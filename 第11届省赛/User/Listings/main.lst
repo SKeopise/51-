@@ -1,0 +1,88 @@
+C51 COMPILER V9.56.0.0   MAIN                                                              04/08/2022 16:39:48 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\system;..\Driver;.
+                    -.\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) TABS(2) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          
+   2          #include <main.h>
+   3          
+   4          bit flag5S = 0;
+   5          
+   6          void main()
+   7          {
+   8   1        ALL_init(); 
+   9   1        Timer1_init();
+  10   1        Time0_init(); 
+  11   1        AD_init();
+  12   1        VP = Read_EEPROM(0x00)*10;
+  13   1        
+  14   1         while(1)
+  15   1         {  
+  16   2           number_Vcnt();
+  17   2           Led_Show();
+  18   2           Key_Driver();
+  19   2           Led_Signal();
+  20   2           DAC(VAIN3*51/100);
+  21   2         }
+  22   1      
+  23   1      }
+  24          
+  25          
+  26          
+  27          void Timer1() interrupt 3
+  28          {  
+  29   1        TL1 = 0xCD; 
+  30   1        TH1 = 0xD4; 
+  31   1      
+  32   1        
+  33   1      
+  34   1      }
+  35          
+  36          void Timer0() interrupt 1
+  37          { 
+  38   1        static int t = 0;
+  39   1        TL0 = 0xCD; 
+  40   1        TH0 = 0xD4;
+  41   1          
+  42   1        t++;
+  43   1        if(t>5000)
+  44   1        {
+  45   2          flag5S = 1;
+  46   2          t = 0;
+  47   2        }
+  48   1      
+  49   1        Key_Scan();
+  50   1      }
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.56.0.0   MAIN                                                              04/08/2022 16:39:48 PAGE 2   
+
+  55          
+  56          
+  57          
+  58          
+  59          
+  60          
+  61          
+  62          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    159    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

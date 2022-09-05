@@ -1,0 +1,84 @@
+C51 COMPILER V9.56.0.0   PCF8951                                                           04/07/2022 20:21:05 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE PCF8951
+OBJECT MODULE PLACED IN .\Objects\PCF8951.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\PCF8951.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\syste
+                    -m;..\Driver;..\Include) DEBUG OBJECTEXTEND PRINT(.\Listings\PCF8951.lst) TABS(2) OBJECT(.\Objects\PCF8951.obj)
+
+line level    source
+
+   1          #include <PCF8951.h>
+   2          
+   3          
+   4          
+   5          
+   6          
+   7          void AD_init()
+   8          {
+   9   1        IIC_Start();
+  10   1        IIC_SendByte(0x90);
+  11   1        IIC_WaitAck(); 
+  12   1        IIC_SendByte(0x43);
+  13   1        IIC_WaitAck();
+  14   1        IIC_Stop(); 
+  15   1      }
+  16          
+  17          
+  18          unsigned char AD_Get()
+  19          {
+  20   1        unsigned char temp;
+  21   1        
+  22   1        IIC_Start();
+  23   1        IIC_SendByte(0x91);
+  24   1        IIC_WaitAck();
+  25   1        
+  26   1        temp = IIC_RecByte();
+  27   1        IIC_Stop();
+  28   1      
+  29   1        return temp;
+  30   1      }
+  31          
+  32          
+  33          void DAC(unsigned char dat)
+  34          {
+  35   1        IIC_Start();
+  36   1        IIC_SendByte(0x90);
+  37   1        IIC_WaitAck(); 
+  38   1        IIC_SendByte(0x43);
+  39   1        IIC_WaitAck();  
+  40   1        IIC_SendByte(dat);
+  41   1        IIC_WaitAck();  
+  42   1        IIC_Stop();
+  43   1        
+  44   1      }
+  45          
+  46          
+  47          
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.56.0.0   PCF8951                                                           04/07/2022 20:21:05 PAGE 2   
+
+  55          
+  56          
+  57          
+  58          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     76    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

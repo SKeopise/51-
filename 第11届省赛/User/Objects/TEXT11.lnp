@@ -1,0 +1,10 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\Key.obj",
+".\Objects\Led.obj",
+".\Objects\PCF8951.obj",
+".\Objects\EEPROM.obj",
+".\Objects\init.obj",
+".\Objects\iic.obj" 
+TO ".\Objects\TEXT11" 
+PRINT(".\Listings\TEXT11.m51") RAMSIZE(256) 
