@@ -1,0 +1,1 @@
+"..\Driver\PCF8951.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\Include;..\Driver;..\system;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\PCF8951.lst) TABS (2) OBJECT(.\Objects\PCF8951.obj)

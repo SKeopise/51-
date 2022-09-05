@@ -1,0 +1,112 @@
+C51 COMPILER V9.56.0.0   INIT                                                              04/07/2022 16:31:30 PAGE 1   
+
+
+C51 COMPILER V9.56.0.0, COMPILATION OF MODULE INIT
+OBJECT MODULE PLACED IN .\Objects\init.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\system\init.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\Include;..\Drive
+                    -r;..\system;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\init.lst) TABS(2) OBJECT(.\Objects\init.obj)
+
+line level    source
+
+   1          
+   2          #include <init.h>
+   3          
+   4          
+   5          
+   6          
+   7          void HC138Y(unsigned char Y)
+   8          {
+   9   1        switch(Y)
+  10   1        {
+  11   2          case 0: P2 = (P2&0x1F) | 0x00;
+  12   2          break;
+  13   2          case 1: P2 = (P2&0x1F) | 0x20;
+  14   2          break;
+  15   2          case 2: P2 = (P2&0x1F) | 0x40;
+  16   2          break;
+  17   2          case 3: P2 = (P2&0x1F) | 0x60;
+  18   2          break;
+  19   2          case 4: P2 = (P2&0x1F) | 0x80;
+  20   2          break;
+  21   2          case 5: P2 = (P2&0x1F) | 0xA0;
+  22   2          break;
+  23   2          case 6: P2 = (P2&0x1F) | 0xC0;
+  24   2          break;
+  25   2          case 7: P2 = (P2&0x1F) | 0xE0;
+  26   2          break;    
+  27   2        }
+  28   1      
+  29   1      
+  30   1      }
+  31          
+  32          
+  33          void Timer0_init()
+  34          {
+  35   1        AUXR |= 0x80;   
+  36   1        TMOD &= 0xF0;   
+  37   1        TL0 = 0xCD;   
+  38   1        TH0 = 0xD4;   
+  39   1        TF0 = 0;    
+  40   1        TR0 = 1;
+  41   1        ET0 = 1;
+  42   1        EA = 1;
+  43   1      }
+  44          
+  45          void Timer1_init()
+  46          {
+  47   1        AUXR |= 0x40;   
+  48   1        TMOD &= 0x0F;   
+  49   1        TL1 = 0xCD;   
+  50   1        TH1 = 0xD4; 
+  51   1        TF1 = 0;    
+  52   1        TR1 = 1;  
+  53   1        ET1 = 1;
+  54   1        EA = 1;
+C51 COMPILER V9.56.0.0   INIT                                                              04/07/2022 16:31:30 PAGE 2   
+
+  55   1      }
+  56          
+  57          
+  58          
+  59          
+  60          void delay_01(unsigned int t)
+  61          {
+  62   1        while(t--);
+  63   1      }
+  64          
+  65          
+  66          
+  67          
+  68          
+  69          
+  70          void Buzz_init()
+  71          {
+  72   1        HC138Y(5);
+  73   1        P0 = 0x50;
+  74   1        delay_01(1);
+  75   1        P0 = 0x00;
+  76   1        HC138Y(0);
+  77   1      }
+  78          
+  79          
+  80          
+  81          
+  82          
+  83          
+  84          
+  85          
+  86          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    179    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,1 @@
+"..\Driver\BUZZ.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\Include;..\Driver;..\system;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\BUZZ.lst) TABS (2) OBJECT(.\Objects\BUZZ.obj)
