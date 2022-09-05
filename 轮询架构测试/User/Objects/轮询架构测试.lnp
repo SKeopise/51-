@@ -1,0 +1,9 @@
+".\Objects\main.obj",
+".\Objects\init.obj",
+".\Objects\led.obj",
+".\Objects\key.obj",
+".\Objects\DS18B20.obj",
+".\Objects\onewire.obj",
+".\Objects\ds1302.obj" 
+TO ".\Objects\¬÷—Øº‹ππ≤‚ ‘" 
+PRINT(".\Listings\¬÷—Øº‹ππ≤‚ ‘.m51") RAMSIZE(256) 
