@@ -1,0 +1,11 @@
+".\Objects\STARTUP.obj",
+".\Objects\main.obj",
+".\Objects\stc_int.obj",
+".\Objects\stc_delay.obj",
+".\Objects\stc_key.obj",
+".\Objects\stc_Led.obj",
+".\Objects\stc_28BYJ48.obj",
+".\Objects\stc_BUZZ.obj",
+".\Objects\stc_Snake.obj" 
+TO ".\Objects\多功能计算器" 
+PRINT(".\Listings\多功能计算器.m51") RAMSIZE(256) 

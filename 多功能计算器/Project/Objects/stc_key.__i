@@ -1,0 +1,1 @@
+"..\Driver\stc_key.c" COMPACT ROM(COMPACT) OPTIMIZE (8,SPEED) BROWSE INCDIR(..\Include;..\Driver;..\System) DEBUG OBJECTEXTEND PRINT(.\Listings\stc_key.lst) TABS (2) OBJECT(.\Objects\stc_key.obj)

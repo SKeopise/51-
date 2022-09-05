@@ -1,0 +1,1 @@
+"..\Driver\stc_Led.c" COMPACT ROM(COMPACT) OPTIMIZE (8,SPEED) BROWSE INCDIR(..\Include;..\Driver;..\System) DEBUG OBJECTEXTEND PRINT(.\Listings\stc_Led.lst) TABS (2) OBJECT(.\Objects\stc_Led.obj)
