@@ -1,0 +1,6 @@
+".\Objects\main.obj",
+".\Objects\Led.obj",
+".\Objects\key.obj",
+".\Objects\init.obj" 
+TO ".\Objects\13届省赛" 
+PRINT(".\Listings\13届省赛.m51") RAMSIZE(256) 

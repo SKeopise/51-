@@ -1,0 +1,8 @@
+".\Objects\main.obj",
+".\Objects\led.obj",
+".\Objects\key.obj",
+".\Objects\ds1302.obj",
+".\Objects\onewire.obj",
+".\Objects\init.obj" 
+TO ".\Objects\ai编程测试_13届省赛" 
+PRINT(".\Listings\ai编程测试_13届省赛.m51") RAMSIZE(256) 

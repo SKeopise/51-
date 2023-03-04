@@ -1,0 +1,107 @@
+C51 COMPILER V9.60.0.0   DS1302                                                            03/04/2023 17:16:16 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\Objects\ds1302.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\System\ds1302.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System
+                    -;..\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\ds1302.lst) OBJECT(.\Objects\ds1302.obj)
+
+line level    source
+
+   1          #include "ds1302.h"                                                                     
+   2          
+   3          
+   4          unsigned char code Ds1302_Write_ADDR[7] = {0x80,0x82,0x84,0x86,0x88,0x8A,0x8C};         //ÂÜôÂÖ•Êï∞ÊçÆÂØÑÂ
+             -≠òÂô®Âú∞ÂùÄ
+   5          unsigned char code Ds1302_Read_ADDR[7] = {0x81,0x83,0x85,0x87,0x89,0x8B,0x8D};           //ËØªÂèñÊï∞ÊçÆÂØÑ
+             -Â≠òÂô®Âú∞ÂùÄ
+   6          unsigned char Ds1302_Time[] = {0x50,0x59,0x23,0x01,0x02,0x05,0x23};                     //ÂΩìÂâçÊó∂Èó¥Â≠òÊ
+             -îæÊï∞ÁªÑ
+   7          
+   8          void Ds1302_Config()              //ÂàùÂßãÂåñÔºåÂ∞ÜDs1302_Time‰∏≠ÁöÑÊï∞ÊçÆÂÜôÂÖ•Âà∞DS1302‰∏≠ÔºåÂπ∂ÂºÄÂßãËá
+             -™Âä®ËÆ°Êï∞
+   9          {
+  10   1              char i = 0;
+  11   1              Write_Ds1302_Byte(0x8E,0x00);
+  12   1              for(i=0;i<7;i++)
+  13   1              {
+  14   2                      Write_Ds1302_Byte(Ds1302_Write_ADDR[i],Ds1302_Time[i]);
+  15   2              }
+  16   1              Write_Ds1302_Byte(0x8E,0x80);
+  17   1      }
+  18          
+  19          void Ds1302_Read()           //ËØªÂèñÂáΩÊï∞ÔºåË∞ÉÁî®Êó∂Â∞ÜDS1302‰∏≠ÁöÑÊï∞ÊçÆÂ≠òÊîæÂà∞Ds1302_Time[]‰∏≠Ôºõ
+  20          {
+  21   1              char i=0;
+  22   1              for(i=0;i<7;i++)
+  23   1              {
+  24   2                      Ds1302_Time[i] = Read_Ds1302_Byte(Ds1302_Read_ADDR[i]);
+  25   2              }
+  26   1      
+  27   1      }
+  28          
+  29          
+  30          
+  31          //–¥◊÷Ω⁄
+  32          void Write_Ds1302(unsigned  char temp) 
+  33          {
+  34   1              unsigned char i;
+  35   1              for (i=0;i<8;i++)       
+  36   1              { 
+  37   2                      SCK = 0;
+  38   2                      SDA = temp&0x01;
+  39   2                      temp>>=1; 
+  40   2                      SCK=1;
+  41   2              }
+  42   1      }   
+  43          
+  44          //œÚDS1302ºƒ¥Ê∆˜–¥»Î ˝æ›
+  45          void Write_Ds1302_Byte( unsigned char address,unsigned char dat )     
+  46          {
+  47   1              RST=0;  _nop_();
+  48   1              SCK=0;  _nop_();
+  49   1              RST=1;  _nop_();  
+  50   1              Write_Ds1302(address);  
+C51 COMPILER V9.60.0.0   DS1302                                                            03/04/2023 17:16:16 PAGE 2   
+
+  51   1              Write_Ds1302(dat);              
+  52   1              RST=0; 
+  53   1      }
+  54          
+  55          //¥”DS1302ºƒ¥Ê∆˜∂¡≥ˆ ˝æ›
+  56          unsigned char Read_Ds1302_Byte( unsigned char address )
+  57          {
+  58   1              unsigned char i,temp=0x00;
+  59   1              RST=0;  _nop_();
+  60   1              SCK=0;  _nop_();
+  61   1              RST=1;  _nop_();
+  62   1              Write_Ds1302(address);
+  63   1              for (i=0;i<8;i++)       
+  64   1              {               
+  65   2                      SCK=0;
+  66   2                      temp>>=1;       
+  67   2                      if(SDA)
+  68   2                      temp|=0x80;     
+  69   2                      SCK=1;
+  70   2              } 
+  71   1              RST=0;  _nop_();
+  72   1              SCK=0;  _nop_();
+  73   1              SCK=1;  _nop_();
+  74   1              SDA=0;  _nop_();
+  75   1              SDA=1;  _nop_();
+  76   1              return (temp);                  
+  77   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    234    ----
+   CONSTANT SIZE    =     14    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      7       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

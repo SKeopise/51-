@@ -1,0 +1,8 @@
+".\Objects\main.obj",
+".\Objects\Led.obj",
+".\Objects\key.obj",
+".\Objects\onewire.obj",
+".\Objects\iic.obj",
+".\Objects\init.obj" 
+TO ".\Objects\12届省赛" 
+PRINT(".\Listings\12届省赛.m51") RAMSIZE(256) 

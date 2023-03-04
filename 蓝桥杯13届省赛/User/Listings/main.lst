@@ -1,0 +1,187 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              03/04/2023 17:16:15 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..\Driver;.
+                    -.\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          #include <config.h>
+   2          
+   3          
+   4          
+   5          // 定义一个全局变量，用于计数
+   6          volatile unsigned int cnt = 0;
+   7          volatile unsigned int keyflag = 0;
+   8          
+   9          bit flag100ms = 0;
+  10          bit flag500ms = 0;
+  11          
+  12          unsigned int temp = 0;      //温度数据，用于显示与判断
+  13          unsigned int tempbuf = 0;   //温度数据缓存
+  14          
+  15          bit workmode = 0;          //工作模式标志位
+  16          bit Relayflag = 0;         //继电器状态标志位
+  17          bit LED3flag = 1;          //L3小灯缓存，用于判断之前小灯状态
+  18          
+  19          void ShowMode();
+  20          void Read_Data();
+  21          void Control_Relay();
+  22          
+  23          
+  24          void main()
+  25          {
+  26   1              timer0_init();      //定时器0与中断初始化
+  27   1              Ds1302_Config();    //DS1302初始化，设置初始时间
+  28   1              LedBuzzInit();      //关闭蜂鸣器与LED小灯
+  29   1              
+  30   1              while(1)
+  31   1              {               
+  32   2                      Key_Driver();                    //按键动作判断
+  33   2                      Read_Data();                     //读取数据
+  34   2                      ShowMode();                      //数码管显示模式切换
+  35   2                      Control_Relay();             //继电器控制
+  36   2              }
+  37   1      }
+  38          
+  39          
+  40          // 定时器中断服务函数
+  41          void timer0_ISR() interrupt 1
+  42          {
+  43   1              TL0 = 0x20;     
+  44   1              TH0 = 0xD1;
+  45   1              
+  46   1              cnt++;
+  47   1              if((cnt % 100) == 0)   //每100ms计数到达传递标志位
+  48   1              {
+  49   2                      flag100ms = 1;
+  50   2              }
+  51   1              if(cnt >= 555)         //500ms计数标志位
+  52   1              {
+  53   2                      cnt =0;
+  54   2                      flag500ms = 1;
+C51 COMPILER V9.60.0.0   MAIN                                                              03/04/2023 17:16:15 PAGE 2   
+
+  55   2              }
+  56   1              
+  57   1              displayDigit();       //数码管显示刷新
+  58   1              Key_Scan();                   //按键扫描
+  59   1      }
+  60          
+  61          
+  62          void Relay(unsigned char onoff)
+  63          {
+  64   1              if(onoff == 1)                  //继电器开启
+  65   1              {
+  66   2                      selectOutput(5);
+  67   2                      P0 = 0x10;
+  68   2                      selectOutput(0);
+  69   2                      Relayflag = 1;
+  70   2              }
+  71   1              else                    //继电器关闭
+  72   1              {
+  73   2                      selectOutput(5);
+  74   2                      P0 = 0x00;
+  75   2                      selectOutput(0);
+  76   2                      Relayflag = 0;          
+  77   2              }
+  78   1      }
+  79          
+  80          void Control_Relay()
+  81          {
+  82   1              if(workmode == 0)                       //温度控制模式下，如果检测到温度超过参数，打开继�
+             -�器，温度小于参数，关闭继电器
+  83   1              {
+  84   2                      if((Tparm*10) >= temp)
+  85   2                      {
+  86   3                              Relay(0);
+  87   3                      }
+  88   2                      else
+  89   2                      {
+  90   3                              Relay(1);
+  91   3                      }
+  92   2              }
+  93   1              else                            //时间控制模式，秒分同时等于0时即为整点
+  94   1              {
+  95   2                      if((Ds1302_Time[1] == 0) && (Ds1302_Time[0] == 0))
+  96   2                      {
+  97   3                              Relay(1);
+  98   3                      }
+  99   2                      if(Relayflag == 1)         //当时间控制模式下继电器处于吸合状态时，判断是否到达
+             -5秒，到达则关闭继电器
+ 100   2                      {
+ 101   3                              if(Ds1302_Time[0] == 0x05)
+ 102   3                              {
+ 103   4                                      Relay(0);
+ 104   4                              }
+ 105   3                      }
+ 106   2              }
+ 107   1              
+ 108   1      }
+ 109          
+ 110          
+ 111          void ShowMode()
+ 112          {
+ 113   1                      if(keyflag == 0)
+ 114   1                      {
+C51 COMPILER V9.60.0.0   MAIN                                                              03/04/2023 17:16:15 PAGE 3   
+
+ 115   2                              Led_Temp();
+ 116   2                      }
+ 117   1                      else if(keyflag == 1)
+ 118   1                      {
+ 119   2                              Led_Time();
+ 120   2                      }
+ 121   1                      else if(keyflag == 2)
+ 122   1                      {
+ 123   2                              Led_Parm();
+ 124   2                      }
+ 125   1      }
+ 126          
+ 127          void Read_Data()
+ 128          {
+ 129   1              if(flag500ms == 1)
+ 130   1              {
+ 131   2                      flag500ms = 0;
+ 132   2                      tempbuf = DS18B20_Read();
+ 133   2                      
+ 134   2                      if(tempbuf >= 400)       //防止DS18B20读取温度数据突变对继电器和数码管显示造成影�
+             -��
+ 135   2                      {
+ 136   3                              temp = temp;
+ 137   3                      }
+ 138   2                      else
+ 139   2                      {
+ 140   3                              temp = tempbuf;
+ 141   3                      }
+ 142   2              }
+ 143   1                              
+ 144   1              if(flag100ms == 1)
+ 145   1              {               
+ 146   2                      Ds1302_Read();
+ 147   2                      Led_Ind();        //读取时间同时对Led指示灯进行操作，100ms控制一次L3达到闪烁效�
+             -�
+ 148   2                      flag100ms = 0;
+ 149   2              }
+ 150   1      
+ 151   1      }
+ 152          
+ 153          
+ 154          
+ 155          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    301    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      8    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      5    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
