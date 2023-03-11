@@ -1,0 +1,9 @@
+".\Objects\main.obj",
+".\Objects\led.obj",
+".\Objects\key.obj",
+".\Objects\ds1302.obj",
+".\Objects\onewire.obj",
+".\Objects\iic.obj",
+".\Objects\init.obj" 
+TO ".\Objects\第11届国赛" 
+PRINT(".\Listings\第11届国赛.m51") RAMSIZE(256) 

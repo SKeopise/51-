@@ -1,0 +1,121 @@
+C51 COMPILER V9.60.0.0   ONEWIRE                                                           03/09/2023 20:52:45 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE ONEWIRE
+OBJECT MODULE PLACED IN .\Objects\onewire.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\System\onewire.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\Syste
+                    -m;..\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\onewire.lst) OBJECT(.\Objects\onewire.obj)
+
+line level    source
+
+   1          #include "onewire.h"
+   2          
+   3          unsigned int TempData = 0;
+   4          
+   5          
+   6          void DS18B20Init()
+   7          {
+   8   1              init_ds18b20();
+   9   1              Write_DS18B20(0xCC);
+  10   1              Write_DS18B20(0x44);    
+  11   1      }
+  12          
+  13          void ReadTempData()
+  14          {
+  15   1              unsigned char LSB,MSB;
+  16   1              
+  17   1              init_ds18b20();
+  18   1              Write_DS18B20(0xCC);
+  19   1              Write_DS18B20(0xBE);
+  20   1      
+  21   1              LSB = Read_DS18B20();
+  22   1              MSB = Read_DS18B20();
+  23   1              TempData = MSB;
+  24   1              TempData = (TempData << 8) | LSB;
+  25   1              
+  26   1              if((TempData & 0xF800) == 0X0000)
+  27   1              {
+  28   2                      TempData = TempData >> 4;
+  29   2                      TempData = TempData * 10;
+  30   2                      TempData = TempData + (LSB & 0x0F)*0.625;
+  31   2              }       
+  32   1      }
+  33          
+  34          
+  35          
+  36          
+  37          
+  38          //单总线内部延时函数
+  39          void Delay_OneWire(unsigned int t)  
+  40          {
+  41   1              t = t*12;
+  42   1              while (t--);
+  43   1      }
+  44          
+  45          //单总线写操作
+  46          void Write_DS18B20(unsigned char dat)
+  47          {
+  48   1              unsigned char i;
+  49   1              for(i=0;i<8;i++)
+  50   1              {
+  51   2                      DQ = 0;
+  52   2                      DQ = dat&0x01;
+  53   2                      Delay_OneWire(5);
+  54   2                      DQ = 1;
+C51 COMPILER V9.60.0.0   ONEWIRE                                                           03/09/2023 20:52:45 PAGE 2   
+
+  55   2                      dat >>= 1;
+  56   2              }
+  57   1              Delay_OneWire(5);
+  58   1      }
+  59          
+  60          //单总线读操作
+  61          unsigned char Read_DS18B20(void)
+  62          {
+  63   1              unsigned char i;
+  64   1              unsigned char dat;
+  65   1        
+  66   1              for(i=0;i<8;i++)
+  67   1              {
+  68   2                      DQ = 0;
+  69   2                      dat >>= 1;
+  70   2                      DQ = 1;
+  71   2                      if(DQ)
+  72   2                      {
+  73   3                              dat |= 0x80;
+  74   3                      }           
+  75   2                      Delay_OneWire(5);
+  76   2              }
+  77   1              return dat;
+  78   1      }
+  79          
+  80          //DS18B20初始化
+  81          bit init_ds18b20(void)
+  82          {
+  83   1              bit initflag = 0;
+  84   1              
+  85   1              DQ = 1;
+  86   1              Delay_OneWire(12);
+  87   1              DQ = 0;
+  88   1              Delay_OneWire(80);
+  89   1              DQ = 1;
+  90   1              Delay_OneWire(10); 
+  91   1          initflag = DQ;     
+  92   1              Delay_OneWire(5);
+  93   1        
+  94   1              return initflag;
+  95   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    274    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       1
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----       1
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

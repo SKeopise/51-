@@ -1,0 +1,194 @@
+C51 COMPILER V9.60.0.0   INIT                                                              03/08/2023 18:47:42 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE INIT
+OBJECT MODULE PLACED IN .\Objects\init.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Config\init.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;.
+                    -.\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\init.lst) OBJECT(.\Objects\init.obj)
+
+line level    source
+
+   1          
+   2          
+   3          #include "init.h"
+   4          
+   5          bit Buzz_Warring = 0;
+   6          unsigned char Buzz_Time = 0;
+   7          unsigned char Door_Open_Time = 0;
+   8          
+   9          
+  10          
+  11          
+  12          void DoorOpenAndWarring()
+  13          {
+  14   1              P0 = 0x00;
+  15   1              
+  16   1              if(Door_Open == 1)
+  17   1              {
+  18   2                      RELAY = 1;
+  19   2              }
+  20   1              else
+  21   1              {
+  22   2                      RELAY = 0;
+  23   2              }
+  24   1              
+  25   1              if(Error_Cnt > 2)
+  26   1              {
+  27   2                      Error_Cnt = 0;
+  28   2                      Buzz_Warring = 1;
+  29   2                      Password_Mode = 0;
+  30   2              }
+  31   1              if(Buzz_Time > 0)
+  32   1              {
+  33   2                      BUZZ = 1;
+  34   2              }
+  35   1              else
+  36   1              {
+  37   2                      BUZZ = 0;
+  38   2              }
+  39   1              
+  40   1              HC138Y(5);
+  41   1              HC138Y(0);
+  42   1      }
+  43          
+  44          void PasswordOver()
+  45          {
+  46   1              unsigned char i;
+  47   1              
+  48   1              for(i=0;i<6;i++)
+  49   1              {
+  50   2                      if(PassWordBuff[i] != 10)
+  51   2                      {
+  52   3                              
+  53   3                      }
+  54   2                      else
+C51 COMPILER V9.60.0.0   INIT                                                              03/08/2023 18:47:42 PAGE 2   
+
+  55   2                      {
+  56   3                              Password_Over = 0;
+  57   3                              PasswordBuffReset();                    
+  58   3                              break;
+  59   3                      }
+  60   2                      if(i == 5)
+  61   2                      {
+  62   3                              Password_Over = 1;
+  63   3                      }
+  64   2              }
+  65   1      }
+  66          
+  67          
+  68          void PasswordSet()
+  69          {
+  70   1              unsigned char i = 0;
+  71   1              
+  72   1              for(i=0;i<6;i++)
+  73   1              {
+  74   2                      PassWord[i] = PassWordBuff[i];
+  75   2              }
+  76   1              AT24C02PasswordWrite();
+  77   1              PasswordBuffReset();
+  78   1      }
+  79          
+  80          
+  81          void PasswordCmd()
+  82          {
+  83   1              unsigned char i = 0;
+  84   1              for(i=0;i<6;i++)
+  85   1              {
+  86   2                      if(PassWord[i] == PassWordBuff[i])
+  87   2                      {
+  88   3                              
+  89   3                      }
+  90   2                      else
+  91   2                      {
+  92   3                              Error_Cnt++;
+  93   3                              Password_Right = 0;
+  94   3                              PasswordBuffReset();
+  95   3                              break;
+  96   3                      }
+  97   2                      if(i == 5)
+  98   2                      {
+  99   3                              Password_Right = 1;
+ 100   3                              Error_Cnt = 0;
+ 101   3                              break;
+ 102   3                      }
+ 103   2              }               
+ 104   1      }
+ 105          
+ 106          void PasswordReset()
+ 107          {
+ 108   1              PassWord[0] = 6;
+ 109   1              PassWord[1] = 5;
+ 110   1              PassWord[2] = 4;
+ 111   1              PassWord[3] = 3;
+ 112   1              PassWord[4] = 2;
+ 113   1              PassWord[5] = 1;
+ 114   1              
+ 115   1              AT24C02PasswordWrite();
+ 116   1              Password_Right = 0;
+C51 COMPILER V9.60.0.0   INIT                                                              03/08/2023 18:47:42 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          void PasswordBuffReset()
+ 120          {
+ 121   1              PassWordBuff[0] = 10;
+ 122   1              PassWordBuff[1] = 10;
+ 123   1              PassWordBuff[2] = 10;
+ 124   1              PassWordBuff[3] = 10;
+ 125   1              PassWordBuff[4] = 10;
+ 126   1              PassWordBuff[5] = 10;
+ 127   1              
+ 128   1              Password_Right = 0;
+ 129   1              Number_Code = 0;
+ 130   1              Password_Over = 0;
+ 131   1      }
+ 132          
+ 133          void HC138Y(unsigned char Y)
+ 134          {
+ 135   1              P2 &= 0x1F;
+ 136   1              P2 |= (Y & 0x07) << 5;
+ 137   1      }
+ 138          
+ 139          void LedBuzzInit()
+ 140          {
+ 141   1              P0 = 0xFF;
+ 142   1              HC138Y(4);
+ 143   1              P0 = 0xFF;
+ 144   1              HC138Y(5);
+ 145   1              P0 = 0x00;
+ 146   1              HC138Y(0);
+ 147   1      }
+ 148          
+ 149          
+ 150          void Timer0Init(void)           //1毫秒@11.0592MHz
+ 151          {
+ 152   1              AUXR |= 0x80;           //定时器时钟1T模式
+ 153   1              TMOD &= 0xF0;           //设置定时器模式
+ 154   1              TL0 = 0xCD;             //设置定时初始值
+ 155   1              TH0 = 0xD4;             //设置定时初始值
+ 156   1              TF0 = 0;                //清除TF0标志
+ 157   1              TR0 = 1;                //定时器0开始计时
+ 158   1              ET0 = 1;
+ 159   1              EA = 1;
+ 160   1      }
+ 161          
+ 162          
+ 163          
+ 164          
+ 165          
+ 166          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    294    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

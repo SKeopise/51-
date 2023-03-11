@@ -1,0 +1,228 @@
+C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\key.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..
+                    -\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) OBJECT(.\Objects\key.obj)
+
+line level    source
+
+   1          #include "key.h"
+   2          
+   3          
+   4          
+   5          unsigned char code Key_Map[4] = {'7','6','5','4'};
+   6          
+   7          unsigned char Key_Sta[4] = {1,1,1,1};
+   8          
+   9          unsigned int Led_Timer_Buff = 400;
+  10          
+  11          unsigned int Led_Timer_Buff_Mode[4] = {400,400,400,400};
+  12          
+  13          unsigned char Led_Running_Mode_Buff = 1;
+  14          
+  15          bit Led_Running_Open = 1;
+  16          
+  17          bit Pwm_Mode_Show = 0;
+  18          
+  19          
+  20          
+  21          void KeyAction0(unsigned char keycode)
+  22          {
+  23   1      
+  24   1              if(keycode == '7')
+  25   1              {
+  26   2                      if(Led_Running_Open == 1)
+  27   2                      {
+  28   3                              Led_Running_Open = 0;
+  29   3                      }
+  30   2                      else 
+  31   2                      {
+  32   3                              Led_Running_Open = 1;
+  33   3                      }
+  34   2              }
+  35   1              else if(keycode == '6')
+  36   1              {
+  37   2                      Smg_Mode++;
+  38   2                      if(Smg_Mode >= 3)
+  39   2                      {
+  40   3                              Smg_Mode = 0;
+  41   3                              switch(Led_Running_Mode_Buff)
+  42   3                              {
+  43   4                                      case 1: Led_Timer_Buff_Mode[0] = Led_Timer_Buff; LedTimerDataWrite(1); break;
+  44   4                                      case 2: Led_Timer_Buff_Mode[1] = Led_Timer_Buff; LedTimerDataWrite(2); break;
+  45   4                                      case 3: Led_Timer_Buff_Mode[2] = Led_Timer_Buff; LedTimerDataWrite(3); break;
+  46   4                                      case 4: Led_Timer_Buff_Mode[3] = Led_Timer_Buff; LedTimerDataWrite(4); break;
+  47   4                                      default: break;
+  48   4                              }
+  49   3                              Led_Running_Mode_Buff = 1;
+  50   3                      }
+  51   2                      if(Smg_Mode == 1)
+  52   2                      {
+  53   3                              Led_Timer_Buff = Led_Timer_Buff_Mode[0];
+  54   3                              Led_Running_Mode_Buff = 1;
+C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 2   
+
+  55   3                      }
+  56   2                      switch(Led_Running_Mode_Buff)
+  57   2                      {
+  58   3                              case 1: Led_Timer_Buff = Led_Timer_Buff_Mode[0]; break;
+  59   3                              case 2: Led_Timer_Buff = Led_Timer_Buff_Mode[1]; break;
+  60   3                              case 3: Led_Timer_Buff = Led_Timer_Buff_Mode[2]; break;
+  61   3                              case 4: Led_Timer_Buff = Led_Timer_Buff_Mode[3]; break;
+  62   3                              default: break;         
+  63   3                      }               
+  64   2              }
+  65   1              else if(keycode == '5')
+  66   1              {
+  67   2                      if(Smg_Mode == 1)
+  68   2                      {
+  69   3                              Led_Running_Mode_Buff++;
+  70   3                              if(Led_Running_Mode_Buff > 4)
+  71   3                              {
+  72   4                                      Led_Running_Mode_Buff = 1;
+  73   4                              }
+  74   3                              switch(Led_Running_Mode_Buff)
+  75   3                              {
+  76   4                                      case 1: Led_Timer_Buff = Led_Timer_Buff_Mode[0]; break;
+  77   4                                      case 2: Led_Timer_Buff = Led_Timer_Buff_Mode[1]; break;
+  78   4                                      case 3: Led_Timer_Buff = Led_Timer_Buff_Mode[2]; break;
+  79   4                                      case 4: Led_Timer_Buff = Led_Timer_Buff_Mode[3]; break;
+  80   4                                      default: break;         
+  81   4                              }                               
+  82   3                      }
+  83   2                      else if(Smg_Mode == 2)
+  84   2                      {
+  85   3                              Led_Timer_Buff += 100;
+  86   3                              if(Led_Timer_Buff > 1200)
+  87   3                              {
+  88   4                                      Led_Timer_Buff = 1200;
+  89   4                              }
+  90   3                      }
+  91   2              }
+  92   1              else if(keycode == '4')
+  93   1              {
+  94   2                      if(Smg_Mode == 1)
+  95   2                      {
+  96   3                              Led_Running_Mode_Buff--;
+  97   3                              if(Led_Running_Mode_Buff < 1)
+  98   3                              {
+  99   4                                      Led_Running_Mode_Buff = 4;
+ 100   4                              }
+ 101   3                              switch(Led_Running_Mode_Buff)
+ 102   3                              {
+ 103   4                                      case 1: Led_Timer_Buff = Led_Timer_Buff_Mode[0]; break;
+ 104   4                                      case 2: Led_Timer_Buff = Led_Timer_Buff_Mode[1]; break;
+ 105   4                                      case 3: Led_Timer_Buff = Led_Timer_Buff_Mode[2]; break;
+ 106   4                                      case 4: Led_Timer_Buff = Led_Timer_Buff_Mode[3]; break;
+ 107   4                                      default: break;         
+ 108   4                              }                               
+ 109   3                      }
+ 110   2                      else if(Smg_Mode == 2)
+ 111   2                      {
+ 112   3                              Led_Timer_Buff -= 100;
+ 113   3                              if(Led_Timer_Buff < 400)
+ 114   3                              {
+ 115   4                                      Led_Timer_Buff = 400;
+ 116   4                              }                       
+C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 3   
+
+ 117   3                      }
+ 118   2                      else
+ 119   2                      {
+ 120   3                              if(Pwm_Mode_Show == 0)
+ 121   3                              {
+ 122   4                                      Pwm_Mode_Show = 1;
+ 123   4                              }
+ 124   3                              else
+ 125   3                              {
+ 126   4                                      Pwm_Mode_Show = 0;
+ 127   4                              }
+ 128   3                      }
+ 129   2              }       
+ 130   1      }
+ 131          
+ 132          
+ 133          
+ 134          
+ 135          void KeyDriver()
+ 136          {
+ 137   1              unsigned char i = 0;
+ 138   1              static unsigned char Key_Backup[4] = {1,1,1,1};
+ 139   1      
+ 140   1              for(i=0;i<4;i++)
+ 141   1              {
+ 142   2                      if(Key_Backup[i] != Key_Sta[i])
+ 143   2                      {
+ 144   3                              if(Key_Backup[i] != 0)
+ 145   3                              {
+ 146   4                                      KeyAction0(Key_Map[i]);
+ 147   4                              }
+ 148   3                              else
+ 149   3                              {
+ 150   4                              
+ 151   4                              }
+ 152   3                              Key_Backup[i] = Key_Sta[i];
+ 153   3                      }
+ 154   2              }
+ 155   1      }
+ 156          
+ 157          void KeyScan()
+ 158          {
+ 159   1              static unsigned char Key_Out = 0;
+ 160   1              static unsigned char Key_Buff[] = {0xFF,0xFF,0xFF,0xFF};
+ 161   1              
+ 162   1              switch(Key_Out)
+ 163   1              {
+ 164   2                      case 0: Key_Buff[0] = (Key_Buff[0] << 1) | KEY_OUT_0; break;
+ 165   2                      case 1: Key_Buff[1] = (Key_Buff[1] << 1) | KEY_OUT_1; break;
+ 166   2                      case 2: Key_Buff[2] = (Key_Buff[2] << 1) | KEY_OUT_2; break;
+ 167   2                      case 3: Key_Buff[3] = (Key_Buff[3] << 1) | KEY_OUT_3; break;
+ 168   2                      default: break;
+ 169   2              }
+ 170   1              
+ 171   1              if((Key_Buff[Key_Out] & 0x0F) == 0x00)
+ 172   1              {
+ 173   2                      Key_Sta[Key_Out] = 0;
+ 174   2              }
+ 175   1              else if((Key_Buff[Key_Out] & 0x0F) == 0x0F)
+ 176   1              {
+ 177   2                      Key_Sta[Key_Out] = 1;
+ 178   2              }
+C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 4   
+
+ 179   1              
+ 180   1              Key_Out++;
+ 181   1              if(Key_Out > 3)
+ 182   1              {
+ 183   2                      Key_Out = 0;
+ 184   2              }
+ 185   1      }
+ 186          
+ 187          
+ 188          
+ 189          
+ 190          
+ 191          
+ 192          
+ 193          
+ 194          
+ 195          
+ 196          
+ 197          
+ 198          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    547    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     24       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      2    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

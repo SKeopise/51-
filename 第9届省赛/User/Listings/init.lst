@@ -1,0 +1,269 @@
+C51 COMPILER V9.60.0.0   INIT                                                              03/10/2023 18:40:49 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE INIT
+OBJECT MODULE PLACED IN .\Objects\init.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Config\init.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;.
+                    -.\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\init.lst) OBJECT(.\Objects\init.obj)
+
+line level    source
+
+   1          #include "init.h"
+   2          
+   3          
+   4          
+   5          void Delay5ms()         //@12.000MHz
+   6          {
+   7   1              unsigned char i, j;
+   8   1      
+   9   1              i = 59;
+  10   1              j = 90;
+  11   1              do
+  12   1              {
+  13   2                      while (--j);
+  14   2              } while (--i);
+  15   1      }
+  16          
+  17          
+  18          void LedTimerRead()
+  19          {
+  20   1              unsigned char ReadBuf = 0;
+  21   1              
+  22   1              ReadBuf = EEPROM_Read(0xF5);
+  23   1              
+  24   1              if(ReadBuf != 78)
+  25   1              {
+  26   2                      LedTimerDataWrite(1);
+  27   2                      LedTimerDataWrite(2);
+  28   2                      LedTimerDataWrite(3);
+  29   2                      LedTimerDataWrite(4);
+  30   2                      EEPROM_Write(0xF5,78);
+  31   2              }
+  32   1              else
+  33   1              {
+  34   2                      
+  35   2              }
+  36   1              LedTimerDataRead();
+  37   1      }
+  38          
+  39          
+  40          void LedTimerDataRead()
+  41          {
+  42   1              unsigned int Timer_Data_Buff = 0;
+  43   1              
+  44   1              Timer_Data_Buff = EEPROM_Read(0x10);
+  45   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  46   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x11);
+  47   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  48   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x12);
+  49   1              Timer_Data_Buff = Timer_Data_Buff * 10; 
+  50   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x13);  
+  51   1              Led_Timer_Buff_Mode[0] = Timer_Data_Buff;
+  52   1              Timer_Data_Buff = 0;
+  53   1              
+  54   1              Timer_Data_Buff = EEPROM_Read(0x15);
+C51 COMPILER V9.60.0.0   INIT                                                              03/10/2023 18:40:49 PAGE 2   
+
+  55   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  56   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x16);
+  57   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  58   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x17);
+  59   1              Timer_Data_Buff = Timer_Data_Buff * 10; 
+  60   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x18);  
+  61   1              Led_Timer_Buff_Mode[1] = Timer_Data_Buff;
+  62   1              Timer_Data_Buff = 0;
+  63   1      
+  64   1              Timer_Data_Buff = EEPROM_Read(0x20);
+  65   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  66   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x21);
+  67   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  68   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x22);
+  69   1              Timer_Data_Buff = Timer_Data_Buff * 10; 
+  70   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x23);  
+  71   1              Led_Timer_Buff_Mode[2] = Timer_Data_Buff;
+  72   1              Timer_Data_Buff = 0;
+  73   1      
+  74   1              Timer_Data_Buff = EEPROM_Read(0x25);
+  75   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  76   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x26);
+  77   1              Timer_Data_Buff = Timer_Data_Buff * 10;
+  78   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x27);
+  79   1              Timer_Data_Buff = Timer_Data_Buff * 10; 
+  80   1              Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x28);  
+  81   1              Led_Timer_Buff_Mode[3] = Timer_Data_Buff;       
+  82   1      }
+  83          
+  84          void LedTimerDataWrite(unsigned char DataCode)
+  85          {
+  86   1              unsigned char Data_Buff = 0;
+  87   1              switch(DataCode)
+  88   1              {
+  89   2                      case 1: 
+  90   2                              Data_Buff = (Led_Timer_Buff_Mode[0]/1000)%10;
+  91   2                              EEPROM_Write(0x10,Data_Buff);
+  92   2                              Delay5ms();
+  93   2                              Data_Buff = 0;
+  94   2                              Data_Buff = (Led_Timer_Buff_Mode[0]/100)%10;
+  95   2                              EEPROM_Write(0x11,Data_Buff);
+  96   2                              Delay5ms();
+  97   2                              Data_Buff = 0;
+  98   2                              Data_Buff = (Led_Timer_Buff_Mode[0]/10)%10;
+  99   2                              EEPROM_Write(0x12,Data_Buff);
+ 100   2                              Delay5ms();     
+ 101   2                              Data_Buff = 0;
+ 102   2                              Data_Buff = (Led_Timer_Buff_Mode[0])%10;
+ 103   2                              EEPROM_Write(0x13,Data_Buff);
+ 104   2                              Delay5ms();     
+ 105   2                              break;
+ 106   2                      case 2: 
+ 107   2                              Data_Buff = (Led_Timer_Buff_Mode[1]/1000)%10;
+ 108   2                              EEPROM_Write(0x15,Data_Buff);
+ 109   2                              Delay5ms();
+ 110   2                              Data_Buff = 0;
+ 111   2                              Data_Buff = (Led_Timer_Buff_Mode[1]/100)%10;
+ 112   2                              EEPROM_Write(0x16,Data_Buff);
+ 113   2                              Delay5ms();
+ 114   2                              Data_Buff = 0;
+ 115   2                              Data_Buff = (Led_Timer_Buff_Mode[1]/10)%10;
+ 116   2                              EEPROM_Write(0x17,Data_Buff);
+C51 COMPILER V9.60.0.0   INIT                                                              03/10/2023 18:40:49 PAGE 3   
+
+ 117   2                              Delay5ms();     
+ 118   2                              Data_Buff = 0;
+ 119   2                              Data_Buff = (Led_Timer_Buff_Mode[1])%10;
+ 120   2                              EEPROM_Write(0x18,Data_Buff);
+ 121   2                              Delay5ms();     
+ 122   2                              break;
+ 123   2                      case 3: 
+ 124   2                              Data_Buff = (Led_Timer_Buff_Mode[2]/1000)%10;
+ 125   2                              EEPROM_Write(0x20,Data_Buff);
+ 126   2                              Delay5ms();
+ 127   2                              Data_Buff = 0;
+ 128   2                              Data_Buff = (Led_Timer_Buff_Mode[2]/100)%10;
+ 129   2                              EEPROM_Write(0x21,Data_Buff);
+ 130   2                              Delay5ms();
+ 131   2                              Data_Buff = 0;
+ 132   2                              Data_Buff = (Led_Timer_Buff_Mode[2]/10)%10;
+ 133   2                              EEPROM_Write(0x22,Data_Buff);
+ 134   2                              Delay5ms();     
+ 135   2                              Data_Buff = 0;
+ 136   2                              Data_Buff = (Led_Timer_Buff_Mode[2])%10;
+ 137   2                              EEPROM_Write(0x23,Data_Buff);
+ 138   2                              Delay5ms();     
+ 139   2                              break;
+ 140   2                      case 4: 
+ 141   2                              Data_Buff = (Led_Timer_Buff_Mode[3]/1000)%10;
+ 142   2                              EEPROM_Write(0x25,Data_Buff);
+ 143   2                              Delay5ms();
+ 144   2                              Data_Buff = 0;
+ 145   2                              Data_Buff = (Led_Timer_Buff_Mode[3]/100)%10;
+ 146   2                              EEPROM_Write(0x26,Data_Buff);
+ 147   2                              Delay5ms();
+ 148   2                              Data_Buff = 0;
+ 149   2                              Data_Buff = (Led_Timer_Buff_Mode[3]/10)%10;
+ 150   2                              EEPROM_Write(0x27,Data_Buff);
+ 151   2                              Delay5ms();     
+ 152   2                              Data_Buff = 0;
+ 153   2                              Data_Buff = (Led_Timer_Buff_Mode[3])%10;
+ 154   2                              EEPROM_Write(0x28,Data_Buff);
+ 155   2                              Delay5ms();     
+ 156   2                              break;
+ 157   2                      default: break;
+ 158   2              }
+ 159   1      
+ 160   1      }
+ 161          
+ 162          
+ 163          
+ 164          bit LedPwm(unsigned char pwm)
+ 165          {
+ 166   1              static unsigned char Pwm_Side = 0;
+ 167   1              unsigned char Pwm_Buff = 0; 
+ 168   1              
+ 169   1              Pwm_Buff = 100 - pwm;
+ 170   1              
+ 171   1              if(Pwm_Side < pwm)
+ 172   1              {
+ 173   2                      Pwm_Side += Pwm_Buff;
+ 174   2                      return 1;
+ 175   2              }
+ 176   1              else
+ 177   1              {
+ 178   2                      Pwm_Side -= pwm;
+C51 COMPILER V9.60.0.0   INIT                                                              03/10/2023 18:40:49 PAGE 4   
+
+ 179   2                      return 0;
+ 180   2              }
+ 181   1      
+ 182   1      }
+ 183          
+ 184          
+ 185          
+ 186          void Timer0Init(void)           //1毫秒@12.000MHz
+ 187          {
+ 188   1              AUXR |= 0x80;           //定时器时钟1T模式
+ 189   1              TMOD &= 0xF0;           //设置定时器模式
+ 190   1              TL0 = 0x20;             //设置定时初始值
+ 191   1              TH0 = 0xD1;             //设置定时初始值
+ 192   1              TF0 = 0;                //清除TF0标志
+ 193   1              TR0 = 1;                //定时器0开始计时
+ 194   1              ET0 = 1;
+ 195   1              EA = 1;
+ 196   1      }
+ 197          
+ 198          
+ 199          void BuzzLedInit()
+ 200          {       
+ 201   1              P0 = 0xFF;
+ 202   1              HC138(4);
+ 203   1              HC138(7);
+ 204   1              HC138(0);
+ 205   1              BUZZ = 0;
+ 206   1              RELAY = 0;
+ 207   1              HC138(5);
+ 208   1              HC138(0);       
+ 209   1      
+ 210   1      }
+ 211          
+ 212          
+ 213          
+ 214          void HC138(unsigned char Y)
+ 215          {
+ 216   1              P2 &= 0x1F;
+ 217   1              P2 |= (Y & 0x07) << 5;
+ 218   1      }
+ 219          
+ 220          
+ 221          
+ 222          
+ 223          
+ 224          
+ 225          
+ 226          
+ 227          
+ 228          
+ 229          
+ 230          
+ 231          
+ 232          
+ 233          
+ 234          
+ 235          
+ 236          
+ 237          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+C51 COMPILER V9.60.0.0   INIT                                                              03/10/2023 18:40:49 PAGE 5   
+
+   CODE SIZE        =   1032    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      1       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

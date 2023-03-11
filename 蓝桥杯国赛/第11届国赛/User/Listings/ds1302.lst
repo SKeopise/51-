@@ -1,0 +1,110 @@
+C51 COMPILER V9.60.0.0   DS1302                                                            03/09/2023 20:52:45 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\Objects\ds1302.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\System\ds1302.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System
+                    -;..\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\ds1302.lst) OBJECT(.\Objects\ds1302.obj)
+
+line level    source
+
+   1          #include "ds1302.h"                                                                     
+   2          
+   3          sbit SCK = P1^7;                
+   4          sbit SDA = P2^3;                
+   5          sbit RST = P1^3; 
+   6          
+   7          unsigned char code Ds1302_Write_Addr[7] = {0x80,0x82,0x84,0x86,0x88,0x8A,0x8C};
+   8          unsigned char code Ds1302_Read_Addr[7] = {0x81,0x83,0x85,0x87,0x89,0x8B,0x8E};
+   9          
+  10          unsigned char TimerData[4] = {0x50,0x59,0x16,0x09};
+  11          
+  12          
+  13          void DS1302Init()
+  14          {
+  15   1              unsigned char i = 0;
+  16   1              
+  17   1              Write_Ds1302_Byte(0x8E,0x00);
+  18   1              for(i=0;i<4;i++)
+  19   1              {
+  20   2                      Write_Ds1302_Byte(Ds1302_Write_Addr[i],TimerData[i]);
+  21   2              }
+  22   1              Write_Ds1302_Byte(0x8E,0x80);
+  23   1      }
+  24          
+  25          void DS1302TimerRead()
+  26          {
+  27   1              unsigned char i = 0;
+  28   1              
+  29   1              for(i=0;i<4;i++)
+  30   1              {
+  31   2                      TimerData[i] = Read_Ds1302_Byte(Ds1302_Read_Addr[i]);
+  32   2              }
+  33   1      }
+  34          
+  35          
+  36          
+  37          
+  38          //写字节
+  39          void Write_Ds1302(unsigned  char temp) 
+  40          {
+  41   1              unsigned char i;
+  42   1              for (i=0;i<8;i++)       
+  43   1              { 
+  44   2                      SCK = 0;
+  45   2                      SDA = temp&0x01;
+  46   2                      temp>>=1; 
+  47   2                      SCK=1;
+  48   2              }
+  49   1      }   
+  50          
+  51          //向DS1302寄存器写入数据
+  52          void Write_Ds1302_Byte( unsigned char address,unsigned char dat )     
+  53          {
+  54   1              RST=0;  _nop_();
+C51 COMPILER V9.60.0.0   DS1302                                                            03/09/2023 20:52:45 PAGE 2   
+
+  55   1              SCK=0;  _nop_();
+  56   1              RST=1;  _nop_();  
+  57   1              Write_Ds1302(address);  
+  58   1              Write_Ds1302(dat);              
+  59   1              RST=0; 
+  60   1      }
+  61          
+  62          //从DS1302寄存器读出数据
+  63          unsigned char Read_Ds1302_Byte ( unsigned char address )
+  64          {
+  65   1              unsigned char i,temp=0x00;
+  66   1              RST=0;  _nop_();
+  67   1              SCK=0;  _nop_();
+  68   1              RST=1;  _nop_();
+  69   1              Write_Ds1302(address);
+  70   1              for (i=0;i<8;i++)       
+  71   1              {               
+  72   2                      SCK=0;
+  73   2                      temp>>=1;       
+  74   2                      if(SDA)
+  75   2                      temp|=0x80;     
+  76   2                      SCK=1;
+  77   2              } 
+  78   1              RST=0;  _nop_();
+  79   1              SCK=0;  _nop_();
+  80   1              SCK=1;  _nop_();
+  81   1              SDA=0;  _nop_();
+  82   1              SDA=1;  _nop_();
+  83   1              return (temp);                  
+  84   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    198    ----
+   CONSTANT SIZE    =     14    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
