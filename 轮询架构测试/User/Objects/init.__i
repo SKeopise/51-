@@ -1,1 +1,0 @@
-"..\System\init.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\Driver;..\Include;..\System;..\User) DEBUG OBJECTEXTEND PRINT(.\Listings\init.lst) OBJECT(.\Objects\init.obj)
