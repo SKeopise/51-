@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 1   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:40:28 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
@@ -62,7 +62,7 @@ line level    source
   52   2                      {
   53   3                              Led_Timer_Buff = Led_Timer_Buff_Mode[0];
   54   3                              Led_Running_Mode_Buff = 1;
-C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 2   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:40:28 PAGE 2   
 
   55   3                      }
   56   2                      switch(Led_Running_Mode_Buff)
@@ -126,7 +126,7 @@ line level    source
  114   3                              {
  115   4                                      Led_Timer_Buff = 400;
  116   4                              }                       
-C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 3   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:40:28 PAGE 3   
 
  117   3                      }
  118   2                      else
@@ -190,7 +190,7 @@ line level    source
  176   1              {
  177   2                      Key_Sta[Key_Out] = 1;
  178   2              }
-C51 COMPILER V9.60.0.0   KEY                                                               03/10/2023 18:40:49 PAGE 4   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:40:28 PAGE 4   
 
  179   1              
  180   1              Key_Out++;

@@ -1,0 +1,70 @@
+C51 COMPILER V9.60.0.0   NE555                                                             03/20/2023 20:56:58 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE NE555
+OBJECT MODULE PLACED IN .\Objects\NE555.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\System\NE555.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;
+                    -..\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\NE555.lst) OBJECT(.\Objects\NE555.obj)
+
+line level    source
+
+   1          #include "NE555.h"
+   2          
+   3          
+   4          
+   5          unsigned int NE555_Timer_Cnt = 0;
+   6          unsigned int NE555_Freq = 0;
+   7          
+   8          
+   9          
+  10          
+  11          
+  12          
+  13          void NE555Timer0Init()
+  14          {
+  15   1              TH0 = 0xFF;
+  16   1              TL0 = 0xFF;
+  17   1              
+  18   1              TMOD |= 0x06;
+  19   1              TF0 = 0;
+  20   1              TR0 = 1;
+  21   1              ET0 = 1;
+  22   1              EA = 1;
+  23   1      }
+  24          
+  25          void NE555Timer0Int() interrupt 1
+  26          {
+  27   1              NE555_Timer_Cnt++;
+  28   1      }
+  29          
+  30          
+  31          
+  32          
+  33          
+  34          
+  35          
+  36          
+  37          
+  38          
+  39          
+  40          
+  41          
+  42          
+  43          
+  44          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     31    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      4    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+C51 COMPILER V9.60.0.0   NE555                                                             03/20/2023 20:56:58 PAGE 2   
+
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

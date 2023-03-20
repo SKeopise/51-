@@ -19,7 +19,7 @@ void LedTimerRead()
 {
 	unsigned char ReadBuf = 0;
 	
-	ReadBuf = EEPROM_Read(0xF5);
+	ReadBuf = EEPROM_Read(0xF8);
 	
 	if(ReadBuf != 78)
 	{
@@ -27,7 +27,7 @@ void LedTimerRead()
 		LedTimerDataWrite(2);
 		LedTimerDataWrite(3);
 		LedTimerDataWrite(4);
-		EEPROM_Write(0xF5,78);
+		EEPROM_Write(0xF8,78);
 	}
 	else
 	{
@@ -42,43 +42,28 @@ void LedTimerDataRead()
 	unsigned int Timer_Data_Buff = 0;
 	
 	Timer_Data_Buff = EEPROM_Read(0x10);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x11);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x12);
-	Timer_Data_Buff = Timer_Data_Buff * 10;	
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x13);	
+	Timer_Data_Buff = Timer_Data_Buff << 8;
+	Timer_Data_Buff = Timer_Data_Buff | EEPROM_Read(0x11);
 	Led_Timer_Buff_Mode[0] = Timer_Data_Buff;
 	Timer_Data_Buff = 0;
 	
-	Timer_Data_Buff = EEPROM_Read(0x15);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x16);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x17);
-	Timer_Data_Buff = Timer_Data_Buff * 10;	
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x18);	
+	Timer_Data_Buff = EEPROM_Read(0x20);
+	Timer_Data_Buff = Timer_Data_Buff << 8;
+	Timer_Data_Buff = Timer_Data_Buff | EEPROM_Read(0x21);
 	Led_Timer_Buff_Mode[1] = Timer_Data_Buff;
 	Timer_Data_Buff = 0;
 
-	Timer_Data_Buff = EEPROM_Read(0x20);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x21);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x22);
-	Timer_Data_Buff = Timer_Data_Buff * 10;	
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x23);	
+	Timer_Data_Buff = EEPROM_Read(0x30);
+	Timer_Data_Buff = Timer_Data_Buff << 8;
+	Timer_Data_Buff = Timer_Data_Buff | EEPROM_Read(0x31);
 	Led_Timer_Buff_Mode[2] = Timer_Data_Buff;
 	Timer_Data_Buff = 0;
 
-	Timer_Data_Buff = EEPROM_Read(0x25);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x26);
-	Timer_Data_Buff = Timer_Data_Buff * 10;
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x27);
-	Timer_Data_Buff = Timer_Data_Buff * 10;	
-	Timer_Data_Buff = Timer_Data_Buff + EEPROM_Read(0x28);	
-	Led_Timer_Buff_Mode[3] = Timer_Data_Buff;	
+	Timer_Data_Buff = EEPROM_Read(0x40);
+	Timer_Data_Buff = Timer_Data_Buff << 8;
+	Timer_Data_Buff = Timer_Data_Buff | EEPROM_Read(0x41);
+	Led_Timer_Buff_Mode[3] = Timer_Data_Buff;
+	Timer_Data_Buff = 0;	
 }
 
 void LedTimerDataWrite(unsigned char DataCode)
@@ -87,72 +72,40 @@ void LedTimerDataWrite(unsigned char DataCode)
 	switch(DataCode)
 	{
 		case 1: 
-			Data_Buff = (Led_Timer_Buff_Mode[0]/1000)%10;
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[0]>>8);
 			EEPROM_Write(0x10,Data_Buff);
 			Delay5ms();
 			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[0]/100)%10;
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[0]&0x00FF);
 			EEPROM_Write(0x11,Data_Buff);
 			Delay5ms();
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[0]/10)%10;
-			EEPROM_Write(0x12,Data_Buff);
-			Delay5ms();	
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[0])%10;
-			EEPROM_Write(0x13,Data_Buff);
-			Delay5ms();	
 			break;
 		case 2: 
-			Data_Buff = (Led_Timer_Buff_Mode[1]/1000)%10;
-			EEPROM_Write(0x15,Data_Buff);
-			Delay5ms();
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[1]/100)%10;
-			EEPROM_Write(0x16,Data_Buff);
-			Delay5ms();
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[1]/10)%10;
-			EEPROM_Write(0x17,Data_Buff);
-			Delay5ms();	
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[1])%10;
-			EEPROM_Write(0x18,Data_Buff);
-			Delay5ms();	
-			break;
-		case 3: 
-			Data_Buff = (Led_Timer_Buff_Mode[2]/1000)%10;
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[1]>>8);
 			EEPROM_Write(0x20,Data_Buff);
 			Delay5ms();
 			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[2]/100)%10;
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[1]&0x00FF);
 			EEPROM_Write(0x21,Data_Buff);
 			Delay5ms();
+			break;
+		case 3: 
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[2]>>8);
+			EEPROM_Write(0x30,Data_Buff);
+			Delay5ms();
 			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[2]/10)%10;
-			EEPROM_Write(0x22,Data_Buff);
-			Delay5ms();	
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[2])%10;
-			EEPROM_Write(0x23,Data_Buff);
-			Delay5ms();	
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[2]&0x00FF);
+			EEPROM_Write(0x31,Data_Buff);
+			Delay5ms();
 			break;
 		case 4: 
-			Data_Buff = (Led_Timer_Buff_Mode[3]/1000)%10;
-			EEPROM_Write(0x25,Data_Buff);
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[3]>>8);
+			EEPROM_Write(0x40,Data_Buff);
 			Delay5ms();
 			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[3]/100)%10;
-			EEPROM_Write(0x26,Data_Buff);
+			Data_Buff = (unsigned char)(Led_Timer_Buff_Mode[3]&0x00FF);
+			EEPROM_Write(0x41,Data_Buff);
 			Delay5ms();
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[3]/10)%10;
-			EEPROM_Write(0x27,Data_Buff);
-			Delay5ms();	
-			Data_Buff = 0;
-			Data_Buff = (Led_Timer_Buff_Mode[3])%10;
-			EEPROM_Write(0x28,Data_Buff);
-			Delay5ms();	
 			break;
 		default: break;
 	}

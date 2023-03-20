@@ -1,0 +1,244 @@
+C51 COMPILER V9.60.0.0   LED                                                               03/20/2023 20:56:58 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\Objects\led.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..
+                    -\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\led.lst) OBJECT(.\Objects\led.obj)
+
+line level    source
+
+   1          #include "led.h"
+   2          
+   3          
+   4          unsigned char code Led_Number[] = {0xC0,0xF9,0xA4,0xB0,0x99,0x92,0x82,0xF8,0x80,0x90,0xFF};
+   5          
+   6          unsigned char Led_Buff[] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+   7          
+   8          
+   9          
+  10          
+  11          void SmgMode()
+  12          {
+  13   1              if(Smg_Open == 1)
+  14   1              {
+  15   2                      if(Show_Mode == 0)
+  16   2                      {
+  17   3                              SmgShowADC();
+  18   3                      }
+  19   2                      else
+  20   2                      {
+  21   3                              if(flag_500ms == 1)
+  22   3                              {
+  23   4                                      SmgShowFreq();
+  24   4                              }
+  25   3                      }
+  26   2              }
+  27   1              else
+  28   1              {
+  29   2                      SmgOff();
+  30   2              }
+  31   1              
+  32   1      }
+  33          
+  34          
+  35          void LedMode()
+  36          {
+  37   1              P0 = 0xFF;
+  38   1              HC138(4);
+  39   1              
+  40   1              if(Show_Mode == 0)
+  41   1              {
+  42   2                      LED1 = 0;
+  43   2                      LED2 = 1;
+  44   2              }   
+  45   1              else
+  46   1              {
+  47   2                      LED1 = 1;
+  48   2                      LED2 = 0;
+  49   2              }
+  50   1              
+  51   1              if(AD_Show_Number < 150)
+  52   1              {
+  53   2                      LED3 = 1;
+  54   2              }
+C51 COMPILER V9.60.0.0   LED                                                               03/20/2023 20:56:58 PAGE 2   
+
+  55   1              else if((AD_Show_Number >= 150) && (AD_Show_Number < 250))
+  56   1              {
+  57   2                      LED3 = 0;
+  58   2              }
+  59   1              else if((AD_Show_Number >= 250) && (AD_Show_Number < 350))
+  60   1              {
+  61   2                      LED3 = 1;
+  62   2              }
+  63   1              else if(AD_Show_Number >= 350)
+  64   1              {
+  65   2                      LED3 = 0;
+  66   2              }
+  67   1              
+  68   1              if(NE555_Freq < 1000)
+  69   1              {
+  70   2                      LED4 = 1;
+  71   2              }
+  72   1              else if((NE555_Freq >= 1000) && (NE555_Freq < 5000))
+  73   1              {
+  74   2                      LED4 = 0;
+  75   2              }
+  76   1              else if((NE555_Freq >= 5000) && (NE555_Freq < 10000))
+  77   1              {
+  78   2                      LED4 = 1;
+  79   2              }
+  80   1              else if(NE555_Freq >= 10000)
+  81   1              {
+  82   2                      LED4 = 0;
+  83   2              }       
+  84   1              
+  85   1              if(DAC_Mode == 0)
+  86   1              {
+  87   2                      LED5 = 1;
+  88   2              }
+  89   1              else
+  90   1              {
+  91   2                      LED5 = 0;
+  92   2              }
+  93   1              
+  94   1              HC138(0);
+  95   1      }
+  96          
+  97          
+  98          void SmgDisplay()
+  99          {
+ 100   1              static unsigned char i = 0;
+ 101   1              
+ 102   1              P0 = 0x00;
+ 103   1              HC138(6);
+ 104   1              P0 = 0x01 << i;
+ 105   1              HC138(0);
+ 106   1              
+ 107   1              P0 = 0xFF;
+ 108   1              HC138(7);
+ 109   1              P0 = Led_Buff[i];
+ 110   1              HC138(0);
+ 111   1              
+ 112   1              i++;
+ 113   1              if(i >= 8)
+ 114   1              {
+ 115   2                      i = 0;
+ 116   2              }
+C51 COMPILER V9.60.0.0   LED                                                               03/20/2023 20:56:58 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          void SmgOff()
+ 120          {
+ 121   1              Led_Buff[0] = Led_Number[10];   
+ 122   1              Led_Buff[1] = Led_Number[10];   
+ 123   1              Led_Buff[2] = Led_Number[10];
+ 124   1              Led_Buff[3] = Led_Number[10];
+ 125   1              Led_Buff[4] = Led_Number[10];
+ 126   1              Led_Buff[5] = Led_Number[10];   
+ 127   1              Led_Buff[6] = Led_Number[10];
+ 128   1              Led_Buff[7] = Led_Number[10];
+ 129   1              
+ 130   1      }
+ 131          
+ 132          void SmgShowADC()
+ 133          {
+ 134   1              Led_Buff[0] = 0xC1;
+ 135   1              Led_Buff[1] = Led_Number[10];   
+ 136   1              Led_Buff[2] = Led_Number[10];
+ 137   1              Led_Buff[3] = Led_Number[10];
+ 138   1              Led_Buff[4] = Led_Number[10];
+ 139   1              
+ 140   1              Led_Buff[5] = Led_Number[(AD_Show_Number/100)%10] & 0x7F;
+ 141   1              Led_Buff[6] = Led_Number[(AD_Show_Number/10)%10];
+ 142   1              Led_Buff[7] = Led_Number[AD_Show_Number%10];            
+ 143   1      }
+ 144          
+ 145          
+ 146          void SmgShowFreq()
+ 147          {
+ 148   1              Led_Buff[0] = 0x8E;
+ 149   1              Led_Buff[1] = Led_Number[10];
+ 150   1              
+ 151   1              if(NE555_Freq >= 100000)
+ 152   1              {
+ 153   2                      Led_Buff[2] = Led_Number[(NE555_Freq/100000)%10];
+ 154   2              }
+ 155   1              else
+ 156   1              {
+ 157   2                      Led_Buff[2] = Led_Number[10];           
+ 158   2              }
+ 159   1              if(NE555_Freq >= 10000)
+ 160   1              {
+ 161   2                      Led_Buff[3] = Led_Number[(NE555_Freq/10000)%10];
+ 162   2              }
+ 163   1              else
+ 164   1              {
+ 165   2                      Led_Buff[3] = Led_Number[10];           
+ 166   2              }
+ 167   1              if(NE555_Freq >= 1000)
+ 168   1              {
+ 169   2                      Led_Buff[4] = Led_Number[(NE555_Freq/1000)%10];
+ 170   2              }
+ 171   1              else
+ 172   1              {
+ 173   2                      Led_Buff[4] = Led_Number[10];           
+ 174   2              }
+ 175   1              if(NE555_Freq >= 100)
+ 176   1              {
+ 177   2                      Led_Buff[5] = Led_Number[(NE555_Freq/100)%10];
+ 178   2              }
+C51 COMPILER V9.60.0.0   LED                                                               03/20/2023 20:56:58 PAGE 4   
+
+ 179   1              else
+ 180   1              {
+ 181   2                      Led_Buff[5] = Led_Number[10];           
+ 182   2              }
+ 183   1              if(NE555_Freq >= 10)
+ 184   1              {
+ 185   2                      Led_Buff[6] = Led_Number[(NE555_Freq/10)%10];
+ 186   2              }
+ 187   1              else
+ 188   1              {
+ 189   2                      Led_Buff[6] = Led_Number[10];           
+ 190   2              }
+ 191   1              
+ 192   1              Led_Buff[7] = Led_Number[NE555_Freq%10];
+ 193   1      }
+ 194          
+ 195          
+ 196          
+ 197          
+ 198          
+ 199          
+ 200          
+ 201          
+ 202          
+ 203          
+ 204          
+ 205          
+ 206          
+ 207          
+ 208          
+ 209          
+ 210          
+ 211          
+ 212          
+ 213          
+ 214          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    693    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

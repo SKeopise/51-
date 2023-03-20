@@ -39,7 +39,7 @@ void PCF8591Init()
 	IIC_Start();
 	IIC_SendByte(0x90);
 	IIC_WaitAck();
-	IIC_SendByte(0x43);
+	IIC_SendByte(0x03);
 	IIC_WaitAck();
 	IIC_Stop();	
 }
