@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    03/04/2023  17:29:46  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                    03/22/2023  21:14:25  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22.2.0, INVOKED BY:
@@ -59,7 +59,7 @@ LINK MAP OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
             CODE    04CAH     0096H     UNIT         ?PR?DS18B20_READ?ONEWIRE
             CODE    0560H     008CH     UNIT         ?C_C51STARTUP
             CODE    05ECH     0072H     UNIT         ?C_INITSEG
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 2
 
 
             CODE    065EH     0070H     UNIT         ?PR?TIMER0_ISR?MAIN
@@ -79,18 +79,18 @@ LINK MAP OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
             CODE    0A2CH     0027H     UNIT         ?PR?INIT_DS18B20?ONEWIRE
             CODE    0A53H     0023H     UNIT         ?PR?READ_DS18B20?ONEWIRE
             CODE    0A76H     0020H     UNIT         ?PR?SHOWMODE?MAIN
-            CODE    0A96H     001CH     UNIT         ?PR?_WRITE_DS1302?DS1302
-            CODE    0AB2H     0018H     UNIT         ?PR?LEDBUZZINIT?INIT
-            CODE    0ACAH     0017H     UNIT         ?PR?MAIN?MAIN
-            CODE    0AE1H     0016H     UNIT         ?PR?_DELAY_ONEWIRE?ONEWIRE
-            CODE    0AF7H     0014H     UNIT         ?PR?_WRITE_DS1302_BYTE?DS1302
-            CODE    0B0BH     0014H     UNIT         ?PR?_SELECTOUTPUT?INIT
-            CODE    0B1FH     0013H     UNIT         ?PR?TIMER0_INIT?INIT
-            CODE    0B32H     0010H     UNIT         ?CO?KEY
-            CODE    0B42H     000EH     UNIT         ?PR?_KEY_ACTION_BKP2?KEY
-            CODE    0B50H     000EH     UNIT         ?CO?DS1302
-            CODE    0B5EH     000BH     UNIT         ?PR?_DELAY_US?INIT
-            CODE    0B69H     000AH     UNIT         ?CO?LED
+            CODE    0A96H     001EH     UNIT         ?PR?_DELAY_ONEWIRE?ONEWIRE
+            CODE    0AB4H     001CH     UNIT         ?PR?_WRITE_DS1302?DS1302
+            CODE    0AD0H     0018H     UNIT         ?PR?LEDBUZZINIT?INIT
+            CODE    0AE8H     0017H     UNIT         ?PR?MAIN?MAIN
+            CODE    0AFFH     0014H     UNIT         ?PR?_WRITE_DS1302_BYTE?DS1302
+            CODE    0B13H     0014H     UNIT         ?PR?_SELECTOUTPUT?INIT
+            CODE    0B27H     0013H     UNIT         ?PR?TIMER0_INIT?INIT
+            CODE    0B3AH     0010H     UNIT         ?CO?KEY
+            CODE    0B4AH     000EH     UNIT         ?PR?_KEY_ACTION_BKP2?KEY
+            CODE    0B58H     000EH     UNIT         ?CO?DS1302
+            CODE    0B66H     000BH     UNIT         ?PR?_DELAY_US?INIT
+            CODE    0B71H     000AH     UNIT         ?CO?LED
 
 
 
@@ -119,7 +119,7 @@ SEGMENT                                  BIT_GROUP          DATA_GROUP
   +--> ?PR?LEDBUZZINIT?INIT
   +--> ?PR?KEY_DRIVER?KEY
   +--> ?PR?READ_DATA?MAIN
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 3
 
 
   +--> ?PR?SHOWMODE?MAIN
@@ -179,7 +179,7 @@ SEGMENT                                  BIT_GROUP          DATA_GROUP
 ?PR?SHOWMODE?MAIN                     -----    -----      -----    -----
   +--> ?PR?LED_TEMP?LED
   +--> ?PR?LED_TIME?LED
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 4
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 4
 
 
   +--> ?PR?LED_PARM?LED
@@ -222,7 +222,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:065EH         PUBLIC        timer0_ISR
   D:00D8H         PUBLIC        CCON
   B:0020H.3       PUBLIC        LED3flag
-  C:0ACAH         PUBLIC        main
+  C:0AE8H         PUBLIC        main
   C:0A76H         PUBLIC        ShowMode
   D:0098H         PUBLIC        SCON
   D:0088H         PUBLIC        TCON
@@ -237,21 +237,21 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   D:0019H         PUBLIC        tempbuf
   D:00D0H         PUBLIC        PSW
   -------         PROC          MAIN
-  C:0ACAH         LINE#         24
-  C:0ACAH         LINE#         25
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 5
+  C:0AE8H         LINE#         24
+  C:0AE8H         LINE#         25
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 5
 
 
-  C:0ACAH         LINE#         26
-  C:0ACDH         LINE#         27
-  C:0AD0H         LINE#         28
-  C:0AD3H         LINE#         30
-  C:0AD3H         LINE#         31
-  C:0AD3H         LINE#         32
-  C:0AD6H         LINE#         33
-  C:0AD9H         LINE#         34
-  C:0ADCH         LINE#         35
-  C:0ADFH         LINE#         36
+  C:0AE8H         LINE#         26
+  C:0AEBH         LINE#         27
+  C:0AEEH         LINE#         28
+  C:0AF1H         LINE#         30
+  C:0AF1H         LINE#         31
+  C:0AF1H         LINE#         32
+  C:0AF4H         LINE#         33
+  C:0AF7H         LINE#         34
+  C:0AFAH         LINE#         35
+  C:0AFDH         LINE#         36
   -------         ENDPROC       MAIN
   -------         PROC          TIMER0_ISR
   C:065EH         LINE#         41
@@ -299,7 +299,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:095DH         LINE#         85
   C:095DH         LINE#         86
   C:095EH         LINE#         87
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 6
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 6
 
 
   C:0960H         LINE#         89
@@ -359,7 +359,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:09D8H         LINE#         147
   C:09DBH         LINE#         148
   C:09DDH         LINE#         149
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 7
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 7
 
 
   C:09DDH         LINE#         151
@@ -372,7 +372,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   D:0090H         PUBLIC        P1
   D:00A0H         PUBLIC        P2
   D:00B0H         PUBLIC        P3
-  C:0B69H         PUBLIC        LedNumber
+  C:0B71H         PUBLIC        LedNumber
   D:00C0H         PUBLIC        P4
   D:00C8H         PUBLIC        P5
   D:00E8H         PUBLIC        P6
@@ -419,7 +419,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:086EH         LINE#         36
   C:0870H         LINE#         38
   C:0870H         LINE#         39
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 8
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 8
 
 
   C:0872H         LINE#         40
@@ -479,7 +479,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:073CH         LINE#         107
   -------         ENDPROC       LED_TEMP
   -------         PROC          LED_TIME
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 9
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 9
 
 
   C:0799H         LINE#         109
@@ -533,13 +533,13 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:0340H         PUBLIC        Key_Scan
   D:00B8H         PUBLIC        IP
   D:00D8H         PUBLIC        CCON
-  C:0B32H         PUBLIC        Key_Map
+  C:0B3AH         PUBLIC        Key_Map
   D:0044H         PUBLIC        Key_Sta
   D:0098H         PUBLIC        SCON
   D:0088H         PUBLIC        TCON
   C:073DH         PUBLIC        _Key_Action_bkp1
-  C:0B42H         PUBLIC        _Key_Action_bkp2
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 10
+  C:0B4AH         PUBLIC        _Key_Action_bkp2
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 10
 
 
   B:00B0H.0       PUBLIC        KEY_OUT_0
@@ -597,19 +597,19 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   -------         ENDPROC       _KEY_ACTION_BKP1
   -------         PROC          _KEY_ACTION_BKP2
   D:0007H         SYMBOL        keycode
-  C:0B42H         LINE#         63
-  C:0B42H         LINE#         64
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 11
+  C:0B4AH         LINE#         63
+  C:0B4AH         LINE#         64
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 11
 
 
-  C:0B42H         LINE#         65
-  C:0B45H         LINE#         66
-  C:0B45H         LINE#         67
-  C:0B4DH         LINE#         68
-  C:0B4DH         LINE#         69
-  C:0B4FH         LINE#         70
-  C:0B4FH         LINE#         72
-  C:0B4FH         LINE#         73
+  C:0B4AH         LINE#         65
+  C:0B4DH         LINE#         66
+  C:0B4DH         LINE#         67
+  C:0B55H         LINE#         68
+  C:0B55H         LINE#         69
+  C:0B57H         LINE#         70
+  C:0B57H         LINE#         72
+  C:0B57H         LINE#         73
   -------         ENDPROC       _KEY_ACTION_BKP2
   -------         PROC          KEY_DRIVER
   -------         DO            
@@ -659,7 +659,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:03E4H         LINE#         124
   C:03EAH         LINE#         125
   C:03EAH         LINE#         126
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 12
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 12
 
 
   C:03F6H         LINE#         127
@@ -696,12 +696,12 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:0891H         PUBLIC        Ds1302_Config
   C:08D6H         PUBLIC        _Read_Ds1302_Byte
   B:00A0H.3       PUBLIC        SDA
-  C:0B57H         PUBLIC        Ds1302_Read_ADDR
+  C:0B5FH         PUBLIC        Ds1302_Read_ADDR
   C:0913H         PUBLIC        Ds1302_Read
   B:0090H.7       PUBLIC        SCK
-  C:0AF7H         PUBLIC        _Write_Ds1302_Byte
-  C:0B50H         PUBLIC        Ds1302_Write_ADDR
-  C:0A96H         PUBLIC        _Write_Ds1302
+  C:0AFFH         PUBLIC        _Write_Ds1302_Byte
+  C:0B58H         PUBLIC        Ds1302_Write_ADDR
+  C:0AB4H         PUBLIC        _Write_Ds1302
   D:0054H         PUBLIC        Ds1302_Time
   B:0090H.3       PUBLIC        RST
   D:00D0H         PUBLIC        PSW
@@ -709,60 +709,60 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   -------         DO            
   D:001BH         SYMBOL        i
   -------         ENDDO         
-  C:0891H         LINE#         8
-  C:0891H         LINE#         9
-  C:0891H         LINE#         10
-  C:0894H         LINE#         11
-  C:089AH         LINE#         12
-  C:08AFH         LINE#         13
-  C:08AFH         LINE#         14
-  C:08CBH         LINE#         15
-  C:08CFH         LINE#         16
+  C:0891H         LINE#         15
+  C:0891H         LINE#         16
+  C:0891H         LINE#         17
+  C:0894H         LINE#         18
+  C:089AH         LINE#         19
+  C:08AFH         LINE#         20
+  C:08AFH         LINE#         21
+  C:08CBH         LINE#         22
+  C:08CFH         LINE#         23
   -------         ENDPROC       DS1302_CONFIG
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 13
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 13
 
 
   -------         PROC          DS1302_READ
   -------         DO            
   D:001BH         SYMBOL        i
   -------         ENDDO         
-  C:0913H         LINE#         19
-  C:0913H         LINE#         20
-  C:0913H         LINE#         21
-  C:0916H         LINE#         22
-  C:092AH         LINE#         23
-  C:092AH         LINE#         24
-  C:0946H         LINE#         25
-  C:094AH         LINE#         27
+  C:0913H         LINE#         26
+  C:0913H         LINE#         27
+  C:0913H         LINE#         28
+  C:0916H         LINE#         29
+  C:092AH         LINE#         30
+  C:092AH         LINE#         31
+  C:0946H         LINE#         32
+  C:094AH         LINE#         34
   -------         ENDPROC       DS1302_READ
   -------         PROC          _WRITE_DS1302
   D:0007H         SYMBOL        temp
   -------         DO            
   D:0006H         SYMBOL        i
   -------         ENDDO         
-  C:0A96H         LINE#         32
-  C:0A96H         LINE#         33
-  C:0A96H         LINE#         35
-  C:0AA2H         LINE#         36
-  C:0AA2H         LINE#         37
-  C:0AA4H         LINE#         38
-  C:0AA8H         LINE#         39
-  C:0AACH         LINE#         40
-  C:0AAEH         LINE#         41
-  C:0AB1H         LINE#         42
+  C:0AB4H         LINE#         38
+  C:0AB4H         LINE#         39
+  C:0AB4H         LINE#         41
+  C:0AC0H         LINE#         42
+  C:0AC0H         LINE#         43
+  C:0AC2H         LINE#         44
+  C:0AC6H         LINE#         45
+  C:0ACAH         LINE#         46
+  C:0ACCH         LINE#         47
+  C:0ACFH         LINE#         48
   -------         ENDPROC       _WRITE_DS1302
   -------         PROC          _WRITE_DS1302_BYTE
   D:0007H         SYMBOL        address
   D:0005H         SYMBOL        dat
-  C:0AF7H         LINE#         45
-  C:0AF7H         LINE#         46
-  C:0AF7H         LINE#         47
-  C:0AFAH         LINE#         48
-  C:0AFDH         LINE#         49
-  C:0B00H         LINE#         50
-  C:0B03H         LINE#         51
-  C:0B08H         LINE#         52
-  C:0B0AH         LINE#         53
+  C:0AFFH         LINE#         51
+  C:0AFFH         LINE#         52
+  C:0AFFH         LINE#         53
+  C:0B02H         LINE#         54
+  C:0B05H         LINE#         55
+  C:0B08H         LINE#         56
+  C:0B0BH         LINE#         57
+  C:0B10H         LINE#         58
+  C:0B12H         LINE#         59
   -------         ENDPROC       _WRITE_DS1302_BYTE
   -------         PROC          _READ_DS1302_BYTE
   D:0007H         SYMBOL        address
@@ -770,31 +770,31 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   D:0007H         SYMBOL        i
   D:0005H         SYMBOL        temp
   -------         ENDDO         
-  C:08D6H         LINE#         56
-  C:08D6H         LINE#         57
-  C:08D6H         LINE#         58
-  C:08D8H         LINE#         59
-  C:08DBH         LINE#         60
-  C:08DEH         LINE#         61
-  C:08E1H         LINE#         62
-  C:08E4H         LINE#         63
-  C:08F0H         LINE#         64
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 14
+  C:08D6H         LINE#         62
+  C:08D6H         LINE#         63
+  C:08D6H         LINE#         64
+  C:08D8H         LINE#         65
+  C:08DBH         LINE#         66
+  C:08DEH         LINE#         67
+  C:08E1H         LINE#         68
+  C:08E4H         LINE#         69
+  C:08F0H         LINE#         70
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 14
 
 
-  C:08F0H         LINE#         65
-  C:08F2H         LINE#         66
-  C:08F6H         LINE#         67
-  C:08F9H         LINE#         68
-  C:08FCH         LINE#         69
-  C:08FEH         LINE#         70
-  C:0901H         LINE#         71
-  C:0904H         LINE#         72
-  C:0907H         LINE#         73
-  C:090AH         LINE#         74
-  C:090DH         LINE#         75
-  C:0910H         LINE#         76
-  C:0912H         LINE#         77
+  C:08F0H         LINE#         71
+  C:08F2H         LINE#         72
+  C:08F6H         LINE#         73
+  C:08F9H         LINE#         74
+  C:08FCH         LINE#         75
+  C:08FEH         LINE#         76
+  C:0901H         LINE#         77
+  C:0904H         LINE#         78
+  C:0907H         LINE#         79
+  C:090AH         LINE#         80
+  C:090DH         LINE#         81
+  C:0910H         LINE#         82
+  C:0912H         LINE#         83
   -------         ENDPROC       _READ_DS1302_BYTE
   -------         ENDMOD        DS1302
 
@@ -811,7 +811,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   D:00E8H         PUBLIC        P6
   D:00F8H         PUBLIC        P7
   D:00A8H         PUBLIC        IE
-  C:0AE5H         PUBLIC        _Delay_OneWire
+  C:0A9AH         PUBLIC        _Delay_OneWire
   C:0A05H         PUBLIC        _Write_DS18B20
   B:0090H.4       PUBLIC        DQ
   D:00B8H         PUBLIC        IP
@@ -826,101 +826,105 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   D:0007H         SYMBOL        MSB
   D:001CH         SYMBOL        temp
   -------         ENDDO         
-  C:04CAH         LINE#         4
-  C:04CAH         LINE#         5
-  C:04CAH         LINE#         9
-  C:04CDH         LINE#         10
-  C:04D2H         LINE#         11
-  C:04D7H         LINE#         13
-  C:04DEH         LINE#         15
-  C:04E1H         LINE#         16
-  C:04E6H         LINE#         17
-  C:04EBH         LINE#         19
-  C:04F0H         LINE#         20
-  C:04F3H         LINE#         22
-  C:04F8H         LINE#         23
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 15
+  C:04CAH         LINE#         15
+  C:04CAH         LINE#         16
+  C:04CAH         LINE#         20
+  C:04CDH         LINE#         21
+  C:04D2H         LINE#         22
+  C:04D7H         LINE#         24
+  C:04DEH         LINE#         26
+  C:04E1H         LINE#         27
+  C:04E6H         LINE#         28
+  C:04EBH         LINE#         30
+  C:04F0H         LINE#         31
+  C:04F3H         LINE#         33
+  C:04F8H         LINE#         34
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 15
 
 
-  C:0500H         LINE#         25
-  C:0506H         LINE#         26
-  C:0506H         LINE#         27
-  C:0518H         LINE#         28
-  C:0526H         LINE#         29
-  C:055BH         LINE#         30
-  C:055BH         LINE#         31
-  C:055FH         LINE#         32
+  C:0500H         LINE#         36
+  C:0506H         LINE#         37
+  C:0506H         LINE#         38
+  C:0518H         LINE#         39
+  C:0526H         LINE#         40
+  C:055BH         LINE#         41
+  C:055BH         LINE#         42
+  C:055FH         LINE#         43
   -------         ENDPROC       DS18B20_READ
-  C:0AE1H         SYMBOL        L?0018
-  -------         PROC          L?0017
-  -------         ENDPROC       L?0017
-  C:0AE1H         SYMBOL        L?0018
+  C:0A96H         SYMBOL        L?0021
+  -------         PROC          L?0020
+  -------         ENDPROC       L?0020
+  C:0A96H         SYMBOL        L?0021
   -------         PROC          _DELAY_ONEWIRE
   D:0006H         SYMBOL        t
-  C:0AE5H         LINE#         36
-  C:0AE5H         LINE#         37
-  C:0AE5H         LINE#         38
-  C:0AECH         LINE#         39
-  C:0AF6H         LINE#         40
+  -------         DO            
+  D:0005H         SYMBOL        i
+  -------         ENDDO         
+  C:0A9AH         LINE#         47
+  C:0A9AH         LINE#         48
+  C:0A9AH         LINE#         50
+  C:0AA4H         LINE#         51
+  C:0AB3H         LINE#         52
+  C:0AB3H         LINE#         53
   -------         ENDPROC       _DELAY_ONEWIRE
   -------         PROC          _WRITE_DS18B20
-  D:0003H         SYMBOL        dat
+  D:0001H         SYMBOL        dat
   -------         DO            
-  D:0002H         SYMBOL        i
+  D:0003H         SYMBOL        i
   -------         ENDDO         
-  C:0A05H         LINE#         43
-  C:0A07H         LINE#         44
-  C:0A07H         LINE#         46
-  C:0A13H         LINE#         47
-  C:0A13H         LINE#         48
-  C:0A15H         LINE#         49
-  C:0A19H         LINE#         50
-  C:0A1CH         LINE#         51
-  C:0A1EH         LINE#         52
-  C:0A22H         LINE#         53
-  C:0A25H         LINE#         54
+  C:0A05H         LINE#         56
+  C:0A07H         LINE#         57
+  C:0A07H         LINE#         59
+  C:0A13H         LINE#         60
+  C:0A13H         LINE#         61
+  C:0A15H         LINE#         62
+  C:0A19H         LINE#         63
+  C:0A1CH         LINE#         64
+  C:0A1EH         LINE#         65
+  C:0A22H         LINE#         66
+  C:0A25H         LINE#         67
   -------         ENDPROC       _WRITE_DS18B20
   -------         PROC          READ_DS18B20
   -------         DO            
-  D:0002H         SYMBOL        i
-  D:0003H         SYMBOL        dat
+  D:0003H         SYMBOL        i
+  D:0004H         SYMBOL        dat
   -------         ENDDO         
-  C:0A53H         LINE#         58
-  C:0A53H         LINE#         59
-  C:0A53H         LINE#         63
-  C:0A5FH         LINE#         64
-  C:0A5FH         LINE#         65
-  C:0A61H         LINE#         66
-  C:0A65H         LINE#         67
-  C:0A67H         LINE#         68
-  C:0A6AH         LINE#         69
-  C:0A6AH         LINE#         70
-  C:0A6DH         LINE#         71
-  C:0A6DH         LINE#         72
-  C:0A70H         LINE#         73
-  C:0A73H         LINE#         74
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 16
+  C:0A53H         LINE#         71
+  C:0A53H         LINE#         72
+  C:0A53H         LINE#         76
+  C:0A5FH         LINE#         77
+  C:0A5FH         LINE#         78
+  C:0A61H         LINE#         79
+  C:0A65H         LINE#         80
+  C:0A67H         LINE#         81
+  C:0A6AH         LINE#         82
+  C:0A6AH         LINE#         83
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 16
 
 
-  C:0A75H         LINE#         75
+  C:0A6DH         LINE#         84
+  C:0A6DH         LINE#         85
+  C:0A70H         LINE#         86
+  C:0A73H         LINE#         87
+  C:0A75H         LINE#         88
   -------         ENDPROC       READ_DS18B20
   -------         PROC          INIT_DS18B20
   -------         DO            
   B:0020H.6       SYMBOL        initflag
   -------         ENDDO         
-  C:0A2CH         LINE#         78
-  C:0A2CH         LINE#         79
-  C:0A2CH         LINE#         80
-  C:0A2EH         LINE#         82
-  C:0A30H         LINE#         83
-  C:0A37H         LINE#         84
-  C:0A39H         LINE#         85
-  C:0A40H         LINE#         86
-  C:0A42H         LINE#         87
-  C:0A49H         LINE#         88
-  C:0A4DH         LINE#         89
-  C:0A50H         LINE#         91
-  C:0A52H         LINE#         92
+  C:0A2CH         LINE#         91
+  C:0A2CH         LINE#         92
+  C:0A2CH         LINE#         93
+  C:0A2EH         LINE#         95
+  C:0A30H         LINE#         96
+  C:0A37H         LINE#         97
+  C:0A39H         LINE#         98
+  C:0A40H         LINE#         99
+  C:0A42H         LINE#         100
+  C:0A49H         LINE#         101
+  C:0A4DH         LINE#         102
+  C:0A50H         LINE#         104
+  C:0A52H         LINE#         105
   -------         ENDPROC       INIT_DS18B20
   -------         ENDMOD        ONEWIRE
 
@@ -937,7 +941,7 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   D:00F8H         PUBLIC        P7
   D:00A8H         PUBLIC        IE
   D:00B8H         PUBLIC        IP
-  C:0B0BH         PUBLIC        _selectOutput
+  C:0B13H         PUBLIC        _selectOutput
   D:00D8H         PUBLIC        CCON
   D:0098H         PUBLIC        SCON
   D:0089H         PUBLIC        TMOD
@@ -947,48 +951,48 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   D:008CH         PUBLIC        TH0
   D:008AH         PUBLIC        TL0
   B:0088H.4       PUBLIC        TR0
-  C:0AB2H         PUBLIC        LedBuzzInit
-  C:0B5EH         PUBLIC        _delay_us
-  C:0B1FH         PUBLIC        timer0_init
+  C:0AD0H         PUBLIC        LedBuzzInit
+  C:0B66H         PUBLIC        _delay_us
+  C:0B27H         PUBLIC        timer0_init
   D:00D0H         PUBLIC        PSW
   -------         PROC          TIMER0_INIT
-  C:0B1FH         LINE#         9
-  C:0B1FH         LINE#         10
-  C:0B1FH         LINE#         11
-  C:0B22H         LINE#         12
-  C:0B25H         LINE#         13
-  C:0B28H         LINE#         14
-  C:0B2BH         LINE#         15
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 17
+  C:0B27H         LINE#         9
+  C:0B27H         LINE#         10
+  C:0B27H         LINE#         11
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 17
 
 
-  C:0B2DH         LINE#         16
-  C:0B2FH         LINE#         17
-  C:0B31H         LINE#         18
+  C:0B2AH         LINE#         12
+  C:0B2DH         LINE#         13
+  C:0B30H         LINE#         14
+  C:0B33H         LINE#         15
+  C:0B35H         LINE#         16
+  C:0B37H         LINE#         17
+  C:0B39H         LINE#         18
   -------         ENDPROC       TIMER0_INIT
   -------         PROC          _SELECTOUTPUT
   D:0006H         SYMBOL        outputNumber
-  C:0B0BH         LINE#         21
-  C:0B0BH         LINE#         22
-  C:0B0BH         LINE#         23
-  C:0B0EH         LINE#         24
-  C:0B1EH         LINE#         25
+  C:0B13H         LINE#         21
+  C:0B13H         LINE#         22
+  C:0B13H         LINE#         23
+  C:0B16H         LINE#         24
+  C:0B26H         LINE#         25
   -------         ENDPROC       _SELECTOUTPUT
   -------         PROC          LEDBUZZINIT
-  C:0AB2H         LINE#         27
-  C:0AB2H         LINE#         28
-  C:0AB2H         LINE#         29
-  C:0AB9H         LINE#         30
-  C:0ABCH         LINE#         31
-  C:0AC2H         LINE#         32
-  C:0AC5H         LINE#         33
+  C:0AD0H         LINE#         27
+  C:0AD0H         LINE#         28
+  C:0AD0H         LINE#         29
+  C:0AD7H         LINE#         30
+  C:0ADAH         LINE#         31
+  C:0AE0H         LINE#         32
+  C:0AE3H         LINE#         33
   -------         ENDPROC       LEDBUZZINIT
   -------         PROC          _DELAY_US
   D:0006H         SYMBOL        us
-  C:0B5EH         LINE#         36
-  C:0B5EH         LINE#         37
-  C:0B5EH         LINE#         38
-  C:0B68H         LINE#         39
+  C:0B66H         LINE#         36
+  C:0B66H         LINE#         37
+  C:0B66H         LINE#         38
+  C:0B70H         LINE#         39
   -------         ENDPROC       _DELAY_US
   -------         ENDMOD        INIT
 
@@ -1015,16 +1019,16 @@ SYMBOL TABLE OF MODULE:  .\Objects\ai编程测试_13届省赛 (MAIN)
   C:02CBH         PUBLIC        ?C?IMUL
   -------         ENDMOD        ?C?IMUL
 
+BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/22/2023  21:14:25  PAGE 18
+
+
   -------         MODULE        ?C?UIDIV
   C:02DDH         PUBLIC        ?C?UIDIV
   -------         ENDMOD        ?C?UIDIV
-
-BL51 BANKED LINKER/LOCATER V6.22.2.0                                                  03/04/2023  17:29:46  PAGE 18
-
 
   -------         MODULE        ?C?LNEG
   C:0332H         PUBLIC        ?C?LNEG
   -------         ENDMOD        ?C?LNEG
 
-Program Size: data=89.7 xdata=0 code=2923
+Program Size: data=89.7 xdata=0 code=2931
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

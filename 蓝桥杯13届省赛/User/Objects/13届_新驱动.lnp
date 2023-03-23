@@ -1,0 +1,8 @@
+".\Objects\main.obj",
+".\Objects\led.obj",
+".\Objects\key.obj",
+".\Objects\ds1302.obj",
+".\Objects\onewire.obj",
+".\Objects\init.obj" 
+TO ".\Objects\13届_新驱动" 
+PRINT(".\Listings\13届_新驱动.m51") RAMSIZE(256) 

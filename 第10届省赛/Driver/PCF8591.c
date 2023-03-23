@@ -10,33 +10,33 @@ unsigned char PCF8591_ADC()
 {
 	unsigned char AD_Buf = 0;
 	
-	IIC_Start();
-	IIC_SendByte(0x90);
-	IIC_WaitAck();
-	IIC_SendByte(0x03);
-	IIC_WaitAck();	
+	I2CStart();
+	I2CSendByte(0x90);
+	I2CWaitAck();
+	I2CSendByte(0x03);
+	I2CWaitAck();	
 	
-	IIC_Start();
-	IIC_SendByte(0x91);
-	IIC_WaitAck();
+	I2CStart();
+	I2CSendByte(0x91);
+	I2CWaitAck();
 
-	AD_Buf = IIC_RecByte();
-	IIC_SendAck(1);
-	IIC_Stop();
+	AD_Buf = I2CReceiveByte();
+	I2CSendAck(1);
+	I2CStop();
 	
 	return AD_Buf;
 }
 
 void PCF8591DAC(unsigned char dat)
 {
-	IIC_Start();
-	IIC_SendByte(0x90);
-	IIC_WaitAck();
-	IIC_SendByte(0x40);
-	IIC_WaitAck();
-	IIC_SendByte(dat);
-	IIC_WaitAck();
-	IIC_Stop();	
+	I2CStart();
+	I2CSendByte(0x90);
+	I2CWaitAck();
+	I2CSendByte(0x40);
+	I2CWaitAck();
+	I2CSendByte(dat);
+	I2CWaitAck();
+	I2CStop();	
 }
 
 

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              03/20/2023 21:10:14 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              03/22/2023 21:46:58 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52   2              }
   53   1              
   54   1              if(cnt>=550)
-C51 COMPILER V9.60.0.0   MAIN                                                              03/20/2023 21:10:14 PAGE 2   
+C51 COMPILER V9.60.0.0   MAIN                                                              03/22/2023 21:46:58 PAGE 2   
 
   55   1              {
   56   2                      NE555_Freq = NE555_Timer_Cnt;

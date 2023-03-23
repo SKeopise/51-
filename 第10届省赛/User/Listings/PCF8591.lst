@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   PCF8591                                                           03/20/2023 20:56:58 PAGE 1   
+C51 COMPILER V9.60.0.0   PCF8591                                                           03/22/2023 21:46:58 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE PCF8591
@@ -20,33 +20,33 @@ line level    source
   10          {
   11   1              unsigned char AD_Buf = 0;
   12   1              
-  13   1              IIC_Start();
-  14   1              IIC_SendByte(0x90);
-  15   1              IIC_WaitAck();
-  16   1              IIC_SendByte(0x03);
-  17   1              IIC_WaitAck();  
+  13   1              I2CStart();
+  14   1              I2CSendByte(0x90);
+  15   1              I2CWaitAck();
+  16   1              I2CSendByte(0x03);
+  17   1              I2CWaitAck();   
   18   1              
-  19   1              IIC_Start();
-  20   1              IIC_SendByte(0x91);
-  21   1              IIC_WaitAck();
+  19   1              I2CStart();
+  20   1              I2CSendByte(0x91);
+  21   1              I2CWaitAck();
   22   1      
-  23   1              AD_Buf = IIC_RecByte();
-  24   1              IIC_SendAck(1);
-  25   1              IIC_Stop();
+  23   1              AD_Buf = I2CReceiveByte();
+  24   1              I2CSendAck(1);
+  25   1              I2CStop();
   26   1              
   27   1              return AD_Buf;
   28   1      }
   29          
   30          void PCF8591DAC(unsigned char dat)
   31          {
-  32   1              IIC_Start();
-  33   1              IIC_SendByte(0x90);
-  34   1              IIC_WaitAck();
-  35   1              IIC_SendByte(0x40);
-  36   1              IIC_WaitAck();
-  37   1              IIC_SendByte(dat);
-  38   1              IIC_WaitAck();
-  39   1              IIC_Stop();     
+  32   1              I2CStart();
+  33   1              I2CSendByte(0x90);
+  34   1              I2CWaitAck();
+  35   1              I2CSendByte(0x40);
+  36   1              I2CWaitAck();
+  37   1              I2CSendByte(dat);
+  38   1              I2CWaitAck();
+  39   1              I2CStop();      
   40   1      }
   41          
   42          
@@ -62,7 +62,7 @@ line level    source
   52          
   53          
   54          
-C51 COMPILER V9.60.0.0   PCF8591                                                           03/20/2023 20:56:58 PAGE 2   
+C51 COMPILER V9.60.0.0   PCF8591                                                           03/22/2023 21:46:58 PAGE 2   
 
   55          
   56          

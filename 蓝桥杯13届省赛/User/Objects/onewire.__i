@@ -1,1 +1,0 @@
-"..\System\onewire.c" OPTIMIZE (8,SPEED) BROWSE INCDIR(..\User;..\System;..\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\onewire.lst) OBJECT(.\Objects\onewire.obj)

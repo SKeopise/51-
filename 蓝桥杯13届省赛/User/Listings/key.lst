@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   KEY                                                               03/04/2023 17:16:16 PAGE 1   
+C51 COMPILER V9.60.0.0   KEY                                                               03/22/2023 21:14:48 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
@@ -62,7 +62,7 @@ line level    source
   52   3                              Tparm--;
   53   3                      }
   54   2                      else if(keyflag == 1)
-C51 COMPILER V9.60.0.0   KEY                                                               03/04/2023 17:16:16 PAGE 2   
+C51 COMPILER V9.60.0.0   KEY                                                               03/22/2023 21:14:48 PAGE 2   
 
   55   2                      {
   56   3                              TimeMod = 1;
@@ -126,7 +126,7 @@ line level    source
  114   1              Key_Buf[keyout][1] = (Key_Buf[keyout][1] << 1) | KEY_IN_1;
  115   1              Key_Buf[keyout][2] = (Key_Buf[keyout][2] << 1) | KEY_IN_2;
  116   1              Key_Buf[keyout][3] = (Key_Buf[keyout][3] << 1) | KEY_IN_3;
-C51 COMPILER V9.60.0.0   KEY                                                               03/04/2023 17:16:16 PAGE 3   
+C51 COMPILER V9.60.0.0   KEY                                                               03/22/2023 21:14:48 PAGE 3   
 
  117   1              
  118   1              for(i=0;i<4;i++)

@@ -1,0 +1,9 @@
+".\Objects\main.obj",
+".\Objects\led.obj",
+".\Objects\key.obj",
+".\Objects\PCF8591.obj",
+".\Objects\iic.obj",
+".\Objects\NE555.obj",
+".\Objects\init.obj" 
+TO ".\Objects\第10届省赛_新驱动" 
+PRINT(".\Listings\第10届省赛_新驱动.m51") RAMSIZE(256) 

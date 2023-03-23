@@ -1,5 +1,12 @@
-#include "ds1302.h"  									
+/*	# 	DS1302代码片段说明
+	1. 	本文件夹中提供的驱动代码供参赛选手完成程序设计参考。
+	2. 	参赛选手可以自行编写相关代码或以该代码为基础，根据所选单片机类型、运行速度和试题
+		中对单片机时钟频率的要求，进行代码调试和修改。
+*/								
 
+//
+
+#include "ds1302.h"
 
 unsigned char code Ds1302_Write_ADDR[7] = {0x80,0x82,0x84,0x86,0x88,0x8A,0x8C};         //写入数据寄存器地址
 unsigned char code Ds1302_Read_ADDR[7] = {0x81,0x83,0x85,0x87,0x89,0x8B,0x8D};           //读取数据寄存器地址
@@ -28,7 +35,6 @@ void Ds1302_Read()           //读取函数，调用时将DS1302中的数据存�
 
 
 
-//д�ֽ�
 void Write_Ds1302(unsigned  char temp) 
 {
 	unsigned char i;
@@ -41,7 +47,7 @@ void Write_Ds1302(unsigned  char temp)
 	}
 }   
 
-//��DS1302�Ĵ���д������
+//
 void Write_Ds1302_Byte( unsigned char address,unsigned char dat )     
 {
  	RST=0;	_nop_();
@@ -52,8 +58,8 @@ void Write_Ds1302_Byte( unsigned char address,unsigned char dat )
  	RST=0; 
 }
 
-//��DS1302�Ĵ�����������
-unsigned char Read_Ds1302_Byte( unsigned char address )
+//
+unsigned char Read_Ds1302_Byte ( unsigned char address )
 {
  	unsigned char i,temp=0x00;
  	RST=0;	_nop_();
