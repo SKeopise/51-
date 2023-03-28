@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SONIC                                                             03/09/2023 17:33:35 PAGE 1   
+C51 COMPILER V9.60.0.0   SONIC                                                             03/13/2023 13:34:15 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SONIC
@@ -62,7 +62,7 @@ line level    source
   52   2                      Sonic_Time = TH1;
   53   2                      Sonic_Time = (Sonic_Time << 8) | TL1;
   54   2                      Sonic_Dist = Sonic_Time*0.017;
-C51 COMPILER V9.60.0.0   SONIC                                                             03/09/2023 17:33:35 PAGE 2   
+C51 COMPILER V9.60.0.0   SONIC                                                             03/13/2023 13:34:15 PAGE 2   
 
   55   2                      if((Door_Mod == 0)&&(Door_Open != 1))
   56   2                      {

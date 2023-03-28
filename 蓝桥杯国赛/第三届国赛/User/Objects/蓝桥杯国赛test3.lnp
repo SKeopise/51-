@@ -1,0 +1,10 @@
+".\Objects\main.obj",
+".\Objects\led.obj",
+".\Objects\key.obj",
+".\Objects\EEPROM.obj",
+".\Objects\sonic.obj",
+".\Objects\ds1302.obj",
+".\Objects\iic.obj",
+".\Objects\init.obj" 
+TO ".\Objects\蓝桥杯国赛test3" 
+PRINT(".\Listings\蓝桥杯国赛test3.m51") RAMSIZE(256) 

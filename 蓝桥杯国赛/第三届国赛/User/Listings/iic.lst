@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   IIC                                                               03/09/2023 17:33:35 PAGE 1   
+C51 COMPILER V9.60.0.0   IIC                                                               03/13/2023 13:34:15 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE IIC
@@ -62,7 +62,7 @@ line level    source
   52          //    IIC_Delay(DELAY_TIME);
   53          //    SCL = 0; 
   54          //    SDA = 1;
-C51 COMPILER V9.60.0.0   IIC                                                               03/09/2023 17:33:35 PAGE 2   
+C51 COMPILER V9.60.0.0   IIC                                                               03/13/2023 13:34:15 PAGE 2   
 
   55          //    IIC_Delay(DELAY_TIME);
   56          //}

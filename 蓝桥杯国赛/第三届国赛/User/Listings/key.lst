@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   KEY                                                               03/09/2023 17:33:35 PAGE 1   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:34:15 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
@@ -62,7 +62,7 @@ line level    source
   51   2                      {
   52   3                              Password_Mode = 0;
   53   3                              PasswordBuffReset();
-C51 COMPILER V9.60.0.0   KEY                                                               03/09/2023 17:33:35 PAGE 2   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:34:15 PAGE 2   
 
   54   3                      }               
   55   2              }
@@ -126,7 +126,7 @@ line level    source
  113          void KeyDriver()
  114          {
  115   1              unsigned char i,j;
-C51 COMPILER V9.60.0.0   KEY                                                               03/09/2023 17:33:35 PAGE 3   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:34:15 PAGE 3   
 
  116   1              static unsigned char backup[4][4] = {
  117   1                      {1,1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}
@@ -190,7 +190,7 @@ line level    source
  175   2                      case 1: KEY_OUT_1 = 0; KEY_OUT_0 = 1; break;
  176   2                      case 2: KEY_OUT_2 = 0; KEY_OUT_1 = 1; break;
  177   2                      case 3: KEY_OUT_3 = 0; KEY_OUT_2 = 1; break;
-C51 COMPILER V9.60.0.0   KEY                                                               03/09/2023 17:33:35 PAGE 4   
+C51 COMPILER V9.60.0.0   KEY                                                               03/13/2023 13:34:15 PAGE 4   
 
  178   2                      default: break;
  179   2              }
