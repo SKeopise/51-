@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              03/28/2023 17:40:55 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              03/28/2023 18:47:26 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   52   3                              {
   53   4                                      if(flag_200ms == 1)
   54   4                                      {
-C51 COMPILER V9.60.0.0   MAIN                                                              03/28/2023 17:40:55 PAGE 2   
+C51 COMPILER V9.60.0.0   MAIN                                                              03/28/2023 18:47:26 PAGE 2   
 
   55   5                                              flag_200ms = 0;
   56   5                                      }
@@ -126,7 +126,7 @@ line level    source
  114   1              //定义一个缓存数组，用于存放TimerData的数据
  115   1              unsigned char Timer_Data_Buff[3];
  116   1              //将TimerData的数据由bcd码转为10进制数后再转存到Timer_Data_Buff数组中
-C51 COMPILER V9.60.0.0   MAIN                                                              03/28/2023 17:40:55 PAGE 3   
+C51 COMPILER V9.60.0.0   MAIN                                                              03/28/2023 18:47:26 PAGE 3   
 
  117   1              Timer_Data_Buff[2] = (TimerData[2]>>4)*10+(TimerData[2]&0x0F);
  118   1              Timer_Data_Buff[1] = (TimerData[1]>>4)*10+(TimerData[1]&0x0F);

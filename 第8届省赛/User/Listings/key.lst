@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 17:40:55 PAGE 1   
+C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 18:49:20 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
@@ -13,313 +13,289 @@ line level    source
    3          
    4          
    5          
-   6          unsigned char code Key_Map[4][4] = {
-   7                  {'7','0','0','0'},
-   8                  {'6','0','0','0'},
-   9                  {'5','0','0','0'},
-  10                  {'4','0','0','0'},      
-  11          };
+   6          unsigned char code Key_Map[4] = {'7','6','5','4'};
+   7          
+   8          unsigned char Key_Sta[4] = {1,1,1,1};
+   9          
+  10          
+  11          
   12          
-  13          unsigned char Key_Sta[4][4] = {
-  14                  {1,1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}
-  15          };
-  16          
+  13          unsigned char Clock_Data_Set = 0;
+  14          unsigned char Clock_Warring_Time_Set = 0;
+  15          
+  16          unsigned char Timer_Warring[3] = {0,0,0};
   17          
-  18          
+  18          bit Temp_Show = 0;
   19          
-  20          unsigned char Clock_Data_Set = 0;
-  21          unsigned char Clock_Warring_Time_Set = 0;
+  20          
+  21          
   22          
-  23          unsigned char Timer_Warring[3] = {0,0,0};
+  23          
   24          
-  25          bit Temp_Show = 0;
-  26          
-  27          
-  28          
-  29          
-  30          
-  31          
-  32          
-  33          void KeyAction0(unsigned char keycode)
-  34          {
-  35   1              if(keycode == '7')
-  36   1              {
-  37   2                      DataSetSwitch();
-  38   2              }
-  39   1              else if(keycode == '6')
-  40   1              {
-  41   2                      WarringTimeSetSwitch();
-  42   2              }
-  43   1              else if(keycode == '5')
-  44   1              {
-  45   2                      DataChange(0);
-  46   2              }
-  47   1              else if(keycode == '4')
-  48   1              {
-  49   2                      DataChange(1);
-  50   2                      if((Clock_Data_Set == 0) && (Clock_Warring_Time_Set == 0)) //显示温度
-  51   2                      {
-  52   3                              Temp_Show = 1;
-  53   3                      }
-  54   2              }       
-C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 17:40:55 PAGE 2   
+  25          
+  26          void KeyAction0(unsigned char keycode)
+  27          {
+  28   1              if(keycode == '7')
+  29   1              {
+  30   2                      DataSetSwitch();
+  31   2              }
+  32   1              else if(keycode == '6')
+  33   1              {
+  34   2                      WarringTimeSetSwitch();
+  35   2              }
+  36   1              else if(keycode == '5')
+  37   1              {
+  38   2                      DataChange(0);
+  39   2              }
+  40   1              else if(keycode == '4')
+  41   1              {
+  42   2                      DataChange(1);
+  43   2                      if((Clock_Data_Set == 0) && (Clock_Warring_Time_Set == 0)) //显示温度
+  44   2                      {
+  45   3                              Temp_Show = 1;
+  46   3                      }
+  47   2              }       
+  48   1              if(Flag_Warring_Clock == 1)
+  49   1              {
+  50   2                      Flag_Warring_Clock = 0;
+  51   2              }
+  52   1      }
+  53          
+  54          void KeyAction1(unsigned char keycode)
+C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 18:49:20 PAGE 2   
 
-  55   1              if(Flag_Warring_Clock == 1)
-  56   1              {
-  57   2                      Flag_Warring_Clock = 0;
-  58   2              }
-  59   1      }
-  60          
-  61          void KeyAction1(unsigned char keycode)
-  62          {
-  63   1              if(keycode == '4')
-  64   1              {
-  65   2                      Temp_Show = 0;
-  66   2              }
-  67   1              
-  68   1      }
-  69          
-  70          
-  71          void KeyDriver()
-  72          {
-  73   1              unsigned char i,j;
-  74   1              static unsigned char Key_Backup[4][4] = {
-  75   1                      {1,1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}
-  76   1              };
-  77   1              
-  78   1              for(i=0;i<4;i++)
-  79   1              {
-  80   2                      for(j=0;j<4;j++)
-  81   2                      {
-  82   3                              if(Key_Backup[i][j] != Key_Sta[i][j])
-  83   3                              {
-  84   4                                      if(Key_Backup[i][j] != 0)
-  85   4                                      {
-  86   5                                              KeyAction0(Key_Map[i][j]);
-  87   5                                      }
-  88   4                                      else
-  89   4                                      {
-  90   5                                              KeyAction1(Key_Map[i][j]);
-  91   5                                      }
-  92   4                                      
-  93   4                                      Key_Backup[i][j] = Key_Sta[i][j]; 
-  94   4                              }
-  95   3                      }
-  96   2              }
-  97   1      }
-  98          
-  99          
- 100          
- 101          
- 102          void KeyScan()
- 103          {
- 104   1              unsigned char i =0;
- 105   1              static unsigned char Key_Out = 0;
- 106   1              static unsigned char Key_Buff[4][4] = {
- 107   1                      {0xFF,0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF,0xFF},
- 108   1                      {0xFF,0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF,0xFF}
- 109   1              };
- 110   1              
- 111   1              Key_Buff[Key_Out][0] = (Key_Buff[Key_Out][0] << 1) | KEY_IN_0;
- 112   1              Key_Buff[Key_Out][1] = (Key_Buff[Key_Out][1] << 1) | KEY_IN_1;
- 113   1              Key_Buff[Key_Out][2] = (Key_Buff[Key_Out][2] << 1) | KEY_IN_2;
- 114   1              Key_Buff[Key_Out][3] = (Key_Buff[Key_Out][3] << 1) | KEY_IN_3;
- 115   1      
- 116   1              for(i=0;i<4;i++)
-C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 17:40:55 PAGE 3   
+  55          {
+  56   1              if(keycode == '4')
+  57   1              {
+  58   2                      Temp_Show = 0;
+  59   2              }
+  60   1              
+  61   1      }
+  62          
+  63          
+  64          void KeyDriver()
+  65          {
+  66   1              unsigned char i;
+  67   1              static unsigned char Key_Backup[4] = {1,1,1,1};
+  68   1              
+  69   1              for(i=0;i<4;i++)
+  70   1              {
+  71   2                      if(Key_Backup[i] != Key_Sta[i])
+  72   2                      {
+  73   3                              if(Key_Backup[i] != 0)
+  74   3                              {
+  75   4                                      KeyAction0(Key_Map[i]);
+  76   4                              }
+  77   3                              else
+  78   3                              {
+  79   4                                      KeyAction1(Key_Map[i]);
+  80   4                              }
+  81   3                              
+  82   3                              Key_Backup[i] = Key_Sta[i]; 
+  83   3                      }
+  84   2              }
+  85   1      }
+  86          
+  87          
+  88          
+  89          
+  90          void KeyScan()
+  91          {
+  92   1              unsigned char i =0;
+  93   1              static unsigned char Key_Out = 0;
+  94   1              static unsigned char Key_Buff[4]= {0xFF,0xFF,0xFF,0xFF};
+  95   1              
+  96   1      
+  97   1              switch(Key_Out)
+  98   1              {
+  99   2                      case 0: Key_Buff[0] = (Key_Buff[0] << 1) | KEY_OUT_0;break;
+ 100   2                      case 1: Key_Buff[1] = (Key_Buff[1] << 1) | KEY_OUT_1;break;
+ 101   2                      case 2: Key_Buff[2] = (Key_Buff[2] << 1) | KEY_OUT_2;break;
+ 102   2                      case 3: Key_Buff[3] = (Key_Buff[3] << 1) | KEY_OUT_3;break;
+ 103   2                      default: break;
+ 104   2              }
+ 105   1      
+ 106   1              if((Key_Buff[Key_Out] & 0x0F) == 0x00)
+ 107   1              {
+ 108   2                      Key_Sta[Key_Out] = 0;
+ 109   2              }
+ 110   1              else if((Key_Buff[Key_Out] & 0x0F) == 0x0F)
+ 111   1              {
+ 112   2                      Key_Sta[Key_Out] = 1;
+ 113   2              }
+ 114   1              
+ 115   1              Key_Out++;
+ 116   1              if(Key_Out > 3)
+C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 18:49:20 PAGE 3   
 
  117   1              {
- 118   2                      if((Key_Buff[Key_Out][i] & 0x0F) == 0x00)
- 119   2                      {
- 120   3                              Key_Sta[Key_Out][i] = 0;
- 121   3                      }
- 122   2                      else if((Key_Buff[Key_Out][i] & 0x0F) == 0x0F)
- 123   2                      {
- 124   3                              Key_Sta[Key_Out][i] = 1;
- 125   3                      }
- 126   2              }
- 127   1              
- 128   1              Key_Out++;
- 129   1              if(Key_Out > 3)
- 130   1              {
- 131   2                      Key_Out = 0;
- 132   2              }
- 133   1              
- 134   1              switch(Key_Out)
- 135   1              {
- 136   2                      case 0: KEY_OUT_0 = 0; KEY_OUT_3 = 1; break;
- 137   2                      case 1: KEY_OUT_1 = 0; KEY_OUT_0 = 1; break;
- 138   2                      case 2: KEY_OUT_2 = 0; KEY_OUT_1 = 1; break;
- 139   2                      case 3: KEY_OUT_3 = 0; KEY_OUT_2 = 1; break;
- 140   2                      default: break;
- 141   2              }
- 142   1      }
- 143          
- 144          
- 145          
- 146          
- 147          void TimerWarringTimeChange(unsigned char i,unsigned char j)
- 148          {
- 149   1              if(j == 0)
+ 118   2                      Key_Out = 0;
+ 119   2              }
+ 120   1      }
+ 121          
+ 122          
+ 123          
+ 124          
+ 125          void TimerWarringTimeChange(unsigned char i,unsigned char j)
+ 126          {
+ 127   1              if(j == 0)
+ 128   1              {
+ 129   2                      Timer_Warring[i]++;
+ 130   2              }
+ 131   1              else if(j == 1)
+ 132   1              {
+ 133   2                      if(Timer_Warring[i] > 0)
+ 134   2                      {
+ 135   3                              Timer_Warring[i]--;
+ 136   3                      }
+ 137   2                      else
+ 138   2                      {
+ 139   3                              if(i == 2)
+ 140   3                              {
+ 141   4                                      Timer_Warring[i] = 23;
+ 142   4                              }
+ 143   3                              else 
+ 144   3                              {
+ 145   4                                      Timer_Warring[i] = 59;
+ 146   4                              }
+ 147   3                      }
+ 148   2              }
+ 149   1              if(i == 2)
  150   1              {
- 151   2                      Timer_Warring[i]++;
- 152   2              }
- 153   1              else if(j == 1)
- 154   1              {
- 155   2                      if(Timer_Warring[i] > 0)
- 156   2                      {
- 157   3                              Timer_Warring[i]--;
- 158   3                      }
- 159   2                      else
- 160   2                      {
- 161   3                              if(i == 2)
- 162   3                              {
- 163   4                                      Timer_Warring[i] = 23;
- 164   4                              }
- 165   3                              else 
- 166   3                              {
- 167   4                                      Timer_Warring[i] = 59;
- 168   4                              }
- 169   3                      }
- 170   2              }
- 171   1              if(i == 2)
- 172   1              {
- 173   2                      if(Timer_Warring[i] > 23)
- 174   2                      {
- 175   3                              Timer_Warring[i] = 0;
- 176   3                      }
- 177   2              }
- 178   1              else
-C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 17:40:55 PAGE 4   
+ 151   2                      if(Timer_Warring[i] > 23)
+ 152   2                      {
+ 153   3                              Timer_Warring[i] = 0;
+ 154   3                      }
+ 155   2              }
+ 156   1              else
+ 157   1              {
+ 158   2                      if(Timer_Warring[i] > 59)
+ 159   2                      {
+ 160   3                              Timer_Warring[i] = 0;
+ 161   3                      }               
+ 162   2              }
+ 163   1      }
+ 164          
+ 165          
+ 166          
+ 167          
+ 168          
+ 169          void TimerDataChange(unsigned char i,unsigned char j)
+ 170          {
+ 171   1              TimerData[i] = (TimerData[i]>>4)*10+(TimerData[i]&0x0F);
+ 172   1              if(j == 0)
+ 173   1              {
+ 174   2                      TimerData[i]++;
+ 175   2              }
+ 176   1              else
+ 177   1              {
+ 178   2                      if(TimerData[i] > 0)
+C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 18:49:20 PAGE 4   
 
- 179   1              {
- 180   2                      if(Timer_Warring[i] > 59)
- 181   2                      {
- 182   3                              Timer_Warring[i] = 0;
- 183   3                      }               
- 184   2              }
- 185   1      }
- 186          
- 187          
- 188          
- 189          
- 190          
- 191          void TimerDataChange(unsigned char i,unsigned char j)
- 192          {
- 193   1              TimerData[i] = (TimerData[i]>>4)*10+(TimerData[i]&0x0F);
- 194   1              if(j == 0)
+ 179   2                      {
+ 180   3                              TimerData[i]--;
+ 181   3                      }
+ 182   2                      else
+ 183   2                      {
+ 184   3                              if(i == 2)
+ 185   3                              {
+ 186   4                                      TimerData[i] = 23;
+ 187   4                              }
+ 188   3                              else 
+ 189   3                              {
+ 190   4                                      TimerData[i] = 59;
+ 191   4                              }
+ 192   3                      }
+ 193   2              }
+ 194   1              if(i == 2)
  195   1              {
- 196   2                      TimerData[i]++;
- 197   2              }
- 198   1              else
- 199   1              {
- 200   2                      if(TimerData[i] > 0)
- 201   2                      {
- 202   3                              TimerData[i]--;
- 203   3                      }
- 204   2                      else
- 205   2                      {
- 206   3                              if(i == 2)
- 207   3                              {
- 208   4                                      TimerData[i] = 23;
- 209   4                              }
- 210   3                              else 
- 211   3                              {
- 212   4                                      TimerData[i] = 59;
- 213   4                              }
- 214   3                      }
- 215   2              }
- 216   1              if(i == 2)
- 217   1              {
- 218   2                      if(TimerData[i] > 23)
- 219   2                      {
- 220   3                              TimerData[i] = 0;
- 221   3                      }
- 222   2              }
- 223   1              else
- 224   1              {
- 225   2                      if(TimerData[i] > 59)
- 226   2                      {
- 227   3                              TimerData[i] = 0;
- 228   3                      }               
- 229   2              }
- 230   1              TimerData[i] = (((TimerData[i]/10)%10)<<4) | ((TimerData[i]%10)&0x0F);  
- 231   1              Write_Ds1302_Byte(DS1302_Write_Addr[2],TimerData[2]);
- 232   1              Write_Ds1302_Byte(DS1302_Write_Addr[1],TimerData[1]);
- 233   1              Write_Ds1302_Byte(DS1302_Write_Addr[0],TimerData[0]);
- 234   1      }       
- 235          
- 236          
- 237          
- 238          void DataChange(bit i)
- 239          {
- 240   1              switch(Clock_Data_Set)
-C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 17:40:55 PAGE 5   
+ 196   2                      if(TimerData[i] > 23)
+ 197   2                      {
+ 198   3                              TimerData[i] = 0;
+ 199   3                      }
+ 200   2              }
+ 201   1              else
+ 202   1              {
+ 203   2                      if(TimerData[i] > 59)
+ 204   2                      {
+ 205   3                              TimerData[i] = 0;
+ 206   3                      }               
+ 207   2              }
+ 208   1              TimerData[i] = (((TimerData[i]/10)%10)<<4) | ((TimerData[i]%10)&0x0F);  
+ 209   1              Write_Ds1302_Byte(DS1302_Write_Addr[2],TimerData[2]);
+ 210   1              Write_Ds1302_Byte(DS1302_Write_Addr[1],TimerData[1]);
+ 211   1              Write_Ds1302_Byte(DS1302_Write_Addr[0],TimerData[0]);
+ 212   1      }       
+ 213          
+ 214          
+ 215          
+ 216          void DataChange(bit i)
+ 217          {
+ 218   1              switch(Clock_Data_Set)
+ 219   1              {
+ 220   2                      case 1: TimerDataChange(2,i); break;
+ 221   2                      case 2: TimerDataChange(1,i); break;
+ 222   2                      case 3: TimerDataChange(0,i); break;    
+ 223   2                      default: break;
+ 224   2              }
+ 225   1              switch(Clock_Warring_Time_Set)
+ 226   1              {
+ 227   2                      case 1: TimerWarringTimeChange(2,i); break;
+ 228   2                      case 2: TimerWarringTimeChange(1,i); break;
+ 229   2                      case 3: TimerWarringTimeChange(0,i); break;
+ 230   2                      default: break;
+ 231   2              }       
+ 232   1      }
+ 233          
+ 234          
+ 235          void DataSetSwitch()
+ 236          {
+ 237   1              if(Clock_Warring_Time_Set == 0)
+ 238   1              {
+ 239   2                      if(Clock_Data_Set == 0)
+ 240   2                      {
+C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 18:49:20 PAGE 5   
 
- 241   1              {
- 242   2                      case 1: TimerDataChange(2,i); break;
- 243   2                      case 2: TimerDataChange(1,i); break;
- 244   2                      case 3: TimerDataChange(0,i); break;    
- 245   2                      default: break;
- 246   2              }
- 247   1              switch(Clock_Warring_Time_Set)
- 248   1              {
- 249   2                      case 1: TimerWarringTimeChange(2,i); break;
- 250   2                      case 2: TimerWarringTimeChange(1,i); break;
- 251   2                      case 3: TimerWarringTimeChange(0,i); break;
- 252   2                      default: break;
- 253   2              }       
- 254   1      }
- 255          
- 256          
- 257          void DataSetSwitch()
- 258          {
- 259   1              if(Clock_Warring_Time_Set == 0)
- 260   1              {
- 261   2                      if(Clock_Data_Set == 0)
+ 241   3                              DS1302Stop();
+ 242   3                      }
+ 243   2                      Clock_Data_Set++;
+ 244   2                      if(Clock_Data_Set > 3)
+ 245   2                      {
+ 246   3                              Clock_Data_Set = 0;
+ 247   3                              DS1302Start();
+ 248   3                      }
+ 249   2              }       
+ 250   1      }
+ 251          
+ 252          void WarringTimeSetSwitch()
+ 253          {
+ 254   1              if(Clock_Data_Set == 0)
+ 255   1              {
+ 256   2                      if(Clock_Warring_Time_Set == 0)
+ 257   2                      {
+ 258   3                              DS1302Stop();
+ 259   3                      }
+ 260   2                      Clock_Warring_Time_Set++;
+ 261   2                      if(Clock_Warring_Time_Set > 3)
  262   2                      {
- 263   3                              DS1302Stop();
- 264   3                      }
- 265   2                      Clock_Data_Set++;
- 266   2                      if(Clock_Data_Set > 3)
- 267   2                      {
- 268   3                              Clock_Data_Set = 0;
- 269   3                              DS1302Start();
- 270   3                      }
- 271   2              }       
- 272   1      }
- 273          
- 274          void WarringTimeSetSwitch()
- 275          {
- 276   1              if(Clock_Data_Set == 0)
- 277   1              {
- 278   2                      if(Clock_Warring_Time_Set == 0)
- 279   2                      {
- 280   3                              DS1302Stop();
- 281   3                      }
- 282   2                      Clock_Warring_Time_Set++;
- 283   2                      if(Clock_Warring_Time_Set > 3)
- 284   2                      {
- 285   3                              Clock_Warring_Time_Set = 0;
- 286   3                              DS1302Start();
- 287   3                      }
- 288   2              }
- 289   1      }
- 290          
- 291          
- 292          
+ 263   3                              Clock_Warring_Time_Set = 0;
+ 264   3                              DS1302Start();
+ 265   3                      }
+ 266   2              }
+ 267   1      }
+ 268          
+ 269          
+ 270          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    904    ----
-   CONSTANT SIZE    =     16    ----
+   CODE SIZE        =    698    ----
+   CONSTANT SIZE    =      4    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =     54       3
+   DATA SIZE        =     18       3
    IDATA SIZE       =   ----    ----
    BIT SIZE         =      1       1
-C51 COMPILER V9.60.0.0   KEY                                                               03/28/2023 17:40:55 PAGE 6   
-
 END OF MODULE INFORMATION.
 
 
