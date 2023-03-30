@@ -1,9 +1,9 @@
-C51 COMPILER V9.60.0.0   LED                                                               03/28/2023 18:47:26 PAGE 1   
+C51 COMPILER V9.60.0.0   LED                                                               03/29/2023 11:01:15 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
 OBJECT MODULE PLACED IN .\Objects\led.obj
-COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\led.c OPTIMIZE(9,SPEED) BROWSE INCDIR(..\User;..\System;..
                     -\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\led.lst) OBJECT(.\Objects\led.obj)
 
 line level    source
@@ -62,7 +62,7 @@ line level    source
   52   1              HC138Set(4);
   53   1              HC138Set(0);
   54   1      }
-C51 COMPILER V9.60.0.0   LED                                                               03/28/2023 18:47:26 PAGE 2   
+C51 COMPILER V9.60.0.0   LED                                                               03/29/2023 11:01:15 PAGE 2   
 
   55          
   56          
@@ -126,7 +126,7 @@ line level    source
  114   1              
  115   1              Led_Buff[5] = 0xBF;
  116   1              
-C51 COMPILER V9.60.0.0   LED                                                               03/28/2023 18:47:26 PAGE 3   
+C51 COMPILER V9.60.0.0   LED                                                               03/29/2023 11:01:15 PAGE 3   
 
  117   1              if(Clock_Warring_Time_Set == 3)
  118   1              {
@@ -190,7 +190,7 @@ line level    source
  176   2                      {
  177   3                              Led_Buff[3] = Led_Number[TimerData[1]>>4];
  178   3                              Led_Buff[4] = Led_Number[TimerData[1]&0x0F];
-C51 COMPILER V9.60.0.0   LED                                                               03/28/2023 18:47:26 PAGE 4   
+C51 COMPILER V9.60.0.0   LED                                                               03/29/2023 11:01:15 PAGE 4   
 
  179   3                      }
  180   2                      else
@@ -254,7 +254,7 @@ line level    source
  238          
  239          
  240          
-C51 COMPILER V9.60.0.0   LED                                                               03/28/2023 18:47:26 PAGE 5   
+C51 COMPILER V9.60.0.0   LED                                                               03/29/2023 11:01:15 PAGE 5   
 
  241          
  242          
@@ -267,7 +267,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    501    ----
+   CODE SIZE        =    454    ----
    CONSTANT SIZE    =     11    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

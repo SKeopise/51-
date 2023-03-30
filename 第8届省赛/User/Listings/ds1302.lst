@@ -1,9 +1,9 @@
-C51 COMPILER V9.60.0.0   DS1302                                                            03/28/2023 18:47:26 PAGE 1   
+C51 COMPILER V9.60.0.0   DS1302                                                            03/29/2023 11:01:15 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DS1302
 OBJECT MODULE PLACED IN .\Objects\ds1302.obj
-COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\System\ds1302.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\System\ds1302.c OPTIMIZE(9,SPEED) BROWSE INCDIR(..\User;..\System
                     -;..\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\ds1302.lst) OBJECT(.\Objects\ds1302.obj)
 
 line level    source
@@ -62,7 +62,7 @@ line level    source
   51   2                      SCK = 0;
   52   2                      SDA = temp&0x01;
   53   2                      temp>>=1; 
-C51 COMPILER V9.60.0.0   DS1302                                                            03/28/2023 18:47:26 PAGE 2   
+C51 COMPILER V9.60.0.0   DS1302                                                            03/29/2023 11:01:15 PAGE 2   
 
   54   2                      SCK=1;
   55   2              }

@@ -1,0 +1,8 @@
+".\Objects\main.obj",
+".\Objects\key.obj",
+".\Objects\led.obj",
+".\Objects\ds1302.obj",
+".\Objects\onewire.obj",
+".\Objects\init.obj" 
+TO ".\Objects\第8届九级优化" 
+PRINT(".\Listings\第8届九级优化.m51") RAMSIZE(256) 

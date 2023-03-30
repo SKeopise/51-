@@ -1,0 +1,7 @@
+".\Objects\main.obj",
+".\Objects\key.obj",
+".\Objects\led.obj",
+".\Objects\onewire.obj",
+".\Objects\init.obj" 
+TO ".\Objects\第7届省赛" 
+PRINT(".\Listings\第7届省赛.m51") RAMSIZE(256) 

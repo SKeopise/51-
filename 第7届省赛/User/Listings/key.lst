@@ -1,0 +1,166 @@
+C51 COMPILER V9.60.0.0   KEY                                                               03/29/2023 22:06:11 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\key.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\key.c OPTIMIZE(9,SPEED) BROWSE INCDIR(..\User;..\System;..
+                    -\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) OBJECT(.\Objects\key.obj)
+
+line level    source
+
+   1          
+   2          #include "key.h"
+   3          
+   4          
+   5          
+   6          unsigned char code Key_Map[4] = {'7','6','5','4'};
+   7          
+   8          
+   9          unsigned char pdata Key_Sta[4] = {1,1,1,1};
+  10          
+  11          unsigned char xdata Mode_Buf = 0;
+  12          
+  13          bit Stop = 0;
+  14          
+  15          
+  16          
+  17          void KeyAction0(unsigned char keycode)
+  18          {
+  19   1              if(keycode == '7')
+  20   1              {       
+  21   2                      if(Mode == 4)
+  22   2                      {
+  23   3                              Mode = Mode_Buf;
+  24   3                      }
+  25   2                      else
+  26   2                      {
+  27   3                              Mode_Buf = Mode;
+  28   3                              Mode = 4;
+  29   3                      }
+  30   2              }
+  31   1              else if(keycode == '6')
+  32   1              {
+  33   2                      Stop = 1;
+  34   2              }
+  35   1              else if(keycode == '5')
+  36   1              {
+  37   2                      if(Mode != 4)
+  38   2                      {
+  39   3                              Stop = 1;
+  40   3                              if(TimeLast < 55)
+  41   3                              {
+  42   4                                      TimeLast = 60;
+  43   4                              }
+  44   3                              else if((TimeLast>=55) && (TimeLast<115))
+  45   3                              {
+  46   4                                      TimeLast = 120;
+  47   4                              }
+  48   3                              else
+  49   3                              {
+  50   4                                      TimeLast = 0;
+  51   4                              }
+  52   3                              Stop = 0;
+  53   3                      }
+  54   2              }
+C51 COMPILER V9.60.0.0   KEY                                                               03/29/2023 22:06:11 PAGE 2   
+
+  55   1              else if(keycode == '4')
+  56   1              {
+  57   2                      if(Mode != 4)
+  58   2                      {
+  59   3                              Mode++;
+  60   3                              if(Mode>3)
+  61   3                              {
+  62   4                                      Mode = 1;
+  63   4                              }
+  64   3                      }
+  65   2              }
+  66   1              
+  67   1      
+  68   1      }
+  69          
+  70          
+  71          
+  72          
+  73          
+  74          void KeyDriver()
+  75          {
+  76   1              unsigned char i = 0;
+  77   1              static unsigned char pdata Key_Backup[4] = {1,1,1,1};
+  78   1              
+  79   1              for(i=0;i<4;i++)
+  80   1              {
+  81   2                      if(Key_Backup[i] != Key_Sta[i])
+  82   2                      {
+  83   3                              if(Key_Backup[i] == 1)
+  84   3                              {
+  85   4                                      KeyAction0(Key_Map[i]);
+  86   4                              }
+  87   3                              
+  88   3                              Key_Backup[i] = Key_Sta[i];
+  89   3                      }
+  90   2              }
+  91   1      }
+  92          
+  93          
+  94          
+  95          void KeyScan()
+  96          {
+  97   1              static unsigned char Key_Out = 0;
+  98   1              static unsigned char Key_Buff[4] = {0xFF,0xFF,0xFF,0xFF};
+  99   1              
+ 100   1              switch(Key_Out)
+ 101   1              {
+ 102   2                      case 0: Key_Buff[0] = (Key_Buff[0] << 1) | KEY_OUT_0; break;
+ 103   2                      case 1: Key_Buff[1] = (Key_Buff[1] << 1) | KEY_OUT_1; break;
+ 104   2                      case 2: Key_Buff[2] = (Key_Buff[2] << 1) | KEY_OUT_2; break;
+ 105   2                      case 3: Key_Buff[3] = (Key_Buff[3] << 1) | KEY_OUT_3; break;
+ 106   2                      default: break;
+ 107   2              }
+ 108   1              
+ 109   1              if((Key_Buff[Key_Out]&0x0F) == 0X00)
+ 110   1              {
+ 111   2                      Key_Sta[Key_Out] = 0;
+ 112   2              }
+ 113   1              else if((Key_Buff[Key_Out]&0x0F) == 0X0F)
+ 114   1              {
+ 115   2                      Key_Sta[Key_Out] = 1;
+ 116   2              }
+C51 COMPILER V9.60.0.0   KEY                                                               03/29/2023 22:06:11 PAGE 3   
+
+ 117   1              
+ 118   1              Key_Out++;
+ 119   1              Key_Out &= 0x03;
+ 120   1      }
+ 121          
+ 122          
+ 123          
+ 124          
+ 125          
+ 126          
+ 127          
+ 128          
+ 129          
+ 130          
+ 131          
+ 132          
+ 133          
+ 134          
+ 135          
+ 136          
+ 137          
+ 138          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    288    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =      1    ----
+   PDATA SIZE       =      8    ----
+   DATA SIZE        =      5    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
