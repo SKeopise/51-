@@ -43,42 +43,23 @@ void LedMode()
 	
 	P0 = 0xFF;
 	if(DAC_Mode == 0)
-	{
-		HC138Y(4);
+	{		
 		LED0 = 0;
-		HC138Y(0);
 	}
-	else
-	{
-		HC138Y(4);
-		LED0 = 1;
-		HC138Y(0);		
-	}
-	
 	if(Show_Mode == 0)
 	{
-		HC138Y(4);
-		LED1 = 0;
-		LED2 = 1;
-		LED3 = 1;
-		HC138Y(0);			
+		LED1 = 0;		
 	}
 	else if(Show_Mode == 1)
 	{
-		HC138Y(4);
-		LED1 = 1;
 		LED2 = 0;
-		LED3 = 1;
-		HC138Y(0);		
 	}
 	else if(Show_Mode == 2)
 	{
-		HC138Y(4);
-		LED1 = 1;
-		LED2 = 1;
-		LED3 = 0;
-		HC138Y(0);		
+		LED3 = 0;				
 	}
+	HC138Y(4);
+	HC138Y(0);
 }
 
 void SmgShowMode()
@@ -137,9 +118,9 @@ void SmgDAC()
 	Led_Buff[3] = 0xFF;	
 	Led_Buff[4] = 0xFF;
 	
-	Led_Buff[5] = Led_Number[(DAC_Number/100)%10] & 0x7F;
-	Led_Buff[6] = Led_Number[(DAC_Number/10)%10];
-	Led_Buff[7] = Led_Number[DAC_Number%10];
+	Led_Buff[5] = Led_Number[(DAC_Number/1000)%10] & 0x7F;
+	Led_Buff[6] = Led_Number[(DAC_Number/100)%10];
+	Led_Buff[7] = Led_Number[(DAC_Number/10)%10];
 }
 
 

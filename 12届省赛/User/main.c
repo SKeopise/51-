@@ -26,8 +26,6 @@ void main()
 		ReadData();
 		
 		SmgShowMode();
-		
-		DAC_PCF8591(DAC);
 	}
 
 }
@@ -49,6 +47,7 @@ void Timer0_int() interrupt 1
 
 void ReadData()
 {
+	unsigned char DAC_Buf = 0;
 	if(flag750ms == 1)
 	{
 		flag750ms = 0;
@@ -66,7 +65,9 @@ void ReadData()
 		{
 			DAC = 0;
 		}
-		DAC_Number = (DAC/51)*100;
+		DAC_PCF8591(DAC);
+		DAC = (DAC/51)*1000;
+		DAC_Number = DAC;
 	}
 	else
 	{
@@ -80,9 +81,12 @@ void ReadData()
 		}
 		else
 		{
-			DAC = (((temp/100)*0.15) - 2)*53.125;
+			DAC = temp;
+			DAC = (((DAC/100)*0.15) - 2)*53.125;
 		}
-		DAC_Number = (DAC/53.125)*100;		
+		DAC_PCF8591(DAC);
+		DAC = (DAC/53.125)*1000;	
+		DAC_Number = DAC;
 	}
 }
 
