@@ -1,0 +1,253 @@
+C51 COMPILER V9.60.0.0   KEY                                                               04/01/2023 20:06:26 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\key.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..
+                    -\Driver;..\Conifg) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) OBJECT(.\Objects\key.obj)
+
+line level    source
+
+   1          #include "key.h"
+   2          
+   3          
+   4          
+   5          
+   6          unsigned char code Key_Map[4][4] = {
+   7              {'0','0','0','0'},
+   8              {'0','0','0','0'},
+   9              {'5','9','0','0'},
+  10              {'4','8','0','0'}
+  11          };
+  12          
+  13          unsigned char pdata Key_Sta[4][4] = {
+  14              {1,1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}
+  15          };
+  16          
+  17          
+  18          unsigned char Read_Timer_Parm = 2;
+  19          unsigned char Read_Timer_Parm_Buf = 2;
+  20          unsigned char Len_Parm = 20;
+  21          unsigned char Len_Parm_Buf = 20;
+  22          
+  23          bit Show_Mode = 0;
+  24          
+  25          unsigned char pdata Show_Data_Mode = 0;
+  26          bit Show_Parm_Mode = 0;
+  27          
+  28          bit Read_Lens_Mode = 0;
+  29          unsigned char Data_Save_Mode = 0;
+  30          
+  31          
+  32          
+  33          void KeyAction0(unsigned char keycode)
+  34          {
+  35   1          SmgShowInit();
+  36   1          if(keycode == '4')
+  37   1          {
+  38   2              MainShowModeChange();
+  39   2          }
+  40   1          else if(keycode == '5')
+  41   1          {
+  42   2              DataParmShowModeChange();
+  43   2          }
+  44   1          else if(keycode == '8')
+  45   1          {
+  46   2              SonicDataReadAndSaveModeChange();
+  47   2          }
+  48   1          else if(keycode == '9')
+  49   1          {
+  50   2              ParmDataChangeAndSave();
+  51   2          }
+  52   1      
+  53   1      }
+  54          
+C51 COMPILER V9.60.0.0   KEY                                                               04/01/2023 20:06:26 PAGE 2   
+
+  55          
+  56          
+  57          void KeyDriver()
+  58          {
+  59   1          unsigned char i,j;
+  60   1          static unsigned char pdata Key_Backup[4][4] = {
+  61   1              {1,1,1,1},{1,1,1,1},{1,1,1,1},{1,1,1,1}
+  62   1          };
+  63   1      
+  64   1          for(i=0;i<4;i++)
+  65   1          {
+  66   2              for(j=0;j<4;j++)
+  67   2              {
+  68   3                  if(Key_Backup[i][j] != Key_Sta[i][j])
+  69   3                  {
+  70   4                      if(Key_Backup[i][j] == 1)
+  71   4                      {
+  72   5                          KeyAction0(Key_Map[i][j]);
+  73   5                      }
+  74   4      
+  75   4                      Key_Backup[i][j] = Key_Sta[i][j];
+  76   4                  }
+  77   3              }
+  78   2          }
+  79   1      
+  80   1      }
+  81          
+  82          
+  83          
+  84          
+  85          
+  86          void KeyScan()
+  87          {
+  88   1          unsigned char i = 0;
+  89   1          static unsigned char Key_Out = 0;
+  90   1          static unsigned char Key_Buff[4][4] = {
+  91   1              {0xFF,0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF,0xFF},
+  92   1              {0xFF,0xFF,0xFF,0xFF},{0xFF,0xFF,0xFF,0xFF}
+  93   1          };
+  94   1      
+  95   1          Key_Buff[Key_Out][0] = (Key_Buff[Key_Out][0] << 1) | KEY_IN_0;
+  96   1          Key_Buff[Key_Out][1] = (Key_Buff[Key_Out][1] << 1) | KEY_IN_1;
+  97   1          Key_Buff[Key_Out][2] = (Key_Buff[Key_Out][2] << 1) | KEY_IN_2;
+  98   1          Key_Buff[Key_Out][3] = (Key_Buff[Key_Out][3] << 1) | KEY_IN_3;
+  99   1      
+ 100   1          for(i=0;i<4;i++)
+ 101   1          {
+ 102   2              if((Key_Buff[Key_Out][i] & 0x0F) == 0x00)
+ 103   2              {
+ 104   3                  Key_Sta[Key_Out][i] = 0;
+ 105   3              }
+ 106   2              else if((Key_Buff[Key_Out][i] & 0x0F) == 0x0F)
+ 107   2              {
+ 108   3                  Key_Sta[Key_Out][i] = 1;
+ 109   3              }        
+ 110   2          }
+ 111   1      
+ 112   1          Key_Out++;
+ 113   1          Key_Out &= 0x03;
+ 114   1      
+ 115   1          switch(Key_Out)
+ 116   1          {
+C51 COMPILER V9.60.0.0   KEY                                                               04/01/2023 20:06:26 PAGE 3   
+
+ 117   2              case 0: KEY_OUT_0 = 0; KEY_OUT_3 = 1; break;
+ 118   2              case 1: KEY_OUT_1 = 0; KEY_OUT_0 = 1; break;
+ 119   2              case 2: KEY_OUT_2 = 0; KEY_OUT_1 = 1; break;
+ 120   2              case 3: KEY_OUT_3 = 0; KEY_OUT_2 = 1; break;
+ 121   2              default: break;
+ 122   2          }
+ 123   1      }
+ 124          
+ 125          
+ 126          
+ 127          
+ 128          
+ 129          void MainShowModeChange()
+ 130          {
+ 131   1          if(Show_Mode == 0)
+ 132   1          {
+ 133   2              Show_Mode = 1;
+ 134   2              Show_Parm_Mode = 0;
+ 135   2              Len_Parm_Buf = Len_Parm;
+ 136   2              Read_Timer_Parm_Buf = Read_Timer_Parm;
+ 137   2          }
+ 138   1          else
+ 139   1          {
+ 140   2              Show_Mode = 0;
+ 141   2              Show_Data_Mode = 0;
+ 142   2              Len_Parm = Len_Parm_Buf;
+ 143   2              Read_Timer_Parm = Read_Timer_Parm_Buf;
+ 144   2          }
+ 145   1      }
+ 146          
+ 147          void DataParmShowModeChange()
+ 148          {
+ 149   1          if(Show_Mode == 0)
+ 150   1          {
+ 151   2              Show_Data_Mode++;
+ 152   2              if(Show_Data_Mode > 2)
+ 153   2              {
+ 154   3                  Show_Data_Mode = 0;
+ 155   3              }
+ 156   2              else if(Show_Data_Mode == 2)
+ 157   2              {
+ 158   3                  Data_Save_Mode = 0;
+ 159   3              }
+ 160   2          }
+ 161   1          else if(Show_Mode == 1)
+ 162   1          {
+ 163   2              if(Show_Parm_Mode == 0)
+ 164   2              {
+ 165   3                  Show_Parm_Mode = 1;
+ 166   3              }
+ 167   2              else
+ 168   2              {
+ 169   3                  Show_Parm_Mode = 0;
+ 170   3              }
+ 171   2          }    
+ 172   1      }
+ 173          
+ 174          
+ 175          void SonicDataReadAndSaveModeChange()
+ 176          {
+ 177   1          if(Show_Data_Mode == 1)
+ 178   1          {
+C51 COMPILER V9.60.0.0   KEY                                                               04/01/2023 20:06:26 PAGE 4   
+
+ 179   2              if(Read_Lens_Mode == 0)
+ 180   2              {
+ 181   3                  Read_Lens_Mode = 1;
+ 182   3              }
+ 183   2              else
+ 184   2              {
+ 185   3                  Read_Lens_Mode = 0;
+ 186   3                  flag_First_Read = 0;
+ 187   3              }        
+ 188   2          }
+ 189   1          else if(Show_Data_Mode == 2)
+ 190   1          {
+ 191   2              Data_Save_Mode++;
+ 192   2              if(Data_Save_Mode > 2)
+ 193   2              {
+ 194   3                  Data_Save_Mode = 0;
+ 195   3              }        
+ 196   2          }
+ 197   1      }
+ 198          
+ 199          void ParmDataChangeAndSave()
+ 200          {
+ 201   1          static unsigned i = 0;
+ 202   1          unsigned char pdata Read_Timer_Parm_Buff[5] = {2,3,5,7,9};
+ 203   1          if(Show_Parm_Mode == 0)
+ 204   1          {
+ 205   2              i++;
+ 206   2              if(i>4)
+ 207   2              {
+ 208   3                  i = 0;
+ 209   3              }
+ 210   2              Read_Timer_Parm_Buf = Read_Timer_Parm_Buff[i];
+ 211   2          }
+ 212   1          else if(Show_Parm_Mode == 1)
+ 213   1          {
+ 214   2              Len_Parm_Buf += 10;
+ 215   2              if(Len_Parm_Buf > 80)
+ 216   2              {
+ 217   3                  Len_Parm_Buf = 10;
+ 218   3              }
+ 219   2          }
+ 220   1      }
+ 221          
+ 222          
+ 223          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    584    ----
+   CONSTANT SIZE    =     21    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =     33       5
+   DATA SIZE        =     24       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      3    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,352 @@
+C51 COMPILER V9.60.0.0   LED                                                               04/01/2023 20:06:26 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\Objects\led.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..
+                    -\Driver;..\Conifg) DEBUG OBJECTEXTEND PRINT(.\Listings\led.lst) OBJECT(.\Objects\led.obj)
+
+line level    source
+
+   1          #include "led.h"
+   2          
+   3          
+   4          
+   5          code unsigned char Led_Number[] =
+   6          {
+   7              0xc0, //0
+   8              0xf9, //1
+   9              0xa4, //2
+  10              0xb0, //3
+  11              0x99, //4
+  12              0x92, //5
+  13              0x82, //6
+  14              0xf8, //7
+  15              0x80, //8
+  16              0x90, //9
+  17              0xFF
+  18          };
+  19          
+  20          unsigned char Led_Buff[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+  21          
+  22          
+  23          
+  24          
+  25          void LedDisplay()
+  26          {
+  27   1          P0 = 0xFF;
+  28   1          if(Show_Mode == 0)
+  29   1          {
+  30   2              if(Show_Data_Mode == 0)
+  31   2              {
+  32   3                  LED1 = 0;
+  33   3              }
+  34   2              else if(Show_Data_Mode == 1)
+  35   2              {
+  36   3                  LED2 = 0;
+  37   3              }
+  38   2              else if(Show_Data_Mode == 2)
+  39   2              {
+  40   3                  LED3 = 0;
+  41   3              }
+  42   2          }
+  43   1      
+  44   1          if(Read_Lens_Mode == 0)
+  45   1          {
+  46   2              LED4 = 0;
+  47   2          }
+  48   1          else
+  49   1          {
+  50   2              if(flag_L5 == 3)
+  51   2              {
+  52   3                  LED5 = 0;
+  53   3              }
+  54   2          }
+C51 COMPILER V9.60.0.0   LED                                                               04/01/2023 20:06:26 PAGE 2   
+
+  55   1      
+  56   1          if(flag_Light_Dark == 1)
+  57   1          {
+  58   2              LED6 = 0;
+  59   2          }
+  60   1      
+  61   1      
+  62   1          HC138Set(4);
+  63   1          HC138Set(0);
+  64   1      }
+  65          
+  66          
+  67          
+  68          void SmgShowMode()
+  69          {
+  70   1          if(Show_Mode == 0)
+  71   1          {
+  72   2              if(Show_Data_Mode == 0)
+  73   2              {
+  74   3                  SmgShowTimer();
+  75   3              }
+  76   2              else if(Show_Data_Mode == 1)
+  77   2              {
+  78   3                  SmgShowLenData();
+  79   3              }
+  80   2              else if(Show_Data_Mode == 2)
+  81   2              {
+  82   3                  SmgShowSaveDataMode();
+  83   3              }
+  84   2          }
+  85   1          else
+  86   1          {
+  87   2              SmgShowParmSet();
+  88   2          }
+  89   1      
+  90   1      
+  91   1      }
+  92          
+  93          void SmgShowInit()
+  94          {
+  95   1          unsigned char i = 0;
+  96   1          for(i=0;i<8;i++)
+  97   1          {
+  98   2              Led_Buff[i] = Led_Number[10];
+  99   2          }
+ 100   1      }
+ 101          
+ 102          void SmgShowParmSet()
+ 103          {
+ 104   1          Led_Buff[0] = 0x8C;
+ 105   1      
+ 106   1          if(Show_Parm_Mode == 0)
+ 107   1          {
+ 108   2              Led_Buff[1] = Led_Number[1];
+ 109   2              Led_Buff[6] = Led_Number[(Read_Timer_Parm_Buf/10)%10];
+ 110   2              Led_Buff[7] = Led_Number[Read_Timer_Parm_Buf%10];        
+ 111   2          }
+ 112   1          else
+ 113   1          {
+ 114   2              Led_Buff[1] = Led_Number[2];
+ 115   2              Led_Buff[6] = Led_Number[(Len_Parm_Buf/10)%10];
+ 116   2              Led_Buff[7] = Led_Number[Len_Parm_Buf%10];         
+C51 COMPILER V9.60.0.0   LED                                                               04/01/2023 20:06:26 PAGE 3   
+
+ 117   2          }
+ 118   1          Led_Buff[2] = Led_Number[10];
+ 119   1          Led_Buff[3] = Led_Number[10];
+ 120   1          Led_Buff[4] = Led_Number[10];
+ 121   1          Led_Buff[5] = Led_Number[10];        
+ 122   1      
+ 123   1      }
+ 124          
+ 125          
+ 126          void SmgShowSaveDataMode()
+ 127          {
+ 128   1          Led_Buff[0] = 0x89;
+ 129   1      
+ 130   1          if(Data_Save_Mode == 0)     //最大值显示
+ 131   1          {
+ 132   2              Led_Buff[1] = 0xFE;
+ 133   2      
+ 134   2              if(Sonic_Data_MAX >= 1000)
+ 135   2              {
+ 136   3                  Led_Buff[4] = Led_Number[(Sonic_Data_MAX/1000)%10];
+ 137   3              }
+ 138   2              else
+ 139   2              {
+ 140   3                  Led_Buff[4] = Led_Number[10];
+ 141   3              }
+ 142   2              if(Sonic_Data_MAX >= 100)
+ 143   2              {
+ 144   3                  Led_Buff[5] = Led_Number[(Sonic_Data_MAX/100)%10];
+ 145   3              }
+ 146   2              else
+ 147   2              {
+ 148   3                  Led_Buff[5] = Led_Number[10];
+ 149   3              }  
+ 150   2              if(Sonic_Data_MAX >= 10)
+ 151   2              {
+ 152   3                  Led_Buff[6] = Led_Number[(Sonic_Data_MAX/10)%10];
+ 153   3              }
+ 154   2              else
+ 155   2              {
+ 156   3                  Led_Buff[6] = Led_Number[10];
+ 157   3              }   
+ 158   2              Led_Buff[7] = Led_Number[Sonic_Data_MAX%10];           
+ 159   2          }
+ 160   1          else if(Data_Save_Mode == 1)    //最小值
+ 161   1          {
+ 162   2              Led_Buff[1] = 0xBF;
+ 163   2              if(Sonic_Data_MIN >= 1000)
+ 164   2              {
+ 165   3                  Led_Buff[4] = Led_Number[(Sonic_Data_MIN/1000)%10];
+ 166   3              }
+ 167   2              else
+ 168   2              {
+ 169   3                  Led_Buff[4] = Led_Number[10];
+ 170   3              }
+ 171   2              if(Sonic_Data_MIN >= 100)
+ 172   2              {
+ 173   3                  Led_Buff[5] = Led_Number[(Sonic_Data_MIN/100)%10];
+ 174   3              }
+ 175   2              else
+ 176   2              {
+ 177   3                  Led_Buff[5] = Led_Number[10];
+ 178   3              }  
+C51 COMPILER V9.60.0.0   LED                                                               04/01/2023 20:06:26 PAGE 4   
+
+ 179   2              if(Sonic_Data_MIN >= 10)
+ 180   2              {
+ 181   3                  Led_Buff[6] = Led_Number[(Sonic_Data_MIN/10)%10];
+ 182   3              }
+ 183   2              else
+ 184   2              {
+ 185   3                  Led_Buff[6] = Led_Number[10];
+ 186   3              }   
+ 187   2              Led_Buff[7] = Led_Number[Sonic_Data_MIN%10];         
+ 188   2          }
+ 189   1          else if(Data_Save_Mode == 2)
+ 190   1          {
+ 191   2              Led_Buff[1] = 0xF7;
+ 192   2              if(Sonic_Data_Sympal >= 1000)
+ 193   2              {
+ 194   3                  Led_Buff[4] = Led_Number[(Sonic_Data_Sympal/1000)%10];
+ 195   3              }
+ 196   2              else
+ 197   2              {
+ 198   3                  Led_Buff[4] = Led_Number[10];
+ 199   3              }
+ 200   2              if(Sonic_Data_Sympal >= 100)
+ 201   2              {
+ 202   3                  Led_Buff[5] = Led_Number[(Sonic_Data_Sympal/100)%10];
+ 203   3              }
+ 204   2              else
+ 205   2              {
+ 206   3                  Led_Buff[5] = Led_Number[10];
+ 207   3              }  
+ 208   2              Led_Buff[6] = Led_Number[(Sonic_Data_Sympal/10)%10] & 0x7F;
+ 209   2              Led_Buff[7] = Led_Number[Sonic_Data_Sympal%10];           
+ 210   2          }
+ 211   1          Led_Buff[2] = Led_Number[10];
+ 212   1          Led_Buff[3] = Led_Number[10];
+ 213   1      }
+ 214          
+ 215          
+ 216          void SmgShowLenData()
+ 217          {
+ 218   1          Led_Buff[0] = 0xC7;
+ 219   1      
+ 220   1          if(Read_Lens_Mode == 0)
+ 221   1          {
+ 222   2              Led_Buff[1] = 0xC6;
+ 223   2          }
+ 224   1          else
+ 225   1          {
+ 226   2              Led_Buff[1] = 0x8E;
+ 227   2          }
+ 228   1      
+ 229   1          Led_Buff[2] = Led_Number[10];
+ 230   1          Led_Buff[3] = Led_Number[10];
+ 231   1          Led_Buff[4] = Led_Number[10];
+ 232   1      
+ 233   1          if(Sonic_Too_Far == 0)
+ 234   1          {
+ 235   2              if(Sonic_Len_Data < 100)
+ 236   2              {
+ 237   3                  Led_Buff[5] = Led_Number[10];
+ 238   3              }            
+ 239   2              else
+ 240   2              {
+C51 COMPILER V9.60.0.0   LED                                                               04/01/2023 20:06:26 PAGE 5   
+
+ 241   3                  Led_Buff[5] = Led_Number[(Sonic_Len_Data/100)%10];
+ 242   3              }
+ 243   2      
+ 244   2              if(Sonic_Len_Data < 10)
+ 245   2              {
+ 246   3                  Led_Buff[6] = Led_Number[10];
+ 247   3              }            
+ 248   2              else
+ 249   2              {
+ 250   3                  Led_Buff[6] = Led_Number[(Sonic_Len_Data/10)%10];
+ 251   3              }    
+ 252   2          }
+ 253   1      
+ 254   1          Led_Buff[7] = Led_Number[Sonic_Len_Data%10];
+ 255   1      
+ 256   1      }
+ 257          
+ 258          
+ 259          
+ 260          void SmgShowTimer()
+ 261          {
+ 262   1          Led_Buff[0] = Led_Number[Timer_Data[2]>>4];
+ 263   1          Led_Buff[1] = Led_Number[Timer_Data[2]&0x0F];
+ 264   1      
+ 265   1          Led_Buff[2] = 0xBF;
+ 266   1      
+ 267   1          Led_Buff[3] = Led_Number[Timer_Data[1]>>4];
+ 268   1          Led_Buff[4] = Led_Number[Timer_Data[1]&0x0F];
+ 269   1      
+ 270   1          Led_Buff[5] = 0xBF;
+ 271   1      
+ 272   1          Led_Buff[6] = Led_Number[Timer_Data[0]>>4];
+ 273   1          Led_Buff[7] = Led_Number[Timer_Data[0]&0x0F];
+ 274   1      
+ 275   1      }
+ 276          
+ 277          
+ 278          
+ 279          
+ 280          
+ 281          
+ 282          
+ 283          
+ 284          void SmgDisplay()
+ 285          {
+ 286   1          static unsigned char i = 0;
+ 287   1      
+ 288   1          P0 = 0x00;
+ 289   1          HC138Set(6);
+ 290   1          P0 = 0x01<<i;
+ 291   1          HC138Set(0);
+ 292   1      
+ 293   1          P0 = 0xFF;
+ 294   1          HC138Set(7);
+ 295   1          P0 = Led_Buff[i];
+ 296   1          HC138Set(0);
+ 297   1      
+ 298   1          i++;
+ 299   1          i &= 0x07;
+ 300   1      }
+ 301          
+ 302          
+C51 COMPILER V9.60.0.0   LED                                                               04/01/2023 20:06:26 PAGE 6   
+
+ 303          
+ 304          
+ 305          
+ 306          
+ 307          
+ 308          
+ 309          
+ 310          
+ 311          
+ 312          
+ 313          
+ 314          
+ 315          
+ 316          
+ 317          
+ 318          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    981    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

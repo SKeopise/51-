@@ -1,0 +1,122 @@
+C51 COMPILER V9.60.0.0   DS1302                                                            04/01/2023 20:06:26 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DS1302
+OBJECT MODULE PLACED IN .\Objects\ds1302.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\System\ds1302.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System
+                    -;..\Driver;..\Conifg) DEBUG OBJECTEXTEND PRINT(.\Listings\ds1302.lst) OBJECT(.\Objects\ds1302.obj)
+
+line level    source
+
+   1          /*      #       DS1302代码片段说明
+   2                  1.      本文件夹中提供的驱动代码供参赛选手完成程序设计参考。
+   3                  2.      参赛选手可以自行编写相关代码或以该代码为基础，根据所选单片机类型、�
+             -�行速度和试题
+   4                          中对单片机时钟频率的要求，进行代码调试和修改。
+   5          */                                                              
+   6          
+   7          //
+   8          
+   9          #include "ds1302.h"
+  10          
+  11          
+  12          sbit SCK = P1^7;
+  13          sbit SDA = P2^3;
+  14          sbit RST = P1^3;
+  15          
+  16          unsigned char code DS1302_Write_Addr[] = {0x80,0x82,0x84,0x86,0x88,0x8A,0x8C};
+  17          unsigned char code DS1302_Read_Addr[] = {0x81,0x83,0x85,0x87,0x89,0x8B,0x8D};
+  18          
+  19          unsigned char Timer_Data[3] = {0x01,0x20,0x20};
+  20          
+  21          
+  22          void Ds1302Init()
+  23          {
+  24   1              unsigned char i = 0;
+  25   1      
+  26   1              Write_Ds1302_Byte(0x8E,0x00);
+  27   1              for(i=0;i<3;i++)
+  28   1              {
+  29   2                      Write_Ds1302_Byte(DS1302_Write_Addr[i],Timer_Data[i]);
+  30   2              }
+  31   1              
+  32   1      }
+  33          
+  34          void Ds1302TimerRead()
+  35          {
+  36   1              unsigned char i = 0;
+  37   1      
+  38   1              for(i=0;i<3;i++)
+  39   1              {
+  40   2                      Timer_Data[i] = Read_Ds1302_Byte(DS1302_Read_Addr[i]);
+  41   2              }
+  42   1      
+  43   1      }
+  44          
+  45          
+  46          
+  47          
+  48          
+  49          
+  50          void Write_Ds1302(unsigned  char temp) 
+  51          {
+  52   1              unsigned char i;
+  53   1              for (i=0;i<8;i++)       
+C51 COMPILER V9.60.0.0   DS1302                                                            04/01/2023 20:06:26 PAGE 2   
+
+  54   1              { 
+  55   2                      SCK = 0;
+  56   2                      SDA = temp&0x01;
+  57   2                      temp>>=1; 
+  58   2                      SCK=1;
+  59   2              }
+  60   1      }   
+  61          
+  62          //
+  63          void Write_Ds1302_Byte( unsigned char address,unsigned char dat )     
+  64          {
+  65   1              RST=0;  _nop_();
+  66   1              SCK=0;  _nop_();
+  67   1              RST=1;  _nop_();  
+  68   1              Write_Ds1302(address);  
+  69   1              Write_Ds1302(dat);              
+  70   1              RST=0; 
+  71   1      }
+  72          
+  73          //
+  74          unsigned char Read_Ds1302_Byte ( unsigned char address )
+  75          {
+  76   1              unsigned char i,temp=0x00;
+  77   1              RST=0;  _nop_();
+  78   1              SCK=0;  _nop_();
+  79   1              RST=1;  _nop_();
+  80   1              Write_Ds1302(address);
+  81   1              for (i=0;i<8;i++)       
+  82   1              {               
+  83   2                      SCK=0;
+  84   2                      temp>>=1;       
+  85   2                      if(SDA)
+  86   2                      temp|=0x80;     
+  87   2                      SCK=1;
+  88   2              } 
+  89   1              RST=0;  _nop_();
+  90   1              SCK=0;  _nop_();
+  91   1              SCK=1;  _nop_();
+  92   1              SDA=0;  _nop_();
+  93   1              SDA=1;  _nop_();
+  94   1              return (temp);                  
+  95   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    192    ----
+   CONSTANT SIZE    =     14    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      3       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

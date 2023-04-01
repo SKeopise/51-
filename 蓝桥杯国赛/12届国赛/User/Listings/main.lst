@@ -1,0 +1,249 @@
+C51 COMPILER V9.60.0.0   MAIN                                                              04/01/2023 20:06:26 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Objects\main.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE main.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..\Driver;.
+                    -.\Conifg) DEBUG OBJECTEXTEND PRINT(.\Listings\main.lst) OBJECT(.\Objects\main.obj)
+
+line level    source
+
+   1          
+   2          #include <config.h>
+   3          
+   4          #define LIGHT_DARK 51
+   5          
+   6          
+   7          unsigned int Sonic_Data_Save_Buff = 0;
+   8          unsigned int Sonic_Data_MAX = 0;
+   9          unsigned int Sonic_Data_MIN = 500;
+  10          unsigned int Sonic_Data_Sympal = 0;
+  11          
+  12          unsigned int Sonic_Len_Data = 0;
+  13          
+  14          unsigned char ADC_AIN1_Data = 0;
+  15          
+  16          unsigned char flag_L5 = 0;
+  17          
+  18          bit flag_Light_Dark = 0;
+  19          
+  20          bit flag_Read_Sonic_Len = 0;
+  21          bit flag_First_Read = 0;
+  22          
+  23          bit flag_100ms = 0;
+  24          bit flag_200ms = 0;
+  25          
+  26          
+  27          void ReadData();
+  28          void ReadSonicLens();
+  29          void SonicOutputDAC();
+  30          void SonicDataSave();
+  31          
+  32          
+  33          
+  34          void main()
+  35          {
+  36   1      
+  37   1          LedBuzzInit();
+  38   1          Timer0Init();
+  39   1          Ds1302Init();
+  40   1          Sonic_Data_Save_Buff = SonicDataRead();
+  41   1          Sonic_Len_Data = Sonic_Data_Save_Buff;
+  42   1      
+  43   1          while(1)
+  44   1          {
+  45   2              ReadData();
+  46   2              SmgShowMode();
+  47   2              KeyDriver();
+  48   2          }
+  49   1      }
+  50          
+  51          
+  52          void Timer0Int() interrupt 1
+  53          {
+  54   1          static unsigned int cnt = 0;
+C51 COMPILER V9.60.0.0   MAIN                                                              04/01/2023 20:06:26 PAGE 2   
+
+  55   1      
+  56   1          cnt++;
+  57   1      
+  58   1          if((cnt % 100) == 0)
+  59   1          {
+  60   2              flag_100ms = 1;
+  61   2      
+  62   2          }
+  63   1          if(cnt>=250)
+  64   1          {
+  65   2              flag_200ms = 1;
+  66   2              cnt = 0;
+  67   2          }
+  68   1      
+  69   1      
+  70   1          KeyScan();
+  71   1          SmgDisplay();
+  72   1          LedDisplay();
+  73   1      
+  74   1      }
+  75          
+  76          
+  77          void ReadData()
+  78          {
+  79   1          if(flag_200ms == 1)
+  80   1          {
+  81   2              flag_200ms = 0;
+  82   2              Ds1302TimerRead();
+  83   2          }
+  84   1          if(flag_100ms == 1)
+  85   1          {
+  86   2              flag_100ms = 0;
+  87   2              ADC_AIN1_Data = ADC_InputAIN1();
+  88   2              if(ADC_AIN1_Data < LIGHT_DARK)
+  89   2              {
+  90   3                  flag_Light_Dark = 0;
+  91   3              }
+  92   2              else
+  93   2              {
+  94   3                  flag_Light_Dark = 1;
+  95   3              }
+  96   2          }
+  97   1          ReadSonicLens();
+  98   1          SonicDataSave();
+  99   1          SonicOutputDAC();
+ 100   1      }
+ 101          
+ 102          void ReadSonicLens()
+ 103          {
+ 104   1          unsigned char Timer_Data_Buff = 0;
+ 105   1      
+ 106   1          if(Read_Lens_Mode == 0)
+ 107   1          {
+ 108   2              if(ADC_AIN1_Data < LIGHT_DARK)
+ 109   2              {
+ 110   3                  if(flag_First_Read == 0)
+ 111   3                  {
+ 112   4                      Sonic_Len_Data = SonicDataRead();
+ 113   4                      flag_First_Read = 1;
+ 114   4                      if((Sonic_Len_Data >= (Len_Parm-5)) && (Sonic_Len_Data <= (Len_Parm+5)))
+ 115   4                      {
+ 116   5                          if(flag_L5 < 3)
+C51 COMPILER V9.60.0.0   MAIN                                                              04/01/2023 20:06:26 PAGE 3   
+
+ 117   5                          {
+ 118   6                              flag_L5++;
+ 119   6                          }
+ 120   5                      }
+ 121   4                      else
+ 122   4                      {
+ 123   5                          flag_L5 = 0;
+ 124   5                      }                
+ 125   4                  }     
+ 126   3              }
+ 127   2              else
+ 128   2              {
+ 129   3                  flag_First_Read = 0;
+ 130   3              }
+ 131   2          }
+ 132   1          else
+ 133   1          {
+ 134   2              Timer_Data_Buff = (Timer_Data[0]>>4)*10 + (Timer_Data[0]&0x0F);
+ 135   2              if((Timer_Data_Buff % Read_Timer_Parm) == 0)
+ 136   2              {
+ 137   3                  flag_Read_Sonic_Len = 1;
+ 138   3              }
+ 139   2              else
+ 140   2              {
+ 141   3                  flag_Read_Sonic_Len = 0;
+ 142   3                  flag_First_Read = 0;
+ 143   3              }
+ 144   2          }
+ 145   1      
+ 146   1          if((flag_Read_Sonic_Len == 1)&&(flag_First_Read == 0))
+ 147   1          {
+ 148   2              Sonic_Len_Data = SonicDataRead();
+ 149   2              flag_First_Read = 1;
+ 150   2              if((Sonic_Len_Data >= (Len_Parm-5)) && (Sonic_Len_Data <= (Len_Parm+5)))
+ 151   2              {
+ 152   3                  if(flag_L5 < 3)
+ 153   3                  {
+ 154   4                      flag_L5++;
+ 155   4                  }
+ 156   3              }
+ 157   2              else
+ 158   2              {
+ 159   3                  flag_L5 = 0;
+ 160   3              }        
+ 161   2          }    
+ 162   1      }
+ 163          
+ 164          
+ 165          void SonicOutputDAC()
+ 166          {
+ 167   1          unsigned char Output_Data = 0;
+ 168   1          float Data_Buf = 0;
+ 169   1          if(Sonic_Len_Data <= 10)
+ 170   1          {
+ 171   2              OutputDAC(53);
+ 172   2          }
+ 173   1          else if(Sonic_Len_Data >= 80)
+ 174   1          {
+ 175   2              OutputDAC(255);
+ 176   2          }
+ 177   1          else
+ 178   1          {
+C51 COMPILER V9.60.0.0   MAIN                                                              04/01/2023 20:06:26 PAGE 4   
+
+ 179   2              Data_Buf = Sonic_Len_Data;
+ 180   2              Data_Buf = (0.057142*Data_Buf);
+ 181   2              Data_Buf = Data_Buf + 0.428571;
+ 182   2              Data_Buf = Data_Buf * 53.125;
+ 183   2              Output_Data = Data_Buf;
+ 184   2              OutputDAC(Output_Data);
+ 185   2          }
+ 186   1      
+ 187   1      }
+ 188          
+ 189          void SonicDataSave()
+ 190          {
+ 191   1          float Sonic_Data_Sympal_Buf = 0;
+ 192   1      
+ 193   1          if(Sonic_Len_Data != Sonic_Data_Save_Buff)
+ 194   1          {
+ 195   2              Sonic_Data_Save_Buff = Sonic_Len_Data;
+ 196   2      
+ 197   2              if(Sonic_Data_Save_Buff > Sonic_Data_MAX)
+ 198   2              {
+ 199   3                  Sonic_Data_MAX = Sonic_Data_Save_Buff;
+ 200   3              }
+ 201   2      
+ 202   2              if(Sonic_Data_Save_Buff < Sonic_Data_MIN)
+ 203   2              {
+ 204   3                  if(Sonic_Data_Save_Buff != 0)
+ 205   3                  {
+ 206   4                      Sonic_Data_MIN = Sonic_Data_Save_Buff;
+ 207   4                  }
+ 208   3              }
+ 209   2      
+ 210   2              Sonic_Data_Sympal_Buf = Sonic_Data_Sympal;
+ 211   2              Sonic_Data_Sympal_Buf = Sonic_Data_Sympal_Buf/10;
+ 212   2              Sonic_Data_Sympal_Buf = Sonic_Data_Sympal_Buf + Sonic_Data_Save_Buff;
+ 213   2              Sonic_Data_Sympal_Buf = Sonic_Data_Sympal_Buf/2;
+ 214   2              Sonic_Data_Sympal_Buf = Sonic_Data_Sympal_Buf*10;
+ 215   2              Sonic_Data_Sympal = Sonic_Data_Sympal_Buf;
+ 216   2          }
+ 217   1      }
+ 218          
+ 219          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    690    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     14      10
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      5    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
