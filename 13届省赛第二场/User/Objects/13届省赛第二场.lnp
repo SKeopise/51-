@@ -1,0 +1,8 @@
+".\Objects\main.obj",
+".\Objects\key.obj",
+".\Objects\led.obj",
+".\Objects\Sonic.obj",
+".\Objects\iic.obj",
+".\Objects\init.obj" 
+TO ".\Objects\13届省赛第二场" 
+PRINT(".\Listings\13届省赛第二场.m51") RAMSIZE(256) 

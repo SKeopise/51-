@@ -1,0 +1,228 @@
+C51 COMPILER V9.60.0.0   LED                                                               04/02/2023 19:05:05 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\Objects\led.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..
+                    -\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\led.lst) OBJECT(.\Objects\led.obj)
+
+line level    source
+
+   1          #include "led.h"
+   2          
+   3          
+   4          code unsigned char Led_Number[] =
+   5          {
+   6              0xc0, //0
+   7              0xf9, //1
+   8              0xa4, //2
+   9              0xb0, //3
+  10              0x99, //4
+  11              0x92, //5
+  12              0x82, //6
+  13              0xf8, //7
+  14              0x80, //8
+  15              0x90, //9
+  16              0xFF
+  17          };
+  18          
+  19          
+  20          unsigned char Led_Buff[8] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+  21          
+  22          
+  23          
+  24          
+  25          
+  26          
+  27          void LedDisplay()
+  28          {
+  29   1          P0 = 0xFF;
+  30   1      
+  31   1          if(Show_Mode == 0)
+  32   1          {
+  33   2              LED1 = 0;
+  34   2          }
+  35   1          else if(Show_Mode == 1)
+  36   1          {
+  37   2              LED2 = 0;
+  38   2          }
+  39   1          else
+  40   1          {
+  41   2              LED3 = 0;
+  42   2          }
+  43   1      
+  44   1          if(flag_Sonic_Reda_Start == 1)
+  45   1          {
+  46   2              if(flag_01s == 1)
+  47   2              {
+  48   3                  LED8 = 0;
+  49   3              }
+  50   2          }
+  51   1      
+  52   1          HC138Set(4);
+  53   1          HC138Set(0);
+  54   1      }
+C51 COMPILER V9.60.0.0   LED                                                               04/02/2023 19:05:05 PAGE 2   
+
+  55          
+  56          
+  57          void SmgShowMode()
+  58          {
+  59   1          if(Show_Mode == 0)
+  60   1          {
+  61   2              SmgShowADC();
+  62   2          }
+  63   1          else if(Show_Mode == 1)
+  64   1          {
+  65   2              SmgShowSonicDistence();
+  66   2          }
+  67   1          else if(Show_Mode == 2)
+  68   1          {
+  69   2              SmgShowParmSet();
+  70   2          }
+  71   1      }
+  72          
+  73          
+  74          void SmgShowParmSet()
+  75          {
+  76   1          Led_Buff[0] = 0x8C;
+  77   1      
+  78   1          Led_Buff[1] = Led_Number[10];
+  79   1          Led_Buff[2] = Led_Number[10];
+  80   1          Led_Buff[5] = Led_Number[10];
+  81   1          
+  82   1          if(Parm_Mode == 0)
+  83   1          {
+  84   2              Led_Buff[3] = Led_Number[(Parm_ADC_MAX_Buf/100)%10];
+  85   2              Led_Buff[4] = Led_Number[(Parm_ADC_MAX_Buf/10)%10];
+  86   2              Led_Buff[6] = Led_Number[10];
+  87   2              Led_Buff[7] = Led_Number[10];        
+  88   2          }  
+  89   1          else
+  90   1          {
+  91   2              Led_Buff[6] = Led_Number[(Parm_ADC_MIN_Buf/100)%10];
+  92   2              Led_Buff[7] = Led_Number[(Parm_ADC_MIN_Buf/10)%10];
+  93   2              Led_Buff[3] = Led_Number[10];
+  94   2              Led_Buff[4] = Led_Number[10];                
+  95   2          }  
+  96   1      }
+  97          
+  98          
+  99          void SmgShowSonicDistence()
+ 100          {
+ 101   1          Led_Buff[0] = 0xC7;
+ 102   1      
+ 103   1          Led_Buff[1] = Led_Number[10];
+ 104   1          Led_Buff[2] = Led_Number[10];
+ 105   1          Led_Buff[3] = Led_Number[10];
+ 106   1          Led_Buff[4] = Led_Number[10];
+ 107   1      
+ 108   1          if(flag_Sonic_Reda_Start == 0)
+ 109   1          {
+ 110   2              Led_Buff[5] = 0x88;
+ 111   2              Led_Buff[6] = 0x88;
+ 112   2              Led_Buff[7] = 0x88;        
+ 113   2          }    
+ 114   1          else
+ 115   1          {
+ 116   2              if(Sonic_Dist_Far == 0)
+C51 COMPILER V9.60.0.0   LED                                                               04/02/2023 19:05:05 PAGE 3   
+
+ 117   2              {
+ 118   3                  if(Sonic_Dist >= 100)
+ 119   3                  {
+ 120   4                      Led_Buff[5] = Led_Number[(Sonic_Dist/100)%10];
+ 121   4                  }
+ 122   3                  else
+ 123   3                  {
+ 124   4                      Led_Buff[5] = Led_Number[10];
+ 125   4                  }
+ 126   3                  if(Sonic_Dist >= 10)
+ 127   3                  {
+ 128   4                      Led_Buff[6] = Led_Number[(Sonic_Dist/10)%10];
+ 129   4                  }
+ 130   3                  else
+ 131   3                  {
+ 132   4                      Led_Buff[6] = Led_Number[10];
+ 133   4                  }
+ 134   3                  Led_Buff[7] = Led_Number[Sonic_Dist%10];       
+ 135   3              }     
+ 136   2              else
+ 137   2              {
+ 138   3                  Led_Buff[5] = 0xBF;
+ 139   3                  Led_Buff[6] = 0xBF;
+ 140   3                  Led_Buff[7] = 0xBF;            
+ 141   3              }
+ 142   2          }
+ 143   1      }
+ 144          
+ 145          
+ 146          void SmgShowADC()
+ 147          {
+ 148   1          Led_Buff[0] = 0xC1;
+ 149   1      
+ 150   1          Led_Buff[1] = Led_Number[10];
+ 151   1          Led_Buff[2] = Led_Number[10];
+ 152   1          Led_Buff[3] = Led_Number[10];
+ 153   1          Led_Buff[4] = Led_Number[10];
+ 154   1      
+ 155   1          Led_Buff[5] = Led_Number[(ADC_Data/100)%10] & 0x7F;
+ 156   1          Led_Buff[6] = Led_Number[(ADC_Data/10)%10];
+ 157   1          Led_Buff[7] = Led_Number[ADC_Data%10];
+ 158   1      }
+ 159          
+ 160          
+ 161          
+ 162          
+ 163          
+ 164          
+ 165          
+ 166          void SmgDisplay()
+ 167          {
+ 168   1          static unsigned char i = 0;
+ 169   1      
+ 170   1          P0 = 0x00;
+ 171   1          HC138Set(6);
+ 172   1          P0 = 0x01 << i;
+ 173   1          HC138Set(0);
+ 174   1      
+ 175   1          P0 = 0xFF;
+ 176   1          HC138Set(7);
+ 177   1          P0 = Led_Buff[i];
+ 178   1          HC138Set(0);
+C51 COMPILER V9.60.0.0   LED                                                               04/02/2023 19:05:05 PAGE 4   
+
+ 179   1      
+ 180   1          i++;
+ 181   1          i &= 0x07;
+ 182   1      
+ 183   1      }
+ 184          
+ 185          
+ 186          
+ 187          
+ 188          
+ 189          
+ 190          
+ 191          
+ 192          
+ 193          
+ 194          
+ 195          
+ 196          
+ 197          
+ 198          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    562    ----
+   CONSTANT SIZE    =     11    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      9    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

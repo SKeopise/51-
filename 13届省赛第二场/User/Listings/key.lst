@@ -1,0 +1,215 @@
+C51 COMPILER V9.60.0.0   KEY                                                               04/02/2023 19:05:05 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\key.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE ..\Driver\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(..\User;..\System;..
+                    -\Driver;..\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) OBJECT(.\Objects\key.obj)
+
+line level    source
+
+   1          #include "key.h"
+   2          
+   3          
+   4          unsigned char code Key_Map[4] = {'7','6','5','4'};
+   5          
+   6          
+   7          unsigned char Key_Sta[4] = {1,1,1,1}; 
+   8          
+   9          
+  10          
+  11          unsigned int Parm_ADC_MAX = 450;
+  12          unsigned int Parm_ADC_MAX_Buf = 450;
+  13          
+  14          unsigned int Parm_ADC_MIN = 50;
+  15          unsigned int Parm_ADC_MIN_Buf = 50;
+  16          
+  17          
+  18          unsigned char Show_Mode = 0;
+  19          
+  20          bit Parm_Mode = 0;
+  21          
+  22          
+  23          
+  24          
+  25          
+  26          void KeyAction0(unsigned char keycode)
+  27          {
+  28   1          if(keycode == '7')
+  29   1          {
+  30   2              if(Show_Mode == 2)
+  31   2              {
+  32   3                  KeyParmReduce();
+  33   3              }
+  34   2          }
+  35   1          else if(keycode == '6')
+  36   1          {
+  37   2              if(Show_Mode == 2)
+  38   2              {
+  39   3                  KeyParmAdd();
+  40   3              }
+  41   2          }
+  42   1          else if(keycode == '5')
+  43   1          {
+  44   2              KeyParmModeChange();
+  45   2          }
+  46   1          else if(keycode == '4')
+  47   1          {
+  48   2              KeyShowModeChange();
+  49   2          }    
+  50   1      }
+  51          
+  52          
+  53          void KeyShowModeChange()
+  54          {
+C51 COMPILER V9.60.0.0   KEY                                                               04/02/2023 19:05:05 PAGE 2   
+
+  55   1          Show_Mode++;
+  56   1          if(Show_Mode > 2)
+  57   1          {
+  58   2              Show_Mode = 0;
+  59   2              Parm_ADC_MAX = Parm_ADC_MAX_Buf;
+  60   2              Parm_ADC_MIN = Parm_ADC_MIN_Buf;
+  61   2          }
+  62   1      }
+  63          
+  64          void KeyParmModeChange()
+  65          {
+  66   1          if(Show_Mode == 2)
+  67   1          {
+  68   2              if(Parm_Mode == 0)
+  69   2              {
+  70   3                  Parm_Mode = 1;
+  71   3              }
+  72   2              else
+  73   2              {
+  74   3                  Parm_Mode = 0;
+  75   3              }
+  76   2          }
+  77   1      }
+  78          
+  79          void KeyParmAdd()
+  80          {
+  81   1          if(Parm_Mode == 0)
+  82   1          {
+  83   2              Parm_ADC_MAX_Buf += 50;
+  84   2              if(Parm_ADC_MAX_Buf > 500)
+  85   2              {
+  86   3                  Parm_ADC_MAX_Buf = 50;
+  87   3              }
+  88   2          }
+  89   1          else
+  90   1          {
+  91   2              Parm_ADC_MIN_Buf += 50;
+  92   2              if(Parm_ADC_MIN_Buf > 500)
+  93   2              {
+  94   3                  Parm_ADC_MIN_Buf = 50;
+  95   3              }
+  96   2          }
+  97   1      }
+  98          
+  99          void KeyParmReduce()
+ 100          {
+ 101   1          if(Parm_Mode == 0)
+ 102   1          {
+ 103   2              Parm_ADC_MAX_Buf -= 50;
+ 104   2              if(Parm_ADC_MAX_Buf < 50)
+ 105   2              {
+ 106   3                  Parm_ADC_MAX_Buf = 500;
+ 107   3              }
+ 108   2          }
+ 109   1          else
+ 110   1          {
+ 111   2              Parm_ADC_MIN_Buf -= 50;
+ 112   2              if(Parm_ADC_MIN_Buf < 50)
+ 113   2              {
+ 114   3                  Parm_ADC_MIN_Buf = 500;
+ 115   3              }
+ 116   2          }
+C51 COMPILER V9.60.0.0   KEY                                                               04/02/2023 19:05:05 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          
+ 120          
+ 121          
+ 122          void KeyDriver()
+ 123          {
+ 124   1          unsigned char i = 0;
+ 125   1          static unsigned char Key_Backup[4] = {1,1,1,1};
+ 126   1      
+ 127   1          for(i=0;i<4;i++)
+ 128   1          {
+ 129   2              if(Key_Backup[i] != Key_Sta[i])
+ 130   2              {
+ 131   3                  if(Key_Backup[i] == 1)
+ 132   3                  {
+ 133   4                      KeyAction0(Key_Map[i]);
+ 134   4                  }
+ 135   3      
+ 136   3                  Key_Backup[i] = Key_Sta[i];
+ 137   3              }
+ 138   2          }
+ 139   1      
+ 140   1      }
+ 141          
+ 142          
+ 143          
+ 144          
+ 145          
+ 146          void KeyScan()
+ 147          {
+ 148   1          static unsigned char Key_Out = 0;
+ 149   1          static unsigned char Key_Buff[4] = {0xFF,0xFF,0xFF,0xFF};
+ 150   1      
+ 151   1      
+ 152   1          switch(Key_Out)
+ 153   1          {
+ 154   2              case 0: Key_Buff[0] = (Key_Buff[0] << 1) | KEY_OUT_0; break;
+ 155   2              case 1: Key_Buff[1] = (Key_Buff[1] << 1) | KEY_OUT_1; break;
+ 156   2              case 2: Key_Buff[2] = (Key_Buff[2] << 1) | KEY_OUT_2; break;
+ 157   2              case 3: Key_Buff[3] = (Key_Buff[3] << 1) | KEY_OUT_3; break;
+ 158   2              default: break;
+ 159   2          }
+ 160   1      
+ 161   1          if((Key_Buff[Key_Out] & 0x0F) == 0X00)
+ 162   1          {
+ 163   2              Key_Sta[Key_Out] = 0;
+ 164   2          }
+ 165   1          else if((Key_Buff[Key_Out] & 0x0F) == 0X0F)
+ 166   1          {
+ 167   2              Key_Sta[Key_Out] = 1;
+ 168   2          }    
+ 169   1      
+ 170   1          Key_Out++;
+ 171   1          Key_Out &= 0x03;
+ 172   1      }
+ 173          
+ 174          
+ 175          
+ 176          
+ 177          
+ 178          
+C51 COMPILER V9.60.0.0   KEY                                                               04/02/2023 19:05:05 PAGE 4   
+
+ 179          
+ 180          
+ 181          
+ 182          
+ 183          
+ 184          
+ 185          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    392    ----
+   CONSTANT SIZE    =      4    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     22       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
