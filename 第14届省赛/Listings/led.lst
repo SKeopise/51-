@@ -1,0 +1,280 @@
+C51 COMPILER V9.60.0.0   LED                                                               05/11/2023 22:29:08 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\Objects\led.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Driver\led.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Config;.\Drive
+                    -r;.\System) DEBUG OBJECTEXTEND PRINT(.\Listings\led.lst) OBJECT(.\Objects\led.obj)
+
+line level    source
+
+   1          #include "led.h"
+   2          
+   3          
+   4          //数码管真值表
+   5          unsigned char code Led_Number[] =
+   6          {
+   7                  0xc0, //0
+   8                  0xf9, //1
+   9                  0xa4, //2
+  10                  0xb0, //3
+  11                  0x99, //4
+  12                  0x92, //5
+  13                  0x82, //6
+  14                  0xf8, //7
+  15                  0x80, //8
+  16                  0x90, //9
+  17          };
+  18          
+  19          //数码管显示缓存
+  20          unsigned char Led_Buff[] = {0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF,0xFF};
+  21          
+  22          unsigned int Temp_Data_Max = 0; //温度数据最大值
+  23          unsigned int Temp_Data_Avg = 0; //温度数据平均值
+  24          
+  25          unsigned int Hum_Data_Max = 0;  //湿度数据最大值
+  26          unsigned int Hum_Data_Avg = 0;  //湿度数据平均值
+  27          
+  28          unsigned char Trip_Cnt = 0;             //触发次数
+  29          
+  30          unsigned char Ds1302_Last_Trip_Time[3] = {0x00,0x00,0x00};      //上一次触发时间
+  31          
+  32          bit flag_Menu_Interrupt = 0;    //菜单中断标志
+  33          
+  34          
+  35          
+  36          void SmgMenuMain()
+  37          {
+  38   1              if(flag_Menu_Interrupt == 0)    //如果当前光敏电阻没有被触发,则显示普通界面
+  39   1              {
+  40   2                      if(MenuModeSelect_S4 == 0)      //如果菜单模式选择为0，显示时钟界面
+  41   2                      {
+  42   3                              SmgMenuTimer(); //时钟界面
+  43   3                      }
+  44   2                      else if(MenuModeSelect_S4 == 1) //如果菜单模式选择为1，显示回显界面
+  45   2                      {
+  46   3                              SmgMenuBackup();        //回显界面
+  47   3                      }
+  48   2                      else if(MenuModeSelect_S4 == 2) //如果菜单模式选择为2，显示参数界面
+  49   2                      {
+  50   3                              SmgMenuParmData();      //参数界面
+  51   3                      }
+  52   2              }
+  53   1              else    //如果当前光敏电阻被触发,则进入温湿度界面
+  54   1              {
+C51 COMPILER V9.60.0.0   LED                                                               05/11/2023 22:29:08 PAGE 2   
+
+  55   2                      SmgMenuInterruptTempHum();      //温湿度界面
+  56   2              }
+  57   1              
+  58   1      }
+  59          
+  60          void LedDisplay()       //LED指示灯显示
+  61          {
+  62   1              P0 = 0xFF;
+  63   1              HC138Set(4);
+  64   1              if(MenuModeSelect_S4 == 0)      //如果菜单模式选择为0,LED1亮
+  65   1              {
+  66   2                      LED1 = 0;
+  67   2              }
+  68   1              else if(MenuModeSelect_S4 == 1) //如果菜单模式选择为1,LED2亮
+  69   1              {
+  70   2                      LED2 = 0;
+  71   2              }
+  72   1              else if(MenuModeSelect_S4 == 2) //如果菜单模式选择为2,LED3亮
+  73   1              {
+  74   2                      LED3 = 0;
+  75   2              }
+  76   1              
+  77   1              if(flag_TempCmpParm == 1)       //如果此次温度数据超过温度参数,LED4闪烁
+  78   1              {
+  79   2                      LED4 = flag_LED4_flash;
+  80   2              }
+  81   1              if(flag_HumData_Error == 1)     //如果湿度数据错误,LED5亮
+  82   1              {
+  83   2                      LED5 = 0;
+  84   2              }
+  85   1              if(Trip_Cnt >= 2)       //如果触发次数大于等于2
+  86   1              {
+  87   2                      if(flag_LED6_ON == 1)   //如果此次触发的温度和湿度数据都升高,则LED6亮
+  88   2                      {
+  89   3                              LED6 = 0;
+  90   3                      }
+  91   2              }
+  92   1              
+  93   1              HC138Set(0);
+  94   1              
+  95   1      }
+  96          
+  97          
+  98          void SmgMenuInterruptTempHum()  //温湿度界面显示内容函数
+  99          {
+ 100   1              Led_Buff[0] = 0x86;     //显示界面标志,0x86显示字母E
+ 101   1              
+ 102   1              Led_Buff[1] = 0xFF;     
+ 103   1              Led_Buff[2] = 0xFF;
+ 104   1              Led_Buff[3] = Led_Number[(Temp_Data_Trip/100)%10]; //显示温度数据的十位        
+ 105   1              Led_Buff[4] = Led_Number[(Temp_Data_Trip/10)%10];       //显示温度数据的个位
+ 106   1              Led_Buff[5] = 0xBF;             //显示分隔符
+ 107   1              if(flag_HumData_Error == 0)             //如果湿度数据没有错误,则显示湿度数据
+ 108   1              {
+ 109   2                      Led_Buff[6] = Led_Number[(Hum_Data_Trip/100)%10];       //显示湿度数据的十位
+ 110   2                      Led_Buff[7] = Led_Number[(Hum_Data_Trip/10)%10];        //显示湿度数据的个位   
+ 111   2              }
+ 112   1              else    //如果湿度数据错误,则显示字母AA
+ 113   1              {
+ 114   2                      Led_Buff[6] = 0x88;
+ 115   2                      Led_Buff[7] = 0x88;             
+ 116   2              }
+C51 COMPILER V9.60.0.0   LED                                                               05/11/2023 22:29:08 PAGE 3   
+
+ 117   1      }
+ 118          
+ 119          
+ 120          
+ 121          void SmgMenuParmData()  //温度参数界面
+ 122          {
+ 123   1              Led_Buff[0] = 0x8C;
+ 124   1              
+ 125   1              Led_Buff[1] = 0xFF;
+ 126   1              Led_Buff[2] = 0xFF;
+ 127   1              Led_Buff[3] = 0xFF;
+ 128   1              Led_Buff[4] = 0xFF;
+ 129   1              Led_Buff[5] = 0xFF;
+ 130   1              
+ 131   1              Led_Buff[6] = Led_Number[(Parm_Temp_Buf/100)%10];       //显示温度参数的十位
+ 132   1              Led_Buff[7] = Led_Number[(Parm_Temp_Buf/10)%10];        //显示温度参数的个位
+ 133   1      }
+ 134          
+ 135          
+ 136          void SmgMenuBackup()    //回显界面选择函数
+ 137          {
+ 138   1              if(BackupMenuChange_S5 == 0)    //如果回显界面选择为0,显示温度回显界面
+ 139   1              {
+ 140   2                      SmgMenuBackupDataTempC();       //温度回显界面
+ 141   2              }
+ 142   1              else if(BackupMenuChange_S5 == 1)       //如果回显界面选择为1,显示湿度回显界面
+ 143   1              {
+ 144   2                      SmgMenuBackupDataHumidityH();   //湿度回显界面
+ 145   2              }
+ 146   1              else if(BackupMenuChange_S5 == 2)       //如果回显界面选择为2,显示触发次数和时间回显界面
+ 147   1              {
+ 148   2                      SmgMenuBackupDataTimerAndTripF();       //触发次数和时间回显界面
+ 149   2              }
+ 150   1      }
+ 151          
+ 152          
+ 153          void SmgMenuBackupDataTimerAndTripF()   //触发次数和时间回显界面
+ 154          {
+ 155   1              Led_Buff[0] = 0x8E;
+ 156   1              Led_Buff[1] = Led_Number[(Trip_Cnt/10)%10];     //显示触发次数的十位
+ 157   1              Led_Buff[2] = Led_Number[(Trip_Cnt)%10];;               //显示触发次数的个位
+ 158   1              
+ 159   1              Led_Buff[3] = Led_Number[Ds1302_Last_Trip_Time[2]>>4];          //显示最后一次触发时间中小时的十�
+             -�
+ 160   1              Led_Buff[4] = Led_Number[Ds1302_Last_Trip_Time[2]&0x0F];        //显示最后一次触发时间中小时的个�
+             -��
+ 161   1              Led_Buff[5] = 0xBF;
+ 162   1              Led_Buff[6] = Led_Number[Ds1302_Last_Trip_Time[1]>>4];                  //显示最后一次触发时间中分钟的十�
+             -��
+ 163   1              Led_Buff[7] = Led_Number[Ds1302_Last_Trip_Time[1]&0x0F];                //显示最后一次触发时间中分钟的个
+             -位
+ 164   1      }
+ 165          
+ 166          
+ 167          void SmgMenuBackupDataHumidityH()       //湿度回显界面
+ 168          {
+ 169   1              Led_Buff[0] = 0x89;
+ 170   1              Led_Buff[1] = 0xFF;
+ 171   1              
+ 172   1              Led_Buff[2] = Led_Number[(Hum_Data_Max/100)%10];        //显示湿度最大值的十位
+ 173   1              Led_Buff[3] = Led_Number[(Hum_Data_Max/10)%10];         //显示湿度最大值的个位
+ 174   1              
+C51 COMPILER V9.60.0.0   LED                                                               05/11/2023 22:29:08 PAGE 4   
+
+ 175   1              Led_Buff[4] = 0xBF;
+ 176   1              
+ 177   1              Led_Buff[5] = Led_Number[(Hum_Data_Avg/100)%10];        //显示湿度平均值的十位
+ 178   1              Led_Buff[6] = Led_Number[(Hum_Data_Avg/10)%10] & 0x7F;  //显示湿度平均值的个位
+ 179   1              Led_Buff[7] = Led_Number[(Hum_Data_Avg)%10];            //显示湿度平均值小数点后一位
+ 180   1      }
+ 181          
+ 182          void SmgMenuBackupDataTempC()   //温度回显界面
+ 183          {
+ 184   1              Led_Buff[0] = 0xC6;
+ 185   1              Led_Buff[1] = 0xFF;
+ 186   1              
+ 187   1              Led_Buff[2] = Led_Number[(Temp_Data_Max/100)%10];       //显示温度最大值的十位
+ 188   1              Led_Buff[3] = Led_Number[(Temp_Data_Max/10)%10];        //显示温度最大值的个位
+ 189   1              
+ 190   1              Led_Buff[4] = 0xBF;     //显示分隔符
+ 191   1              
+ 192   1              Led_Buff[5] = Led_Number[(Temp_Data_Avg/100)%10];       //显示温度平均值的十位
+ 193   1              Led_Buff[6] = Led_Number[(Temp_Data_Avg/10)%10] & 0x7F; //显示温度平均值的个位
+ 194   1              Led_Buff[7] = Led_Number[(Temp_Data_Avg)%10];           //显示温度平均值小数点后一位
+ 195   1      }
+ 196          
+ 197          void SmgMenuTimer()     //时间显示界面
+ 198          {
+ 199   1              Led_Buff[0] = Led_Number[Ds1302_Timer[2]>>4];
+ 200   1              Led_Buff[1] = Led_Number[Ds1302_Timer[2]&0x0F];
+ 201   1              Led_Buff[2] = 0xBF;
+ 202   1              Led_Buff[3] = Led_Number[Ds1302_Timer[1]>>4];
+ 203   1              Led_Buff[4] = Led_Number[Ds1302_Timer[1]&0x0F];
+ 204   1              Led_Buff[5] = 0xBF;
+ 205   1              Led_Buff[6] = Led_Number[Ds1302_Timer[0]>>4];
+ 206   1              Led_Buff[7] = Led_Number[Ds1302_Timer[0]&0x0F]; 
+ 207   1      }
+ 208          
+ 209          
+ 210          
+ 211          void SmgDisplay()       //数码管显示函数
+ 212          {
+ 213   1              static unsigned char i = 0;     //数码管位选变量
+ 214   1              
+ 215   1              HC138Set(7);    //数码管段选
+ 216   1              P0 = 0xFF;              //消隐
+ 217   1              HC138Set(6);    //数码管位选
+ 218   1              P0 = 0x01<<i;   //位选,从左到右依次点亮数码管
+ 219   1              HC138Set(7);    //数码管段选
+ 220   1              P0 = 0xFF;              //消隐
+ 221   1              P0 = Led_Buff[i];       //段选,显示数码管的值
+ 222   1              HC138Set(0);    //138译码器悬空,防止干扰到其他模块
+ 223   1              
+ 224   1              i++;    //数码管位选变量自加
+ 225   1              i &= 0x07;              //数码管位选变量限制在0~7之间
+ 226   1      }
+ 227          
+ 228          
+ 229          
+ 230          
+ 231          
+ 232          
+ 233          
+ 234          
+ 235          
+ 236          
+C51 COMPILER V9.60.0.0   LED                                                               05/11/2023 22:29:08 PAGE 5   
+
+ 237          
+ 238          
+ 239          
+ 240          
+ 241          
+ 242          
+ 243          
+ 244          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    868    ----
+   CONSTANT SIZE    =     10    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     21    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,83 @@
+C51 COMPILER V9.60.0.0   INIT                                                              05/11/2023 22:29:08 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE INIT
+OBJECT MODULE PLACED IN .\Objects\init.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Config\init.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Config;.\Driv
+                    -er;.\System) DEBUG OBJECTEXTEND PRINT(.\Listings\init.lst) OBJECT(.\Objects\init.obj)
+
+line level    source
+
+   1          #include "init.h"
+   2          
+   3          
+   4          
+   5          
+   6          
+   7          
+   8          
+   9          
+  10          
+  11          
+  12          void Timer1Init()               //1毫秒@12.000MHz
+  13          {
+  14   1              AUXR |= 0x40;           //定时器时钟1T模式
+  15   1              TMOD &= 0x0F;           //设置定时器模式
+  16   1              TL1 = 0x20;             //设置定时初始值
+  17   1              TH1 = 0xD1;             //设置定时初始值
+  18   1              TF1 = 0;                //清除TF1标志
+  19   1              TR1 = 1;                //定时器1开始计时
+  20   1              
+  21   1              ET1 = 1;                //定时器1中断允许
+  22   1              EA = 1;                 //总中断允许
+  23   1      }
+  24          
+  25          
+  26          
+  27          void LedBuzzInit()      //初始化LED和蜂鸣器等外设,防止上电时出现异常
+  28          {
+  29   1              HC138Set(4);    //138译码器选择LED对应的锁存器,使P0口输出直接控制LED
+  30   1              P0 = 0xFF;              //LED全灭
+  31   1              HC138Set(5);    //138译码器选择BUZZ对应的锁存器,使P0口输出直接控制BUZZ和继电器
+  32   1              BUZZ = 0;               //蜂鸣器关闭
+  33   1              RELAY = 0;              //继电器关闭
+  34   1              HC138Set(0);    //138译码器悬空,避免影响其他功能
+  35   1      }
+  36          
+  37          
+  38          void HC138Set(unsigned char Y)  //设置138译码器的Y0~Y7
+  39          {
+  40   1              P2 &= 0x1F;             //清除P2口的高3位
+  41   1              P2 |= (Y & 0x07) << 5;  //设置P2口的高3位,将Y对应的十进制数转换为高三位对应的Y0~Y7�
+             -��，如Y=4,则P2口的高3位为100,即选通Y4C
+  42   1      }
+  43          
+  44          
+  45          
+  46          
+  47          
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+C51 COMPILER V9.60.0.0   INIT                                                              05/11/2023 22:29:08 PAGE 2   
+
+  54          
+  55          
+  56          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     56    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

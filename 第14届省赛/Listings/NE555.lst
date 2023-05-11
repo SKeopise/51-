@@ -1,0 +1,64 @@
+C51 COMPILER V9.60.0.0   NE555                                                             05/11/2023 22:29:08 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE NE555
+OBJECT MODULE PLACED IN .\Objects\NE555.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Driver\NE555.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Config;.\Dri
+                    -ver;.\System) DEBUG OBJECTEXTEND PRINT(.\Listings\NE555.lst) OBJECT(.\Objects\NE555.obj)
+
+line level    source
+
+   1          #include "NE555.h"
+   2          
+   3          
+   4          
+   5          
+   6          
+   7          void Timer0Init()       //定时器0初始化,用于NE555频率测量
+   8          {
+   9   1              TH0 = 0x00;     //定时器0高8位
+  10   1              TL0 = 0x00;     //定时器0低8位
+  11   1              TMOD |= 0x05;   //定时器0工作在计数模式,16位定时器
+  12   1              TR0 = 1;        //启动定时器0
+  13   1              TF0 = 0;        //清除定时器0溢出标志
+  14   1              ET0 = 0;        //禁止定时器0中断
+  15   1      }
+  16          
+  17          
+  18          void ReadFreqNe555(unsigned int* freq)  //读取NE555频率,保存指针freq指向的变量中
+  19          {
+  20   1              *freq = TH0;    //读取定时器0高8位
+  21   1              *freq = (*freq<<8)|TL0; //读取定时器0低8位
+  22   1              TH0 = 0x00;     //清除定时器0高8位
+  23   1              TL0 = 0x00;     //清除定时器0低8位
+  24   1      }
+  25          
+  26          
+  27          
+  28          
+  29          
+  30          
+  31          
+  32          
+  33          
+  34          
+  35          
+  36          
+  37          
+  38          
+  39          
+  40          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     42    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
