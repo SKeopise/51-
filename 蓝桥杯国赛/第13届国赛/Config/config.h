@@ -18,12 +18,18 @@
 
 
 
+extern unsigned char RH_Data;
+
+extern bit flag_Led_Flash;
+
+extern unsigned char Relay_Cnt;
+extern bit flag_Clear_RelayCnt;
 
 
+sbit RELAY = P0^4;
+sbit BUZZ = P0^6;
 
-
-
-
+sbit Motor = P0^5;
 
 
 

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   LED                                                               05/29/2023 22:02:10 PAGE 1   
+C51 COMPILER V9.60.0.0   LED                                                               05/30/2023 22:30:27 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
@@ -33,7 +33,7 @@ line level    source
   23          
   24          
   25          
-  26          
+  26          bit flag_Pwm_Output = 0;
   27          
   28          
   29          
@@ -42,62 +42,258 @@ line level    source
   32          
   33          void SmgMenuMain()
   34          {
-  35   1              Led_Buff[0] = Led_Number[(NE555_Freq/10000)%10];
-  36   1              Led_Buff[1] = Led_Number[(NE555_Freq/1000)%10];
-  37   1              Led_Buff[2] = Led_Number[(NE555_Freq/100)%10];
-  38   1              Led_Buff[3] = Led_Number[(NE555_Freq/10)%10];
-  39   1              Led_Buff[4] = Led_Number[(NE555_Freq)%10];
-  40   1      
-  41   1      }
-  42          
-  43          
-  44          
-  45          
-  46          
-  47          
-  48          void SmgDisplay()
-  49          {
-  50   1              static unsigned char i = 0;
-  51   1      
-  52   1          HC138Set(7);
-  53   1          P0 = 0xFF;  
-  54   1              HC138Set(6);
-C51 COMPILER V9.60.0.0   LED                                                               05/29/2023 22:02:10 PAGE 2   
+  35   1              if(Menu_Mode == 0)
+  36   1              {
+  37   2                      SmgMenuFreq();
+  38   2              }
+  39   1              else if(Menu_Mode == 1)
+  40   1              {
+  41   2                      SmgMenuRH();
+  42   2              }
+  43   1              else if(Menu_Mode == 2)
+  44   1              {
+  45   2                      SmgMenuDistence();
+  46   2              }
+  47   1              else if(Menu_Mode == 3)
+  48   1              {
+  49   2                      SmgMenuParm();
+  50   2              }
+  51   1      }
+  52          
+  53          void LedDisplay()
+  54          {
+C51 COMPILER V9.60.0.0   LED                                                               05/30/2023 22:30:27 PAGE 2   
 
-  55   1              P0 = 0x01 << i;
-  56   1              HC138Set(7);
-  57   1              P0 = 0xFF;
-  58   1              P0 = Led_Buff[i];
-  59   1              HC138Set(0);
-  60   1              
-  61   1              i++;
-  62   1              i &= 0x07;      
-  63   1      }
-  64          
-  65          
-  66          
-  67          
-  68          
-  69          
-  70          
-  71          
-  72          
-  73          
-  74          
-  75          
-  76          
-  77          
-  78          
+  55   1              P0 = 0xFF;
+  56   1              HC138Set(4);
+  57   1              
+  58   1              if(Menu_Mode == 0)
+  59   1              {
+  60   2                      LED1 = 0;
+  61   2              }
+  62   1              else if(Menu_Mode == 1)
+  63   1              {
+  64   2                      LED2 = 0;
+  65   2              }
+  66   1              else if(Menu_Mode == 2)
+  67   1              {
+  68   2                      LED3 = 0;
+  69   2              }
+  70   1              else if(Menu_Mode == 3)
+  71   1              {
+  72   2                      if(Menu_Parm == 0)
+  73   2                      {
+  74   3                              LED1 = flag_Led_Flash;
+  75   3                      }
+  76   2                      else if(Menu_Parm == 1)
+  77   2                      {
+  78   3                              LED2 = flag_Led_Flash;
+  79   3                      }
+  80   2                      else if(Menu_Parm == 2)
+  81   2                      {
+  82   3                              LED3 = flag_Led_Flash;
+  83   3                      }               
+  84   2              }
+  85   1              
+  86   1              if(NE555_Freq > Parm_Freq)
+  87   1              {
+  88   2                      LED4 = 0;
+  89   2                      flag_Pwm_Output = 1;
+  90   2              }
+  91   1              else
+  92   1              {
+  93   2                      flag_Pwm_Output = 0;
+  94   2              }
+  95   1              if(RH_Data > Parm_RH)
+  96   1              {
+  97   2                      LED5 = 0;
+  98   2              }
+  99   1              if(Sonic_Data_Distence > Parm_Distence)
+ 100   1              {
+ 101   2                      LED6 = 0;
+ 102   2              }
+ 103   1              
+ 104   1              if(flag_Clear_RelayCnt == 1)
+ 105   1              {
+ 106   2                      LED8 = 0;
+ 107   2              }
+ 108   1              
+ 109   1              HC138Set(0);
+ 110   1      }
+ 111          
+ 112          void SmgMenuParm()
+ 113          {
+ 114   1              SmgClear();
+ 115   1              Led_Buff[0] = 0x8C;
+ 116   1              if(Menu_Parm == 0)
+C51 COMPILER V9.60.0.0   LED                                                               05/30/2023 22:30:27 PAGE 3   
+
+ 117   1              {
+ 118   2                      Led_Buff[1] = Led_Number[1]; 
+ 119   2                      
+ 120   2                      if(Parm_Freq_Buf >= 10000)
+ 121   2                      {
+ 122   3                              Led_Buff[5] = Led_Number[(Parm_Freq_Buf/10000)%10];
+ 123   3                      }
+ 124   2                      Led_Buff[6] = Led_Number[(Parm_Freq_Buf/1000)%10] & 0x7F;
+ 125   2                      Led_Buff[7] = Led_Number[(Parm_Freq_Buf/100)%10];
+ 126   2              }
+ 127   1              else if(Menu_Parm == 1)
+ 128   1              {
+ 129   2                      Led_Buff[1] = Led_Number[2];
+ 130   2                      Led_Buff[6] = Led_Number[(Parm_RH_Buf/10)%10];
+ 131   2                      Led_Buff[7] = Led_Number[(Parm_RH_Buf)%10];             
+ 132   2              }
+ 133   1              else if(Menu_Parm == 2)
+ 134   1              {
+ 135   2                      Led_Buff[1] = Led_Number[3];
+ 136   2                      Led_Buff[6] = Led_Number[(Parm_Distence_Buf/100)%10] & 0x7F;
+ 137   2                      Led_Buff[7] = Led_Number[(Parm_Distence_Buf/10)%10];                    
+ 138   2              }       
+ 139   1      }
+ 140          
+ 141          void SmgMenuDistence()
+ 142          {
+ 143   1              SmgClear();
+ 144   1              Led_Buff[0] = 0x88;     
+ 145   1              
+ 146   1              if(distence_mode == 0)
+ 147   1              {
+ 148   2                      if(Sonic_Data_Distence >= 100)
+ 149   2                      {
+ 150   3                              Led_Buff[5] = Led_Number[(Sonic_Data_Distence/100)%10];                 
+ 151   3                      }
+ 152   2                      if(Sonic_Data_Distence >= 10)
+ 153   2                      {
+ 154   3                              Led_Buff[6] = Led_Number[(Sonic_Data_Distence/10)%10];                  
+ 155   3                      }
+ 156   2                      Led_Buff[7] = Led_Number[(Sonic_Data_Distence)%10];             
+ 157   2              }
+ 158   1              else
+ 159   1              {
+ 160   2                      Led_Buff[5] = Led_Number[(Sonic_Data_Distence/100)%10] & 0x7F;
+ 161   2                      Led_Buff[6] = Led_Number[(Sonic_Data_Distence/10)%10];
+ 162   2                      Led_Buff[7] = Led_Number[(Sonic_Data_Distence)%10];     
+ 163   2              }
+ 164   1      }
+ 165          
+ 166          
+ 167          void SmgMenuRH()
+ 168          {
+ 169   1              Led_Buff[0] = 0x89;
+ 170   1              Led_Buff[1] = 0xFF;
+ 171   1              Led_Buff[2] = 0xFF;
+ 172   1              Led_Buff[3] = 0xFF;
+ 173   1              Led_Buff[4] = 0xFF;
+ 174   1              Led_Buff[5] = 0xFF;
+ 175   1              
+ 176   1              Led_Buff[6] = Led_Number[(RH_Data/10)%10];
+ 177   1              Led_Buff[7] = Led_Number[(RH_Data)%10]; 
+ 178   1      }
+C51 COMPILER V9.60.0.0   LED                                                               05/30/2023 22:30:27 PAGE 4   
+
+ 179          
+ 180          void SmgMenuFreq()
+ 181          {
+ 182   1              SmgClear();
+ 183   1              Led_Buff[0] = 0x8E;
+ 184   1              
+ 185   1              if(freq_mode == 0)
+ 186   1              {
+ 187   2                      if(NE555_Freq >= 100000)
+ 188   2                      {
+ 189   3                              Led_Buff[2] = Led_Number[(NE555_Freq/100000)%10];                       
+ 190   3                      }
+ 191   2                      if(NE555_Freq >= 10000)
+ 192   2                      {
+ 193   3                              Led_Buff[3] = Led_Number[(NE555_Freq/10000)%10];                        
+ 194   3                      }
+ 195   2                      if(NE555_Freq >= 1000)
+ 196   2                      {
+ 197   3                              Led_Buff[4] = Led_Number[(NE555_Freq/1000)%10];                 
+ 198   3                      }       
+ 199   2                      if(NE555_Freq >= 100)
+ 200   2                      {
+ 201   3                              Led_Buff[5] = Led_Number[(NE555_Freq/100)%10];                  
+ 202   3                      }       
+ 203   2                      if(NE555_Freq >= 10)
+ 204   2                      {
+ 205   3                              Led_Buff[6] = Led_Number[(NE555_Freq/10)%10];                   
+ 206   3                      }       
+ 207   2                      Led_Buff[7] = Led_Number[(NE555_Freq)%10];                              
+ 208   2              }
+ 209   1              else
+ 210   1              {
+ 211   2                      if(NE555_Freq >= 100000)
+ 212   2                      {
+ 213   3                              Led_Buff[4] = Led_Number[(NE555_Freq/100000)%10];                       
+ 214   3                      }
+ 215   2                      if(NE555_Freq >= 10000)
+ 216   2                      {
+ 217   3                              Led_Buff[5] = Led_Number[(NE555_Freq/10000)%10];                        
+ 218   3                      }
+ 219   2                      Led_Buff[6] = Led_Number[(NE555_Freq/1000)%10] & 0x7F;                  
+ 220   2                      Led_Buff[7] = Led_Number[(NE555_Freq/100)%10];                          
+ 221   2              }
+ 222   1      }
+ 223          
+ 224          
+ 225          void SmgClear()
+ 226          {
+ 227   1              Led_Buff[0] = 0xFF;
+ 228   1              Led_Buff[1] = 0xFF;
+ 229   1              Led_Buff[2] = 0xFF;
+ 230   1              Led_Buff[3] = 0xFF;
+ 231   1              Led_Buff[4] = 0xFF;
+ 232   1              Led_Buff[5] = 0xFF;
+ 233   1              Led_Buff[6] = 0xFF;     
+ 234   1              Led_Buff[7] = 0xFF;     
+ 235   1      }
+ 236          
+ 237          
+ 238          void SmgDisplay()
+ 239          {
+ 240   1              static unsigned char i = 0;
+C51 COMPILER V9.60.0.0   LED                                                               05/30/2023 22:30:27 PAGE 5   
+
+ 241   1      
+ 242   1          HC138Set(7);
+ 243   1          P0 = 0xFF;  
+ 244   1              HC138Set(6);
+ 245   1              P0 = 0x01 << i;
+ 246   1              HC138Set(7);
+ 247   1              P0 = 0xFF;
+ 248   1              P0 = Led_Buff[i];
+ 249   1              HC138Set(0);
+ 250   1              
+ 251   1              i++;
+ 252   1              i &= 0x07;      
+ 253   1      }
+ 254          
+ 255          
+ 256          
+ 257          
+ 258          
+ 259          
+ 260          
+ 261          
+ 262          
+ 263          
+ 264          
+ 265          
+ 266          
+ 267          
+ 268          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    209    ----
+   CODE SIZE        =   1106    ----
    CONSTANT SIZE    =     11    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
    DATA SIZE        =      9    ----
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =   ----    ----
+   BIT SIZE         =      1    ----
 END OF MODULE INFORMATION.
 
 

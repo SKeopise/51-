@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SONIC                                                             05/29/2023 22:02:10 PAGE 1   
+C51 COMPILER V9.60.0.0   SONIC                                                             05/30/2023 22:30:28 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SONIC
@@ -11,41 +11,97 @@ line level    source
    1          #include "sonic.h"
    2          
    3          
-   4          
-   5          
+   4          sbit TX = P1^0;
+   5          sbit RX = P1^1;
    6          
-   7          
+   7          unsigned int Sonic_Data_Distence = 0;
    8          
-   9          
+   9          bit flag_Sonic_Far = 0;
   10          
   11          
-  12          
-  13          
-  14          
-  15          
-  16          
-  17          
-  18          
-  19          
-  20          
+  12          void Delay13us()                //@12.000MHz
+  13          {
+  14   1              unsigned char i;
+  15   1      
+  16   1              _nop_();
+  17   1              _nop_();
+  18   1              i = 36;
+  19   1              while (--i);
+  20   1      }
   21          
-  22          
-  23          
-  24          
-  25          
-  26          
-  27          
-  28          
+  22          void SendWave()
+  23          {
+  24   1              unsigned char i = 0;
+  25   1              
+  26   1              for(i=0;i<8;i++)
+  27   1              {
+  28   2                      TX = 1;
+  29   2                      Delay13us();
+  30   2                      TX = 0;
+  31   2                      Delay13us();
+  32   2              }
+  33   1      }
+  34          
+  35          
+  36          void SonicDataRead()
+  37          {
+  38   1              unsigned int Sonic_Time_Buf = 0;
+  39   1              float Distence_Buf = 0;
+  40   1              
+  41   1              TH1 = 0x00;
+  42   1              TL1 = 0x00;
+  43   1              
+  44   1              SendWave();
+  45   1              TR1 = 1;
+  46   1              while((TF1 == 0) && (RX == 1));
+  47   1              TR1 = 0;
+  48   1              
+  49   1              if(TF1 == 1)
+  50   1              {
+  51   2                      TF1 = 0;
+  52   2                      flag_Sonic_Far = 1;
+  53   2              }
+  54   1              else
+C51 COMPILER V9.60.0.0   SONIC                                                             05/30/2023 22:30:28 PAGE 2   
+
+  55   1              {
+  56   2                      flag_Sonic_Far = 0;
+  57   2                      Sonic_Time_Buf = TH1;
+  58   2                      Sonic_Time_Buf = (Sonic_Time_Buf << 8) | TL1;
+  59   2                      Distence_Buf = Sonic_Time_Buf;
+  60   2                      Distence_Buf = Distence_Buf*0.017;
+  61   2                      Sonic_Data_Distence = Distence_Buf; 
+  62   2              }       
+  63   1      }
+  64          
+  65          
+  66          
+  67          
+  68          
+  69          
+  70          
+  71          
+  72          
+  73          
+  74          
+  75          
+  76          
+  77          
+  78          
+  79          
+  80          
+  81          
+  82          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =   ----    ----
+   CODE SIZE        =    125    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----    ----
+   DATA SIZE        =      2       4
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =   ----    ----
+   BIT SIZE         =      1    ----
 END OF MODULE INFORMATION.
 
 

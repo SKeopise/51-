@@ -12,11 +12,13 @@
 
 
 
+void SonicDataRead();
 
 
 
+extern unsigned int Sonic_Data_Distence;
 
-
+extern bit flag_Sonic_Far;
 
 
 

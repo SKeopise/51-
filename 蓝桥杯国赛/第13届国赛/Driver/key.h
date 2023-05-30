@@ -12,8 +12,33 @@ void KeyDriver();
 
 void KeyScan();
 
+void MenuSelectModeS4();
+
+void ParmSelectModeS5();
+
+void ParmDataIncS6();
+
+void ParmDataDecS7();
 
 
+
+
+extern unsigned char Menu_Mode;
+extern unsigned char Menu_Parm;
+
+extern unsigned int Parm_Freq;
+extern unsigned int Parm_Freq_Buf;
+
+extern unsigned char Parm_RH;
+extern unsigned char Parm_RH_Buf;
+
+extern unsigned char Parm_Distence;
+extern unsigned char Parm_Distence_Buf;
+
+extern bit freq_mode;
+extern bit distence_mode;
+
+extern bit flag_S7_LongSet;
 
 
 
