@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 18:42:33 PAGE 1   
+C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 19:53:07 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SONIC
@@ -62,7 +62,7 @@ line level    source
   52   1              while((CF == 0) && (RX == 1));
   53   1              CR = 0;
   54   1              
-C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 18:42:33 PAGE 2   
+C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 19:53:07 PAGE 2   
 
   55   1              if(CF == 1)
   56   1              {

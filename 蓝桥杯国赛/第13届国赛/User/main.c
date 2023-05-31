@@ -3,7 +3,7 @@
 
 
 
-
+bit flag10ms = 0;
 
 bit flag50ms = 0;
 
@@ -41,7 +41,12 @@ void main()
 	InitPCA();
 	
 	while(1)
-	{		
+	{	
+		if(flag_pwm == 1)
+		{
+			flag_pwm = 0;
+			RelayMotorControl();
+		}		
 		if(flag50ms == 1)
 		{
 			flag50ms = 0;
@@ -52,11 +57,7 @@ void main()
 			flag_EEPROM_Write = 0;
 			DataWriteEEPROM(0x00,Relay_Cnt);
 		}
-		if(flag_pwm == 1)
-		{
-			flag_pwm = 0;
-			RelayMotorControl();
-		}
+
 		DataRead();
 		
 	}
@@ -70,9 +71,8 @@ void Timer1Int() interrupt 3
 	if(pwm_cnt >= 5)
 	{
 		pwm_cnt = 0;
-		SmgDisplay();
-		LedDisplay();
 	}
+	SmgDisplay();	
 }
 
 void Timer2Int() interrupt 12
@@ -81,11 +81,16 @@ void Timer2Int() interrupt 12
 	static unsigned char Long_Set_Time = 0;
 	
 	cnt++;
-	if((cnt % 44) == 0)
+	if((cnt % 13) == 0)
+	{
+		flag10ms = 1;
+		LedDisplay();		
+	}
+	if((cnt % 47) == 0)
 	{
 		flag50ms = 1;		
 	}
-	if((cnt % 101) == 0)
+	if((cnt % 102) == 0)
 	{
 		flag100ms = 1;
 		flag_Led_Flash = ~flag_Led_Flash;
@@ -120,13 +125,27 @@ void Timer2Int() interrupt 12
 
 void DataRead()
 {
+	float RH_Data_Buf = 0;
+	
+	if(flag10ms == 1)
+	{
+		flag10ms = 0;
+		ADC_Data_Read_AIN3(&RH_Data);
+		RH_Data_Buf = RH_Data;
+		RH_Data_Buf /= 51;
+		RH_Data_Buf *= 20;
+		RH_Data = RH_Data_Buf;
+		if(RH_Data >= 99)
+		{
+			RH_Data = 99;
+		}
+		SmgMenuMain();		
+	}
 	if(flag100ms == 1)
 	{
 		flag100ms = 0;
-		SonicDataRead();		
-		ADC_Data_Read_AIN3(&RH_Data);
-		DataMath();	
-		SmgMenuMain();
+		SonicDataRead();	
+		DataMath();			
 	}
 	if(flag500ms == 1)
 	{
@@ -137,18 +156,8 @@ void DataRead()
 
 void DataMath()
 {
-	float RH_Data_Buf = 0;
 	float DAC_Data_Buf = 0;
 	unsigned char DAC_Data = 0;
-	
-	RH_Data_Buf = RH_Data;
-	RH_Data_Buf /= 51;
-	RH_Data_Buf *= 20;
-	RH_Data = RH_Data_Buf;
-	if(RH_Data >= 99)
-	{
-		RH_Data = 99;
-	}
 	
 	if(RH_Data < Parm_RH)
 	{
@@ -208,7 +217,7 @@ void RelayMotorControl()
 		}		
 	}
 	
-	if(flag100ms == 1)
+	if(flag50ms == 1)
 	{
 		if(Sonic_Data_Distence > Parm_Distence)
 		{
