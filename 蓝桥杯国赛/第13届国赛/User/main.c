@@ -15,23 +15,30 @@ bit flag_Led_Flash = 0;
 
 bit flag_Relay = 0;
 
+bit flag_EEPROM_Write = 0;
+
 unsigned char RH_Data;
 
 unsigned char Relay_Cnt = 0;
 bit flag_Clear_RelayCnt = 0;
 
+unsigned char pwm_cnt = 0;
+
+bit flag_pwm = 0;
 
 
 void DataRead();
 void DataMath();
-void RelayControl(bit RelayOn);
+void RelayMotorControl();
 
 void main()
 {
 	LedBuzzInit();
+	Timer1Init();
 	Timer2Init();
 	NE555Init();
 	FirstReadEEPROM();
+	InitPCA();
 	
 	while(1)
 	{		
@@ -40,7 +47,31 @@ void main()
 			flag50ms = 0;
 			KeyDriver();			
 		}
+		if(flag_EEPROM_Write == 1)
+		{
+			flag_EEPROM_Write = 0;
+			DataWriteEEPROM(0x00,Relay_Cnt);
+		}
+		if(flag_pwm == 1)
+		{
+			flag_pwm = 0;
+			RelayMotorControl();
+		}
 		DataRead();
+		
+	}
+}
+
+void Timer1Int() interrupt 3
+{	
+	pwm_cnt++;
+	
+	flag_pwm = 1;
+	if(pwm_cnt >= 5)
+	{
+		pwm_cnt = 0;
+		SmgDisplay();
+		LedDisplay();
 	}
 }
 
@@ -81,8 +112,8 @@ void Timer2Int() interrupt 12
 	}
 	
 
-	LedDisplay();
-	SmgDisplay();
+//	LedDisplay();
+//	SmgDisplay();
 	KeyScan();
 }
 
@@ -138,37 +169,68 @@ void DataMath()
 		DAC_Data = DAC_Data_Buf;
 		DAC_Output(DAC_Data);
 	}
-	
-	if(Sonic_Data_Distence > Parm_Distence)
+}
+
+
+void RelayMotorControl()
+{	
+	P0 = 0x00;
+	if(flag_Relay == 1)
+	{		
+		RELAY = 1;
+	}
+	else
 	{
-		if(flag_Relay == 0)
+		RELAY = 0;		
+	}
+	
+	HC138Set(5);
+	if(flag_Pwm_Output == 1)
+	{
+		if(pwm_cnt < 4)
 		{
-			flag_Relay = 1;
-			RelayControl(1);
-			Relay_Cnt++;
-			DataWriteEEPROM(0x00,Relay_Cnt);
+			Motor = 1;
+		}
+		else
+		{
+			Motor = 0;
 		}
 	}
 	else
 	{
-		if(flag_Relay == 1)
+		if(pwm_cnt < 4)
 		{
-			flag_Relay = 0;
-			RelayControl(0);
+			Motor = 0;
 		}
+		else
+		{
+			Motor = 1;
+		}		
 	}
-}
-
-void RelayControl(bit RelayOn)
-{
-	P0 = 0xFF;
-	HC138Set(5);
 	
-	RELAY = RelayOn;
+	if(flag100ms == 1)
+	{
+		if(Sonic_Data_Distence > Parm_Distence)
+		{
+			if(flag_Relay == 0)
+			{
+				flag_Relay = 1;
+	//			RELAY = 1;
+				Relay_Cnt++;
+				flag_EEPROM_Write = 1;
+			}
+		}
+		else
+		{
+			if(flag_Relay == 1)
+			{
+				flag_Relay = 0;
+	//			RELAY = 0;
+			}
+		}	
+	}
 	
-	HC138Set(0);
+	HC138Set(0);	
 }
-
-
 
 

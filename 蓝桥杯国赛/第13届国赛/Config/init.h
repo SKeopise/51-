@@ -16,7 +16,7 @@ void LedBuzzInit();
 
 void Timer2Init();
 
-
+void Timer1Init();
 
 
 

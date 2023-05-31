@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   MAIN                                                              05/30/2023 22:30:27 PAGE 1   
+C51 COMPILER V9.60.0.0   MAIN                                                              05/31/2023 18:42:32 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE MAIN
@@ -25,179 +25,243 @@ line level    source
   15          
   16          bit flag_Relay = 0;
   17          
-  18          unsigned char RH_Data;
+  18          bit flag_EEPROM_Write = 0;
   19          
-  20          unsigned char Relay_Cnt = 0;
-  21          bit flag_Clear_RelayCnt = 0;
-  22          
-  23          
+  20          unsigned char RH_Data;
+  21          
+  22          unsigned char Relay_Cnt = 0;
+  23          bit flag_Clear_RelayCnt = 0;
   24          
-  25          void DataRead();
-  26          void DataMath();
-  27          void RelayControl(bit RelayOn);
+  25          unsigned char pwm_cnt = 0;
+  26          
+  27          bit flag_pwm = 0;
   28          
-  29          void main()
-  30          {
-  31   1              LedBuzzInit();
-  32   1              Timer2Init();
-  33   1              NE555Init();
-  34   1              FirstReadEEPROM();
-  35   1              
-  36   1              while(1)
-  37   1              {               
-  38   2                      if(flag50ms == 1)
-  39   2                      {
-  40   3                              flag50ms = 0;
-  41   3                              KeyDriver();                    
-  42   3                      }
-  43   2                      DataRead();
-  44   2              }
-  45   1      }
-  46          
-  47          void Timer2Int() interrupt 12
-  48          {
-  49   1              static unsigned int cnt = 0;
-  50   1              static unsigned char Long_Set_Time = 0;
-  51   1              
-  52   1              cnt++;
-  53   1              if((cnt % 44) == 0)
-  54   1              {
-C51 COMPILER V9.60.0.0   MAIN                                                              05/30/2023 22:30:27 PAGE 2   
+  29          
+  30          void DataRead();
+  31          void DataMath();
+  32          void RelayMotorControl();
+  33          
+  34          void main()
+  35          {
+  36   1              LedBuzzInit();
+  37   1              Timer1Init();
+  38   1              Timer2Init();
+  39   1              NE555Init();
+  40   1              FirstReadEEPROM();
+  41   1              InitPCA();
+  42   1              
+  43   1              while(1)
+  44   1              {               
+  45   2                      if(flag50ms == 1)
+  46   2                      {
+  47   3                              flag50ms = 0;
+  48   3                              KeyDriver();                    
+  49   3                      }
+  50   2                      if(flag_EEPROM_Write == 1)
+  51   2                      {
+  52   3                              flag_EEPROM_Write = 0;
+  53   3                              DataWriteEEPROM(0x00,Relay_Cnt);
+  54   3                      }
+C51 COMPILER V9.60.0.0   MAIN                                                              05/31/2023 18:42:32 PAGE 2   
 
-  55   2                      flag50ms = 1;           
-  56   2              }
-  57   1              if((cnt % 101) == 0)
-  58   1              {
-  59   2                      flag100ms = 1;
-  60   2                      flag_Led_Flash = ~flag_Led_Flash;
-  61   2                      if(flag_S7_LongSet == 1)
-  62   2                      {
-  63   3                              if(Long_Set_Time < 10)
-  64   3                              {
-  65   4                                      Long_Set_Time++;
-  66   4                              }
-  67   3                              else
-  68   3                              {
-  69   4                                      flag_Clear_RelayCnt = 1;
-  70   4                              }
-  71   3                      }
-  72   2                      else
-  73   2                      {
-  74   3                              Long_Set_Time = 0;
-  75   3                      }
-  76   2              }
-  77   1              if(cnt >= 499)
-  78   1              {
-  79   2                      cnt = 0;
-  80   2                      flag500ms = 1;
-  81   2              }
+  55   2                      if(flag_pwm == 1)
+  56   2                      {
+  57   3                              flag_pwm = 0;
+  58   3                              RelayMotorControl();
+  59   3                      }
+  60   2                      DataRead();
+  61   2                      
+  62   2              }
+  63   1      }
+  64          
+  65          void Timer1Int() interrupt 3
+  66          {       
+  67   1              pwm_cnt++;
+  68   1              
+  69   1              flag_pwm = 1;
+  70   1              if(pwm_cnt >= 5)
+  71   1              {
+  72   2                      pwm_cnt = 0;
+  73   2                      SmgDisplay();
+  74   2                      LedDisplay();
+  75   2              }
+  76   1      }
+  77          
+  78          void Timer2Int() interrupt 12
+  79          {
+  80   1              static unsigned int cnt = 0;
+  81   1              static unsigned char Long_Set_Time = 0;
   82   1              
-  83   1      
-  84   1              LedDisplay();
-  85   1              SmgDisplay();
-  86   1              KeyScan();
-  87   1      }
-  88          
-  89          
-  90          void DataRead()
-  91          {
-  92   1              if(flag100ms == 1)
-  93   1              {
-  94   2                      flag100ms = 0;
-  95   2                      SonicDataRead();                
-  96   2                      ADC_Data_Read_AIN3(&RH_Data);
-  97   2                      DataMath();     
-  98   2                      SmgMenuMain();
-  99   2              }
- 100   1              if(flag500ms == 1)
- 101   1              {
- 102   2                      flag500ms = 0;
- 103   2                      NE555FreqReadData(&NE555_Freq);
- 104   2              }       
- 105   1      }
- 106          
- 107          void DataMath()
- 108          {
- 109   1              float RH_Data_Buf = 0;
- 110   1              float DAC_Data_Buf = 0;
- 111   1              unsigned char DAC_Data = 0;
- 112   1              
- 113   1              RH_Data_Buf = RH_Data;
- 114   1              RH_Data_Buf /= 51;
- 115   1              RH_Data_Buf *= 20;
- 116   1              RH_Data = RH_Data_Buf;
-C51 COMPILER V9.60.0.0   MAIN                                                              05/30/2023 22:30:27 PAGE 3   
+  83   1              cnt++;
+  84   1              if((cnt % 44) == 0)
+  85   1              {
+  86   2                      flag50ms = 1;           
+  87   2              }
+  88   1              if((cnt % 101) == 0)
+  89   1              {
+  90   2                      flag100ms = 1;
+  91   2                      flag_Led_Flash = ~flag_Led_Flash;
+  92   2                      if(flag_S7_LongSet == 1)
+  93   2                      {
+  94   3                              if(Long_Set_Time < 10)
+  95   3                              {
+  96   4                                      Long_Set_Time++;
+  97   4                              }
+  98   3                              else
+  99   3                              {
+ 100   4                                      flag_Clear_RelayCnt = 1;
+ 101   4                              }
+ 102   3                      }
+ 103   2                      else
+ 104   2                      {
+ 105   3                              Long_Set_Time = 0;
+ 106   3                      }
+ 107   2              }
+ 108   1              if(cnt >= 499)
+ 109   1              {
+ 110   2                      cnt = 0;
+ 111   2                      flag500ms = 1;
+ 112   2              }
+ 113   1              
+ 114   1      
+ 115   1      //      LedDisplay();
+ 116   1      //      SmgDisplay();
+C51 COMPILER V9.60.0.0   MAIN                                                              05/31/2023 18:42:32 PAGE 3   
 
- 117   1              if(RH_Data >= 99)
- 118   1              {
- 119   2                      RH_Data = 99;
- 120   2              }
- 121   1              
- 122   1              if(RH_Data < Parm_RH)
- 123   1              {
- 124   2                      DAC_Output(53);
- 125   2              }
- 126   1              else if(RH_Data > 80)
- 127   1              {
- 128   2                      DAC_Output(255);
- 129   2              }
- 130   1              else
- 131   1              {
- 132   2                      DAC_Data_Buf = RH_Data;
- 133   2                      DAC_Data_Buf -= Parm_RH;
- 134   2                      DAC_Data_Buf *= 4;
- 135   2                      DAC_Data_Buf /= (80 - Parm_RH);
- 136   2                      DAC_Data_Buf += 1;
- 137   2                      DAC_Data_Buf *= 53.125;
- 138   2                      DAC_Data = DAC_Data_Buf;
- 139   2                      DAC_Output(DAC_Data);
- 140   2              }
- 141   1              
- 142   1              if(Sonic_Data_Distence > Parm_Distence)
- 143   1              {
- 144   2                      if(flag_Relay == 0)
- 145   2                      {
- 146   3                              flag_Relay = 1;
- 147   3                              RelayControl(1);
- 148   3                              Relay_Cnt++;
- 149   3                              DataWriteEEPROM(0x00,Relay_Cnt);
- 150   3                      }
+ 117   1              KeyScan();
+ 118   1      }
+ 119          
+ 120          
+ 121          void DataRead()
+ 122          {
+ 123   1              if(flag100ms == 1)
+ 124   1              {
+ 125   2                      flag100ms = 0;
+ 126   2                      SonicDataRead();                
+ 127   2                      ADC_Data_Read_AIN3(&RH_Data);
+ 128   2                      DataMath();     
+ 129   2                      SmgMenuMain();
+ 130   2              }
+ 131   1              if(flag500ms == 1)
+ 132   1              {
+ 133   2                      flag500ms = 0;
+ 134   2                      NE555FreqReadData(&NE555_Freq);
+ 135   2              }       
+ 136   1      }
+ 137          
+ 138          void DataMath()
+ 139          {
+ 140   1              float RH_Data_Buf = 0;
+ 141   1              float DAC_Data_Buf = 0;
+ 142   1              unsigned char DAC_Data = 0;
+ 143   1              
+ 144   1              RH_Data_Buf = RH_Data;
+ 145   1              RH_Data_Buf /= 51;
+ 146   1              RH_Data_Buf *= 20;
+ 147   1              RH_Data = RH_Data_Buf;
+ 148   1              if(RH_Data >= 99)
+ 149   1              {
+ 150   2                      RH_Data = 99;
  151   2              }
- 152   1              else
- 153   1              {
- 154   2                      if(flag_Relay == 1)
- 155   2                      {
- 156   3                              flag_Relay = 0;
- 157   3                              RelayControl(0);
- 158   3                      }
- 159   2              }
- 160   1      }
- 161          
- 162          void RelayControl(bit RelayOn)
- 163          {
- 164   1              P0 = 0xFF;
- 165   1              HC138Set(5);
- 166   1              
- 167   1              RELAY = RelayOn;
- 168   1              
- 169   1              HC138Set(0);
- 170   1      }
- 171          
- 172          
+ 152   1              
+ 153   1              if(RH_Data < Parm_RH)
+ 154   1              {
+ 155   2                      DAC_Output(53);
+ 156   2              }
+ 157   1              else if(RH_Data > 80)
+ 158   1              {
+ 159   2                      DAC_Output(255);
+ 160   2              }
+ 161   1              else
+ 162   1              {
+ 163   2                      DAC_Data_Buf = RH_Data;
+ 164   2                      DAC_Data_Buf -= Parm_RH;
+ 165   2                      DAC_Data_Buf *= 4;
+ 166   2                      DAC_Data_Buf /= (80 - Parm_RH);
+ 167   2                      DAC_Data_Buf += 1;
+ 168   2                      DAC_Data_Buf *= 53.125;
+ 169   2                      DAC_Data = DAC_Data_Buf;
+ 170   2                      DAC_Output(DAC_Data);
+ 171   2              }
+ 172   1      }
  173          
  174          
+ 175          void RelayMotorControl()
+ 176          {       
+ 177   1              P0 = 0x00;
+ 178   1              if(flag_Relay == 1)
+C51 COMPILER V9.60.0.0   MAIN                                                              05/31/2023 18:42:32 PAGE 4   
+
+ 179   1              {               
+ 180   2                      RELAY = 1;
+ 181   2              }
+ 182   1              else
+ 183   1              {
+ 184   2                      RELAY = 0;              
+ 185   2              }
+ 186   1              
+ 187   1              HC138Set(5);
+ 188   1              if(flag_Pwm_Output == 1)
+ 189   1              {
+ 190   2                      if(pwm_cnt < 4)
+ 191   2                      {
+ 192   3                              Motor = 1;
+ 193   3                      }
+ 194   2                      else
+ 195   2                      {
+ 196   3                              Motor = 0;
+ 197   3                      }
+ 198   2              }
+ 199   1              else
+ 200   1              {
+ 201   2                      if(pwm_cnt < 4)
+ 202   2                      {
+ 203   3                              Motor = 0;
+ 204   3                      }
+ 205   2                      else
+ 206   2                      {
+ 207   3                              Motor = 1;
+ 208   3                      }               
+ 209   2              }
+ 210   1              
+ 211   1              if(flag100ms == 1)
+ 212   1              {
+ 213   2                      if(Sonic_Data_Distence > Parm_Distence)
+ 214   2                      {
+ 215   3                              if(flag_Relay == 0)
+ 216   3                              {
+ 217   4                                      flag_Relay = 1;
+ 218   4              //                      RELAY = 1;
+ 219   4                                      Relay_Cnt++;
+ 220   4                                      flag_EEPROM_Write = 1;
+ 221   4                              }
+ 222   3                      }
+ 223   2                      else
+ 224   2                      {
+ 225   3                              if(flag_Relay == 1)
+ 226   3                              {
+ 227   4                                      flag_Relay = 0;
+ 228   4              //                      RELAY = 0;
+ 229   4                              }
+ 230   3                      }       
+ 231   2              }
+ 232   1              
+ 233   1              HC138Set(0);    
+ 234   1      }
+ 235          
+ 236          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    553    ----
-C51 COMPILER V9.60.0.0   MAIN                                                              05/30/2023 22:30:27 PAGE 4   
+   CODE SIZE        =    687    ----
+C51 COMPILER V9.60.0.0   MAIN                                                              05/31/2023 18:42:32 PAGE 5   
 
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =      5       9
+   DATA SIZE        =      6       9
    IDATA SIZE       =   ----    ----
-   BIT SIZE         =      6       1
+   BIT SIZE         =      8    ----
 END OF MODULE INFORMATION.
 
 

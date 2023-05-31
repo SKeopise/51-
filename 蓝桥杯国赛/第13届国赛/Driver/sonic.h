@@ -10,7 +10,7 @@
 
 
 
-
+void InitPCA();
 
 void SonicDataRead();
 

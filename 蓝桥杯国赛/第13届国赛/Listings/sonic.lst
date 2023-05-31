@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SONIC                                                             05/30/2023 22:30:28 PAGE 1   
+C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 18:42:33 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SONIC
@@ -19,67 +19,67 @@ line level    source
    9          bit flag_Sonic_Far = 0;
   10          
   11          
-  12          void Delay13us()                //@12.000MHz
+  12          void InitPCA()
   13          {
-  14   1              unsigned char i;
-  15   1      
-  16   1              _nop_();
-  17   1              _nop_();
-  18   1              i = 36;
-  19   1              while (--i);
-  20   1      }
-  21          
-  22          void SendWave()
-  23          {
-  24   1              unsigned char i = 0;
-  25   1              
-  26   1              for(i=0;i<8;i++)
-  27   1              {
-  28   2                      TX = 1;
-  29   2                      Delay13us();
-  30   2                      TX = 0;
-  31   2                      Delay13us();
-  32   2              }
-  33   1      }
-  34          
-  35          
-  36          void SonicDataRead()
-  37          {
-  38   1              unsigned int Sonic_Time_Buf = 0;
-  39   1              float Distence_Buf = 0;
-  40   1              
-  41   1              TH1 = 0x00;
-  42   1              TL1 = 0x00;
-  43   1              
-  44   1              SendWave();
-  45   1              TR1 = 1;
-  46   1              while((TF1 == 0) && (RX == 1));
-  47   1              TR1 = 0;
-  48   1              
-  49   1              if(TF1 == 1)
-  50   1              {
-  51   2                      TF1 = 0;
-  52   2                      flag_Sonic_Far = 1;
-  53   2              }
-  54   1              else
-C51 COMPILER V9.60.0.0   SONIC                                                             05/30/2023 22:30:28 PAGE 2   
+  14   1              CMOD |= 0x80;
+  15   1              CCON = 0x00;
+  16   1      }
+  17          
+  18          void Delay13us()                //@12.000MHz
+  19          {
+  20   1              unsigned char i;
+  21   1      
+  22   1              _nop_();
+  23   1              _nop_();
+  24   1              i = 36;
+  25   1              while (--i);
+  26   1      }
+  27          
+  28          void SendWave()
+  29          {
+  30   1              unsigned char i = 0;
+  31   1              
+  32   1              for(i=0;i<8;i++)
+  33   1              {
+  34   2                      TX = 1;
+  35   2                      Delay13us();
+  36   2                      TX = 0;
+  37   2                      Delay13us();
+  38   2              }
+  39   1      }
+  40          
+  41          
+  42          void SonicDataRead()
+  43          {
+  44   1              unsigned int Sonic_Time_Buf = 0;
+  45   1              float Distence_Buf = 0;
+  46   1              
+  47   1              CH = 0x00;
+  48   1              CL = 0x00;
+  49   1              
+  50   1              SendWave();
+  51   1              CR = 1;
+  52   1              while((CF == 0) && (RX == 1));
+  53   1              CR = 0;
+  54   1              
+C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 18:42:33 PAGE 2   
 
-  55   1              {
-  56   2                      flag_Sonic_Far = 0;
-  57   2                      Sonic_Time_Buf = TH1;
-  58   2                      Sonic_Time_Buf = (Sonic_Time_Buf << 8) | TL1;
-  59   2                      Distence_Buf = Sonic_Time_Buf;
-  60   2                      Distence_Buf = Distence_Buf*0.017;
-  61   2                      Sonic_Data_Distence = Distence_Buf; 
-  62   2              }       
-  63   1      }
-  64          
-  65          
-  66          
-  67          
-  68          
-  69          
-  70          
+  55   1              if(CF == 1)
+  56   1              {
+  57   2                      CF = 0;
+  58   2                      flag_Sonic_Far = 1;
+  59   2                      Sonic_Data_Distence = 999;
+  60   2              }
+  61   1              else
+  62   1              {
+  63   2                      flag_Sonic_Far = 0;
+  64   2                      Sonic_Time_Buf = CH;
+  65   2                      Sonic_Time_Buf = (Sonic_Time_Buf << 8) | CL;
+  66   2                      Distence_Buf = Sonic_Time_Buf;
+  67   2                      Distence_Buf = Distence_Buf*0.017;
+  68   2                      Sonic_Data_Distence = Distence_Buf; 
+  69   2              }       
+  70   1      }
   71          
   72          
   73          
@@ -92,10 +92,17 @@ line level    source
   80          
   81          
   82          
+  83          
+  84          
+  85          
+  86          
+  87          
+  88          
+  89          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    125    ----
+   CODE SIZE        =    138    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
