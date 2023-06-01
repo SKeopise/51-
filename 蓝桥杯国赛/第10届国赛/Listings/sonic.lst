@@ -1,0 +1,133 @@
+C51 COMPILER V9.60.0.0   SONIC                                                             06/01/2023 22:28:24 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SONIC
+OBJECT MODULE PLACED IN .\Objects\sonic.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Driver\sonic.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Driver;.\Sys
+                    -tem;.\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\sonic.lst) OBJECT(.\Objects\sonic.obj)
+
+line level    source
+
+   1          #include "sonic.h"
+   2          
+   3          
+   4          
+   5          sbit TX = P1^0;
+   6          sbit RX = P1^1;
+   7          
+   8          
+   9          bit Distence_Far = 0;
+  10          unsigned int Sonic_Distence = 0;
+  11          
+  12          
+  13          
+  14          void PCA_Init()
+  15          {
+  16   1              CMOD = 0x80;
+  17   1              CCON = 0x00;
+  18   1      }
+  19          
+  20          
+  21          void Delay13us()                //@12.000MHz
+  22          {
+  23   1              unsigned char i;
+  24   1      
+  25   1              _nop_();
+  26   1              _nop_();
+  27   1              i = 36;
+  28   1              while (--i);
+  29   1      }
+  30          
+  31          
+  32          void SendWave()
+  33          {
+  34   1              unsigned char i = 0;
+  35   1              
+  36   1              for(i=0;i<8;i++)
+  37   1              {
+  38   2                      TX = 1;
+  39   2                      Delay13us();
+  40   2                      TX = 0;
+  41   2                      Delay13us();
+  42   2              }
+  43   1      }
+  44          
+  45          
+  46          void Sonic_DataRead()
+  47          {
+  48   1              unsigned int Data_Buf = 0;
+  49   1              float Distence_Buf = 0;
+  50   1              
+  51   1              
+  52   1              CH = 0x00;
+  53   1              CL = 0x00;
+  54   1              
+C51 COMPILER V9.60.0.0   SONIC                                                             06/01/2023 22:28:24 PAGE 2   
+
+  55   1              SendWave();
+  56   1              CR = 1;
+  57   1              while((RX == 1) && (CF == 0));
+  58   1              CR = 0;
+  59   1              
+  60   1              if(CF == 1)
+  61   1              {
+  62   2                      CF = 0;
+  63   2                      Distence_Far = 1;
+  64   2              }
+  65   1              else
+  66   1              {               
+  67   2                      Data_Buf = CH;
+  68   2                      Data_Buf = (Data_Buf << 8) | CL;
+  69   2                      Distence_Buf = Data_Buf;
+  70   2                      Distence_Buf = Distence_Buf * 0.017;
+  71   2                      Data_Buf = Distence_Buf;
+  72   2                      if(Data_Buf > 99)
+  73   2                      {
+  74   3                              Distence_Far = 1;
+  75   3                      }
+  76   2                      else
+  77   2                      {
+  78   3                              Distence_Far = 0;
+  79   3                      }
+  80   2              }
+  81   1              
+  82   1              if(Distence_Far == 0)
+  83   1              {
+  84   2                      Sonic_Distence = Data_Buf;
+  85   2              }
+  86   1              else
+  87   1              {
+  88   2                      Sonic_Distence = 99;
+  89   2              }
+  90   1      }
+  91          
+  92          
+  93          
+  94          
+  95          
+  96          
+  97          
+  98          
+  99          
+ 100          
+ 101          
+ 102          
+ 103          
+ 104          
+ 105          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    157    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.60.0.0   SONIC                                                             06/01/2023 22:28:24 PAGE 3   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
