@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   EEPROM                                                            06/01/2023 22:28:24 PAGE 1   
+C51 COMPILER V9.60.0.0   EEPROM                                                            06/03/2023 18:34:59 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EEPROM
@@ -23,91 +23,103 @@ line level    source
   13   1              if(Data_Buf != FIRST_DATA)
   14   1              {
   15   2                      EEPROM_WriteData(FIRST_ADDR,FIRST_DATA);
-  16   2                      Data_Buf = (unsigned char)(Parm_ChangCnt & 0x0F); 
-  17   2                      EEPROM_WriteData(PARM_CNT_ADDR_LOW,Data_Buf);
-  18   2                      Data_Buf = (unsigned char)(Parm_ChangCnt >> 8);
-  19   2                      EEPROM_WriteData(PARM_CNT_ADDR_HIGH,Data_Buf);          
-  20   2              }
-  21   1              else
-  22   1              {
-  23   2                      EEPROM_ReadData(PARM_CNT_ADDR_HIGH,&Data_Buf);
-  24   2                      Parm_ChangCnt = Data_Buf;
-  25   2                      Parm_ChangCnt <<= 8;
-  26   2                      EEPROM_ReadData(PARM_CNT_ADDR_LOW,&Data_Buf);
-  27   2                      Parm_ChangCnt |= Data_Buf;
-  28   2              }
-  29   1      }
-  30          
-  31          
-  32          
-  33          void Delay5ms()         //@12.000MHz
-  34          {
-  35   1              unsigned char i, j;
-  36   1      
-  37   1              i = 59;
-  38   1              j = 90;
-  39   1              do
-  40   1              {
-  41   2                      while (--j);
-  42   2              } while (--i);
-  43   1      }
+  16   2                      EEPROM_WriteUnsignedInt(PARM_CNT_ADDR_HIGH,PARM_CNT_ADDR_LOW,&Parm_ChangCnt);   
+  17   2              }
+  18   1              else
+  19   1              {
+  20   2                      EEPROM_ReadUnsignedInt(PARM_CNT_ADDR_HIGH,PARM_CNT_ADDR_LOW,&Parm_ChangCnt);
+  21   2              }
+  22   1      }
+  23          
+  24          void EEPROM_WriteUnsignedInt(unsigned char addrH,unsigned char addrL,unsigned int *dat)
+  25          {
+  26   1              unsigned char Data_Buf = 0;
+  27   1              
+  28   1              Data_Buf = (unsigned char)(*dat & 0x0F); 
+  29   1              EEPROM_WriteData(addrL,Data_Buf);
+  30   1              Data_Buf = (unsigned char)(*dat >> 8);
+  31   1              EEPROM_WriteData(addrH,Data_Buf);                       
+  32   1      }
+  33          
+  34          void EEPROM_ReadUnsignedInt(unsigned char addrH,unsigned char addrL,unsigned int *dat)
+  35          {
+  36   1              unsigned char Data_Buf = 0;
+  37   1              EEPROM_ReadData(addrH,&Data_Buf);
+  38   1              *dat = Data_Buf;
+  39   1              *dat <<= 8;
+  40   1              EEPROM_ReadData(addrL,&Data_Buf);       
+  41   1              *dat |= Data_Buf;       
+  42   1      }
+  43          
   44          
-  45          
-  46          
-  47          void EEPROM_ReadData(unsigned char addr,unsigned char *dat)
-  48          {
-  49   1              I2CStart();
-  50   1              I2CSendByte(0xA0);
-  51   1              I2CWaitAck();
-  52   1              I2CSendByte(addr);
-  53   1              I2CWaitAck();
-  54   1              
-C51 COMPILER V9.60.0.0   EEPROM                                                            06/01/2023 22:28:24 PAGE 2   
+  45          void Delay5ms()         //@12.000MHz
+  46          {
+  47   1              unsigned char i, j;
+  48   1      
+  49   1              i = 59;
+  50   1              j = 90;
+  51   1              do
+  52   1              {
+  53   2                      while (--j);
+  54   2              } while (--i);
+C51 COMPILER V9.60.0.0   EEPROM                                                            06/03/2023 18:34:59 PAGE 2   
 
-  55   1              I2CStart();
-  56   1              I2CSendByte(0xA1);
-  57   1              I2CWaitAck();   
-  58   1              
-  59   1              *dat = I2CReceiveByte();
-  60   1              I2CSendAck(1);
-  61   1              I2CStop();
-  62   1      }
-  63          
-  64          
-  65          void EEPROM_WriteData(unsigned char addr,unsigned char dat)
-  66          {
+  55   1      }
+  56          
+  57          
+  58          
+  59          void EEPROM_ReadData(unsigned char addr,unsigned char *dat)
+  60          {
+  61   1              I2CStart();
+  62   1              I2CSendByte(0xA0);
+  63   1              I2CWaitAck();
+  64   1              I2CSendByte(addr);
+  65   1              I2CWaitAck();
+  66   1              
   67   1              I2CStart();
-  68   1              I2CSendByte(0xA0);
-  69   1              I2CWaitAck();
-  70   1              I2CSendByte(addr);
-  71   1              I2CWaitAck();
-  72   1              I2CSendByte(dat);
-  73   1              I2CWaitAck();
-  74   1              I2CStop();      
-  75   1              
-  76   1              Delay5ms();
-  77   1      }
-  78          
-  79          
-  80          
-  81          
-  82          
-  83          
-  84          
-  85          
-  86          
-  87          
-  88          
-  89          
+  68   1              I2CSendByte(0xA1);
+  69   1              I2CWaitAck();   
+  70   1              
+  71   1              *dat = I2CReceiveByte();
+  72   1              I2CSendAck(1);
+  73   1              I2CStop();
+  74   1      }
+  75          
+  76          
+  77          void EEPROM_WriteData(unsigned char addr,unsigned char dat)
+  78          {
+  79   1              I2CStart();
+  80   1              I2CSendByte(0xA0);
+  81   1              I2CWaitAck();
+  82   1              I2CSendByte(addr);
+  83   1              I2CWaitAck();
+  84   1              I2CSendByte(dat);
+  85   1              I2CWaitAck();
+  86   1              I2CStop();      
+  87   1              
+  88   1              Delay5ms();
+  89   1      }
   90          
+  91          
+  92          
+  93          
+  94          
+  95          
+  96          
+  97          
+  98          
+  99          
+ 100          
+ 101          
+ 102          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    188    ----
+   CODE SIZE        =    275    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----
-   DATA SIZE        =   ----       7
+   DATA SIZE        =   ----      16
    IDATA SIZE       =   ----    ----
    BIT SIZE         =   ----    ----
 END OF MODULE INFORMATION.

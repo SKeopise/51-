@@ -13,21 +13,33 @@ void FirstRead_EEPROM()
 	if(Data_Buf != FIRST_DATA)
 	{
 		EEPROM_WriteData(FIRST_ADDR,FIRST_DATA);
-		Data_Buf = (unsigned char)(Parm_ChangCnt & 0x0F); 
-		EEPROM_WriteData(PARM_CNT_ADDR_LOW,Data_Buf);
-		Data_Buf = (unsigned char)(Parm_ChangCnt >> 8);
-		EEPROM_WriteData(PARM_CNT_ADDR_HIGH,Data_Buf);		
+		EEPROM_WriteUnsignedInt(PARM_CNT_ADDR_HIGH,PARM_CNT_ADDR_LOW,&Parm_ChangCnt);	
 	}
 	else
 	{
-		EEPROM_ReadData(PARM_CNT_ADDR_HIGH,&Data_Buf);
-		Parm_ChangCnt = Data_Buf;
-		Parm_ChangCnt <<= 8;
-		EEPROM_ReadData(PARM_CNT_ADDR_LOW,&Data_Buf);
-		Parm_ChangCnt |= Data_Buf;
+		EEPROM_ReadUnsignedInt(PARM_CNT_ADDR_HIGH,PARM_CNT_ADDR_LOW,&Parm_ChangCnt);
 	}
 }
 
+void EEPROM_WriteUnsignedInt(unsigned char addrH,unsigned char addrL,unsigned int *dat)
+{
+	unsigned char Data_Buf = 0;
+	
+	Data_Buf = (unsigned char)(*dat & 0x0F); 
+	EEPROM_WriteData(addrL,Data_Buf);
+	Data_Buf = (unsigned char)(*dat >> 8);
+	EEPROM_WriteData(addrH,Data_Buf);			
+}
+
+void EEPROM_ReadUnsignedInt(unsigned char addrH,unsigned char addrL,unsigned int *dat)
+{
+	unsigned char Data_Buf = 0;
+	EEPROM_ReadData(addrH,&Data_Buf);
+	*dat = Data_Buf;
+	*dat <<= 8;
+	EEPROM_ReadData(addrL,&Data_Buf);	
+	*dat |= Data_Buf;	
+}
 
 
 void Delay5ms()		//@12.000MHz

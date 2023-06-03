@@ -28,7 +28,7 @@ unsigned int Parm_ChangCnt = 0;
 unsigned int ParmData_Temp = 3000;
 unsigned int ParmData_Temp_Buf = 3000;
 
-unsigned int ParmData_Distence = 35;
+unsigned char ParmData_Distence = 35;
 unsigned char ParmData_Distence_Buf = 35;
 
 
@@ -98,8 +98,6 @@ void KeyAction0(unsigned char keycode)
 
 void KeyAction1(unsigned char keycode)
 {
-	unsigned char Data_Buf = 0;
-	
 	if(keycode == '3')
 	{
 		flag_Key_Set = 0;
@@ -110,10 +108,7 @@ void KeyAction1(unsigned char keycode)
 				if((ParmData_Temp_Buf != ParmData_Temp) || (ParmData_Distence_Buf != ParmData_Distence))
 				{
 					Parm_ChangCnt++;
-					Data_Buf = (unsigned char)(Parm_ChangCnt & 0x0F); 
-					EEPROM_WriteData(PARM_CNT_ADDR_LOW,Data_Buf);
-					Data_Buf = (unsigned char)(Parm_ChangCnt >> 8);
-					EEPROM_WriteData(PARM_CNT_ADDR_HIGH,Data_Buf);						
+					EEPROM_WriteUnsignedInt(PARM_CNT_ADDR_HIGH,PARM_CNT_ADDR_LOW,&Parm_ChangCnt);					
 				}
 				ParmData_Temp = ParmData_Temp_Buf;
 				ParmData_Distence = ParmData_Distence_Buf;
@@ -149,10 +144,7 @@ void KeyAction1(unsigned char keycode)
 		else
 		{
 			Parm_ChangCnt = 0;
-			Data_Buf = (unsigned char)(Parm_ChangCnt & 0x0F); 
-			EEPROM_WriteData(PARM_CNT_ADDR_LOW,Data_Buf);
-			Data_Buf = (unsigned char)(Parm_ChangCnt >> 8);
-			EEPROM_WriteData(PARM_CNT_ADDR_HIGH,Data_Buf);					
+			EEPROM_WriteUnsignedInt(PARM_CNT_ADDR_HIGH,PARM_CNT_ADDR_LOW,&Parm_ChangCnt);					
 		}
 		Key_SetTime = 0;		
 	}

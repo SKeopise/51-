@@ -29,7 +29,7 @@ extern unsigned int Parm_ChangCnt;
 extern unsigned int ParmData_Temp;
 extern unsigned int ParmData_Temp_Buf;
 
-extern unsigned int ParmData_Distence;
+extern unsigned char ParmData_Distence;
 extern unsigned char ParmData_Distence_Buf;
 
 sbit KEY_OUT_0 = P3^0;

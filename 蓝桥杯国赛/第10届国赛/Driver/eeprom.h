@@ -20,9 +20,9 @@ void EEPROM_WriteData(unsigned char addr,unsigned char dat);
 void FirstRead_EEPROM();
 
 
+void EEPROM_ReadUnsignedInt(unsigned char addrH,unsigned char addrL,unsigned int *dat);
 
-
-
+void EEPROM_WriteUnsignedInt(unsigned char addrH,unsigned char addrL,unsigned int *dat);
 
 
 #endif

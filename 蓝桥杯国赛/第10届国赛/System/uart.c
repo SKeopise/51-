@@ -7,10 +7,6 @@ unsigned char Send_StringBuf[15];
 
 unsigned char Uart_ReadCnt = 0;
 
-bit flag_StringError = 0;
-
-bit flag_ReadRight = 0;
-
 bit flag_ReadEnd = 0;
 
 
@@ -40,8 +36,7 @@ void Uart1Int() interrupt 4
 		{
 			Uart_StringBuf[Uart_ReadCnt++] = SBUF;
 		}
-	}
-	
+	}	
 	if(TI == 1)
 	{
 		TI = 0;
@@ -56,36 +51,29 @@ void UartDriver()
 	if(flag_ReadEnd == 1)
 	{
 		if(Uart_StringBuf[0] == 'S')
-		{
-			StringCmp(Uart_StringBuf,"ST\r\n");
-			if(flag_ReadRight == 1)
+		{			
+			if(StringCmp(Uart_StringBuf,"ST\r\n") == 1)
 			{
-				flag_ReadRight = 0;
 				Data_Buf = Temp_Data;
 				Data_Buf /= 100;
 				sprintf(Send_StringBuf,"$%2d,%2.2f\r\n",Sonic_Distence,Data_Buf);
 				UartSendString(Send_StringBuf);
 			}
-			if(flag_StringError == 1)
+			else
 			{
-				flag_StringError = 0;
 				UartSendString("ERROR\r\n");
 			}
 		}
 		else if(Uart_StringBuf[0] == 'P')
 		{
-			StringCmp(Uart_StringBuf,"PARA\r\n");
-			if(flag_ReadRight == 1)
+			if(StringCmp(Uart_StringBuf,"PARA\r\n") == 1)
 			{
-				flag_ReadRight = 0;
-				Int_Buf = ParmData_Temp;
-				Int_Buf /= 100;
-				sprintf(Send_StringBuf,"$%2d,%2d\r\n",ParmData_Distence,Int_Buf);
+				Int_Buf = ParmData_Distence;
+				sprintf(Send_StringBuf,"$%2d,%2d\r\n",Int_Buf,ParmData_Temp/100);
 				UartSendString(Send_StringBuf);
 			}
-			if(flag_StringError == 1)
+			else
 			{
-				flag_StringError = 0;
 				UartSendString("ERROR\r\n");
 			}		
 		}
@@ -148,25 +136,24 @@ void UartSendString(unsigned char *str)
 }
 
 
-void StringCmp(unsigned char *str1,unsigned char *str2)
+bit StringCmp(unsigned char *str1,unsigned char *str2)
 {
 	while((*str1 != '\0') && (*str2 != '\0'))
 	{
 		if(*str1 != *str2)
 		{
-			flag_StringError = 1;
-			break;
+			return 0;
 		}
 		str1++;
 		str2++;
 	}
 	if((*str1 == '\0') && (*str2 == '\0'))
 	{
-		flag_ReadRight = 1;
+		return 1;
 	}
 	else
 	{
-		flag_StringError = 1;
+		return 0;
 	}
 	
 }
