@@ -1,0 +1,227 @@
+C51 COMPILER V9.60.0.0   KEY                                                               06/04/2023 17:11:26 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE KEY
+OBJECT MODULE PLACED IN .\Objects\key.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Driver\key.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Driver;.\Syste
+                    -m;.\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\key.lst) OBJECT(.\Objects\key.obj)
+
+line level    source
+
+   1          #include "key.h"
+   2          
+   3          
+   4          
+   5          unsigned char Key_Map[4] = {'7','6','5','4'};
+   6          
+   7          unsigned char Key_Sta[4] = {1,1,1,1};
+   8          
+   9          
+  10          unsigned char MenuMode_Data = 0;
+  11          unsigned char MenuMode_Backup = 0;
+  12          
+  13          unsigned char MenuMode_Main = 0;
+  14          
+  15          bit flag_StartKey6 = 0;
+  16          unsigned int Key6_SetTime = 0;
+  17          
+  18          
+  19          unsigned char ADC_Data_EEPROM = 0;
+  20          unsigned int Temp_Data_EEPROM = 0;
+  21          unsigned int Freq_Data_EEPROM = 0;
+  22          
+  23          unsigned char Parm_ADC = 10;
+  24          unsigned char Parm_ADC_Buf = 10;
+  25          
+  26          
+  27          void KeyAction0(unsigned char keycode)
+  28          {
+  29   1              if(keycode == '7')
+  30   1              {
+  31   2                      MenuParmSetS7();
+  32   2              }
+  33   1              else if(keycode == '6')
+  34   1              {
+  35   2                      MenuBackupDataS6();
+  36   2              }
+  37   1              else if(keycode == '5')
+  38   1              {
+  39   2                      SaveDataS5();
+  40   2              }
+  41   1              else if(keycode == '4')
+  42   1              {
+  43   2                      MenuModeSelectS4();
+  44   2              }       
+  45   1      }
+  46          
+  47          void KeyAction1(unsigned char keycode)
+  48          {
+  49   1              if(keycode == '6')
+  50   1              {
+  51   2                      if(flag_StartKey6 == 1)
+  52   2                      {
+  53   3                              flag_StartKey6 = 0;
+  54   3                              if(Key6_SetTime < 800)
+C51 COMPILER V9.60.0.0   KEY                                                               06/04/2023 17:11:26 PAGE 2   
+
+  55   3                              {
+  56   4                                      if(Parm_ADC_Buf < 50)
+  57   4                                      {
+  58   5                                              Parm_ADC_Buf++;
+  59   5                                      }
+  60   4                                      else
+  61   4                                      {
+  62   5                                              Parm_ADC_Buf = 10;
+  63   5                                      }
+  64   4                              }
+  65   3                              Key6_SetTime = 0;
+  66   3                      }
+  67   2              }
+  68   1      }
+  69          
+  70          
+  71          void SaveDataS5()
+  72          {
+  73   1              ADC_Data_EEPROM = ADC_Data;
+  74   1              Temp_Data_EEPROM = Temp_Data;
+  75   1              Freq_Data_EEPROM = Freq_Data;
+  76   1              EEPROM_WriteData(ADC_DATA_ADDR,ADC_Data_EEPROM);
+  77   1              EEPROM_WriteDataUint(TEMP_DATA_ADDR_HIGH,TEMP_DATA_ADDR_LOW,Temp_Data_EEPROM);
+  78   1              EEPROM_WriteDataUint(FREQ_DATA_ADDR_HIGH,FREQ_DATA_ADDR_LOW,Freq_Data_EEPROM);  
+  79   1      }
+  80          
+  81          void MenuParmSetS7()
+  82          {
+  83   1              if(MenuMode_Main != 2)
+  84   1              {
+  85   2                      MenuMode_Main = 2;
+  86   2                      MenuMode_Data = 0;
+  87   2                      MenuMode_Backup = 0;
+  88   2              }
+  89   1              else
+  90   1              {
+  91   2                      MenuMode_Main = 0;
+  92   2                      Parm_ADC = Parm_ADC_Buf;
+  93   2              }
+  94   1      }
+  95          
+  96          
+  97          void MenuBackupDataS6()
+  98          {
+  99   1              if(MenuMode_Main == 0)
+ 100   1              {
+ 101   2                      MenuMode_Main = 1;
+ 102   2                      MenuMode_Data = 0;
+ 103   2                      MenuMode_Backup = 0;            
+ 104   2              }
+ 105   1              else if(MenuMode_Main == 1)
+ 106   1              {
+ 107   2                      MenuMode_Main = 0;
+ 108   2              }
+ 109   1              else
+ 110   1              {
+ 111   2                      flag_StartKey6 = 1;
+ 112   2              }
+ 113   1      }
+ 114          
+ 115          void MenuModeSelectS4()
+ 116          {
+C51 COMPILER V9.60.0.0   KEY                                                               06/04/2023 17:11:26 PAGE 3   
+
+ 117   1              if(MenuMode_Main == 0)
+ 118   1              {
+ 119   2                      MenuMode_Data++;
+ 120   2                      if(MenuMode_Data > 2)
+ 121   2                      {
+ 122   3                              MenuMode_Data = 0;
+ 123   3                      }
+ 124   2              }
+ 125   1              else if(MenuMode_Main == 1)
+ 126   1              {
+ 127   2                      MenuMode_Backup++;
+ 128   2                      if(MenuMode_Backup > 2)
+ 129   2                      {
+ 130   3                              MenuMode_Backup = 0;
+ 131   3                      }               
+ 132   2              }
+ 133   1      }
+ 134          
+ 135          
+ 136          void KeyDriver()
+ 137          {
+ 138   1              unsigned char i = 0;
+ 139   1              static unsigned char Key_Backup[4] = {1,1,1,1};
+ 140   1              
+ 141   1              for(i=0;i<4;i++)
+ 142   1              {
+ 143   2                      if(Key_Backup[i] != Key_Sta[i])
+ 144   2                      {
+ 145   3                              if(Key_Backup[i] == 1)
+ 146   3                              {
+ 147   4                                      KeyAction0(Key_Map[i]);
+ 148   4                              }
+ 149   3                              else
+ 150   3                              {
+ 151   4                                      KeyAction1(Key_Map[i]);                 
+ 152   4                              }
+ 153   3                              
+ 154   3                              Key_Backup[i] = Key_Sta[i];
+ 155   3                      }
+ 156   2              }
+ 157   1      }
+ 158          
+ 159          
+ 160          
+ 161          
+ 162          void KeyScan()
+ 163          {
+ 164   1              static unsigned char Key_Out = 0;
+ 165   1              static unsigned char Key_Buff[4] = {0xFF,0xFF,0xFF,0xFF};
+ 166   1              
+ 167   1              switch(Key_Out)
+ 168   1              {
+ 169   2                      case 0: Key_Buff[0] = (Key_Buff[0] << 1) | KEY_OUT_0; break;
+ 170   2                      case 1: Key_Buff[1] = (Key_Buff[1] << 1) | KEY_OUT_1; break;
+ 171   2                      case 2: Key_Buff[2] = (Key_Buff[2] << 1) | KEY_OUT_2; break;
+ 172   2                      case 3: Key_Buff[3] = (Key_Buff[3] << 1) | KEY_OUT_3; break;
+ 173   2                      default: break;
+ 174   2              }
+ 175   1      
+ 176   1              if((Key_Buff[Key_Out] & 0x0F) == 0x00)
+ 177   1              {
+ 178   2                      Key_Sta[Key_Out] = 0;
+C51 COMPILER V9.60.0.0   KEY                                                               06/04/2023 17:11:26 PAGE 4   
+
+ 179   2              }
+ 180   1              else if((Key_Buff[Key_Out] & 0x0F) == 0x0F)
+ 181   1              {
+ 182   2                      Key_Sta[Key_Out] = 1;
+ 183   2              }
+ 184   1              
+ 185   1              Key_Out++;
+ 186   1              Key_Out &= 0x03;
+ 187   1      }
+ 188          
+ 189          
+ 190          
+ 191          
+ 192          
+ 193          
+ 194          
+ 195          
+ 196          
+ 197          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    407    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     29       2
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

@@ -1,0 +1,139 @@
+C51 COMPILER V9.60.0.0   EEPROM                                                            06/04/2023 17:11:27 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EEPROM
+OBJECT MODULE PLACED IN .\Objects\eeprom.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Driver\eeprom.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Driver;.\Sy
+                    -stem;.\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\eeprom.lst) OBJECT(.\Objects\eeprom.obj)
+
+line level    source
+
+   1          #include "eeprom.h"
+   2          
+   3          
+   4          #define FIRST_ADDR 0xB7
+   5          #define FIRST_DATA 0xC2
+   6          
+   7          
+   8          
+   9          void EEPROM_FirstRead()
+  10          {
+  11   1              unsigned char Data_Buf = 0;
+  12   1              
+  13   1              EEPROM_ReadData(FIRST_ADDR,&Data_Buf);
+  14   1              if(Data_Buf != FIRST_DATA)
+  15   1              {
+  16   2                      EEPROM_WriteData(FIRST_ADDR,FIRST_DATA);
+  17   2                      EEPROM_WriteData(ADC_DATA_ADDR,ADC_Data_EEPROM);
+  18   2                      EEPROM_WriteDataUint(TEMP_DATA_ADDR_HIGH,TEMP_DATA_ADDR_LOW,Temp_Data_EEPROM);
+  19   2                      EEPROM_WriteDataUint(FREQ_DATA_ADDR_HIGH,FREQ_DATA_ADDR_LOW,Freq_Data_EEPROM);
+  20   2              }
+  21   1              else
+  22   1              {
+  23   2                      EEPROM_ReadData(ADC_DATA_ADDR,&ADC_Data_EEPROM);
+  24   2                      EEPROM_ReadDataUint(TEMP_DATA_ADDR_HIGH,TEMP_DATA_ADDR_LOW,&Temp_Data_EEPROM);
+  25   2                      EEPROM_ReadDataUint(FREQ_DATA_ADDR_HIGH,FREQ_DATA_ADDR_LOW,&Freq_Data_EEPROM);
+  26   2              }
+  27   1      }
+  28          
+  29          
+  30          
+  31          void Delay5ms()         //@12.000MHz
+  32          {
+  33   1              unsigned char i, j;
+  34   1      
+  35   1              i = 59;
+  36   1              j = 90;
+  37   1              do
+  38   1              {
+  39   2                      while (--j);
+  40   2              } while (--i);
+  41   1      }
+  42          
+  43          void EEPROM_WriteDataUint(unsigned char addrH,unsigned char addrL,unsigned int dat)
+  44          {
+  45   1              unsigned char Data_Buf = 0;
+  46   1              
+  47   1              Data_Buf = (unsigned char)(dat >> 8);
+  48   1              EEPROM_WriteData(addrH,Data_Buf);
+  49   1              Data_Buf = (unsigned char)(dat & 0x0F);
+  50   1              EEPROM_WriteData(addrL,Data_Buf);       
+  51   1      }
+  52          
+  53          void EEPROM_ReadDataUint(unsigned char addrH,unsigned char addrL,unsigned int *dat)
+  54          {
+C51 COMPILER V9.60.0.0   EEPROM                                                            06/04/2023 17:11:27 PAGE 2   
+
+  55   1              unsigned char Data_Buf = 0;
+  56   1              
+  57   1              EEPROM_ReadData(addrH,&Data_Buf);
+  58   1              *dat = Data_Buf;
+  59   1              EEPROM_ReadData(addrL,&Data_Buf);
+  60   1              *dat = (*dat << 8) | Data_Buf;
+  61   1      }
+  62          
+  63          
+  64          void EEPROM_ReadData(unsigned char addr,unsigned char *dat)
+  65          {
+  66   1              I2CStart();
+  67   1              I2CSendByte(0xA0);
+  68   1              I2CWaitAck();
+  69   1              I2CSendByte(addr);
+  70   1              I2CWaitAck();   
+  71   1              
+  72   1              I2CStart();
+  73   1              I2CSendByte(0xA1);
+  74   1              I2CWaitAck();
+  75   1              
+  76   1              *dat = I2CReceiveByte();
+  77   1              I2CSendAck(1);
+  78   1              I2CStop();      
+  79   1      }
+  80          
+  81          
+  82          void EEPROM_WriteData(unsigned char addr,unsigned char dat)
+  83          {
+  84   1              I2CStart();
+  85   1              I2CSendByte(0xA0);
+  86   1              I2CWaitAck();
+  87   1              I2CSendByte(addr);
+  88   1              I2CWaitAck();   
+  89   1              I2CSendByte(dat);
+  90   1              I2CWaitAck();
+  91   1              I2CStop();
+  92   1      
+  93   1              Delay5ms();
+  94   1      }
+  95          
+  96          
+  97          
+  98          
+  99          
+ 100          
+ 101          
+ 102          
+ 103          
+ 104          
+ 105          
+ 106          
+ 107          
+ 108          
+ 109          
+ 110          
+ 111          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    282    ----
+   CONSTANT SIZE    =   ----    ----
+C51 COMPILER V9.60.0.0   EEPROM                                                            06/04/2023 17:11:27 PAGE 3   
+
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----      15
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

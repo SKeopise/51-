@@ -1,0 +1,84 @@
+C51 COMPILER V9.60.0.0   DS18B20                                                           06/04/2023 17:11:26 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE DS18B20
+OBJECT MODULE PLACED IN .\Objects\ds18b20.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Driver\ds18b20.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Driver;.\S
+                    -ystem;.\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\ds18b20.lst) OBJECT(.\Objects\ds18b20.obj)
+
+line level    source
+
+   1          #include "ds18b20.h"
+   2          
+   3          
+   4          
+   5          unsigned int Temp_Data = 0;
+   6          
+   7          
+   8          
+   9          
+  10          
+  11          void Ds18b20ReadConfig()
+  12          {
+  13   1              init_ds18b20();
+  14   1              Write_DS18B20(0xCC);
+  15   1              Write_DS18B20(0x44);
+  16   1      }
+  17          
+  18          
+  19          void Ds18b20ReadData()
+  20          {
+  21   1              unsigned char LSB,MSB;
+  22   1              unsigned int Data_Buf;
+  23   1              
+  24   1              init_ds18b20();
+  25   1              Write_DS18B20(0xCC);
+  26   1              Write_DS18B20(0xBE);
+  27   1                      
+  28   1              LSB = Read_DS18B20();
+  29   1              MSB = Read_DS18B20();
+  30   1              
+  31   1              Data_Buf = MSB;
+  32   1              Data_Buf = (Data_Buf << 8) | LSB;
+  33   1              
+  34   1              if((Data_Buf & 0xF800) != 0x0000)
+  35   1              {
+  36   2                      Data_Buf = ~Data_Buf + 1;
+  37   2              }
+  38   1              Data_Buf >>= 4;
+  39   1              Data_Buf *= 100;
+  40   1              Data_Buf += (LSB&0x0F) * 6.25;
+  41   1              
+  42   1              Temp_Data = Data_Buf;
+  43   1      }
+  44          
+  45          
+  46          
+  47          
+  48          
+  49          
+  50          
+  51          
+  52          
+  53          
+  54          
+C51 COMPILER V9.60.0.0   DS18B20                                                           06/04/2023 17:11:26 PAGE 2   
+
+  55          
+  56          
+  57          
+  58          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    162    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =      2       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
