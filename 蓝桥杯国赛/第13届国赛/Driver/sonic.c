@@ -29,6 +29,7 @@ void SendWave()
 {
 	unsigned char i = 0;
 	
+	EA = 0;
 	for(i=0;i<8;i++)
 	{
 		TX = 1;
@@ -36,6 +37,7 @@ void SendWave()
 		TX = 0;
 		Delay13us();
 	}
+	EA = 1;
 }
 
 

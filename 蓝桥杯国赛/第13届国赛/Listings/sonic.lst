@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 19:53:07 PAGE 1   
+C51 COMPILER V9.60.0.0   SONIC                                                             06/05/2023 12:20:55 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SONIC
@@ -39,49 +39,49 @@ line level    source
   29          {
   30   1              unsigned char i = 0;
   31   1              
-  32   1              for(i=0;i<8;i++)
-  33   1              {
-  34   2                      TX = 1;
-  35   2                      Delay13us();
-  36   2                      TX = 0;
-  37   2                      Delay13us();
-  38   2              }
-  39   1      }
-  40          
-  41          
-  42          void SonicDataRead()
-  43          {
-  44   1              unsigned int Sonic_Time_Buf = 0;
-  45   1              float Distence_Buf = 0;
-  46   1              
-  47   1              CH = 0x00;
-  48   1              CL = 0x00;
-  49   1              
-  50   1              SendWave();
-  51   1              CR = 1;
-  52   1              while((CF == 0) && (RX == 1));
-  53   1              CR = 0;
-  54   1              
-C51 COMPILER V9.60.0.0   SONIC                                                             05/31/2023 19:53:07 PAGE 2   
+  32   1              EA = 0;
+  33   1              for(i=0;i<8;i++)
+  34   1              {
+  35   2                      TX = 1;
+  36   2                      Delay13us();
+  37   2                      TX = 0;
+  38   2                      Delay13us();
+  39   2              }
+  40   1              EA = 1;
+  41   1      }
+  42          
+  43          
+  44          void SonicDataRead()
+  45          {
+  46   1              unsigned int Sonic_Time_Buf = 0;
+  47   1              float Distence_Buf = 0;
+  48   1              
+  49   1              CH = 0x00;
+  50   1              CL = 0x00;
+  51   1              
+  52   1              SendWave();
+  53   1              CR = 1;
+  54   1              while((CF == 0) && (RX == 1));
+C51 COMPILER V9.60.0.0   SONIC                                                             06/05/2023 12:20:55 PAGE 2   
 
-  55   1              if(CF == 1)
-  56   1              {
-  57   2                      CF = 0;
-  58   2                      flag_Sonic_Far = 1;
-  59   2                      Sonic_Data_Distence = 999;
-  60   2              }
-  61   1              else
-  62   1              {
-  63   2                      flag_Sonic_Far = 0;
-  64   2                      Sonic_Time_Buf = CH;
-  65   2                      Sonic_Time_Buf = (Sonic_Time_Buf << 8) | CL;
-  66   2                      Distence_Buf = Sonic_Time_Buf;
-  67   2                      Distence_Buf = Distence_Buf*0.017;
-  68   2                      Sonic_Data_Distence = Distence_Buf; 
-  69   2              }       
-  70   1      }
-  71          
-  72          
+  55   1              CR = 0;
+  56   1              
+  57   1              if(CF == 1)
+  58   1              {
+  59   2                      CF = 0;
+  60   2                      flag_Sonic_Far = 1;
+  61   2                      Sonic_Data_Distence = 999;
+  62   2              }
+  63   1              else
+  64   1              {
+  65   2                      flag_Sonic_Far = 0;
+  66   2                      Sonic_Time_Buf = CH;
+  67   2                      Sonic_Time_Buf = (Sonic_Time_Buf << 8) | CL;
+  68   2                      Distence_Buf = Sonic_Time_Buf;
+  69   2                      Distence_Buf = Distence_Buf*0.017;
+  70   2                      Sonic_Data_Distence = Distence_Buf; 
+  71   2              }       
+  72   1      }
   73          
   74          
   75          
@@ -99,10 +99,12 @@ line level    source
   87          
   88          
   89          
+  90          
+  91          
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    138    ----
+   CODE SIZE        =    142    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

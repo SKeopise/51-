@@ -22,9 +22,8 @@ unsigned char RH_Data;
 unsigned char Relay_Cnt = 0;
 bit flag_Clear_RelayCnt = 0;
 
-unsigned char pwm_cnt = 0;
 
-bit flag_pwm = 0;
+
 
 
 void DataRead();
@@ -42,15 +41,26 @@ void main()
 	
 	while(1)
 	{	
-		if(flag_pwm == 1)
-		{
-			flag_pwm = 0;
-			RelayMotorControl();
-		}		
 		if(flag50ms == 1)
 		{
 			flag50ms = 0;
-			KeyDriver();			
+			KeyDriver();
+			if(Sonic_Data_Distence > Parm_Distence)
+			{
+				if(flag_Relay == 0)
+				{
+					flag_Relay = 1;
+					Relay_Cnt++;
+					flag_EEPROM_Write = 1;
+				}
+			}
+			else
+			{
+				if(flag_Relay == 1)
+				{
+					flag_Relay = 0;
+				}
+			}				
 		}
 		if(flag_EEPROM_Write == 1)
 		{
@@ -65,13 +75,7 @@ void main()
 
 void Timer1Int() interrupt 3
 {	
-	pwm_cnt++;
-	
-	flag_pwm = 1;
-	if(pwm_cnt >= 5)
-	{
-		pwm_cnt = 0;
-	}
+	RelayMotorControl();	
 	SmgDisplay();	
 }
 
@@ -110,7 +114,7 @@ void Timer2Int() interrupt 12
 			Long_Set_Time = 0;
 		}
 	}
-	if(cnt >= 499)
+	if(cnt >= 482)
 	{
 		cnt = 0;
 		flag500ms = 1;
@@ -183,7 +187,38 @@ void DataMath()
 
 void RelayMotorControl()
 {	
+	static unsigned char pwm_cnt = 0;
+
+	pwm_cnt++;
+	
+	if(pwm_cnt >= 10)
+	{
+		pwm_cnt = 0;
+	}	
+	
 	P0 = 0x00;
+	if(flag_Pwm_Output == 1)
+	{
+		if(pwm_cnt < 8)
+		{
+			Motor = 1;
+		}
+		else
+		{
+			Motor = 0;
+		}
+	}
+	else
+	{
+		if(pwm_cnt < 8)
+		{
+			Motor = 0;
+		}
+		else
+		{
+			Motor = 1;
+		}		
+	}	
 	if(flag_Relay == 1)
 	{		
 		RELAY = 1;
@@ -193,52 +228,7 @@ void RelayMotorControl()
 		RELAY = 0;		
 	}
 	
-	HC138Set(5);
-	if(flag_Pwm_Output == 1)
-	{
-		if(pwm_cnt < 4)
-		{
-			Motor = 1;
-		}
-		else
-		{
-			Motor = 0;
-		}
-	}
-	else
-	{
-		if(pwm_cnt < 4)
-		{
-			Motor = 0;
-		}
-		else
-		{
-			Motor = 1;
-		}		
-	}
-	
-	if(flag50ms == 1)
-	{
-		if(Sonic_Data_Distence > Parm_Distence)
-		{
-			if(flag_Relay == 0)
-			{
-				flag_Relay = 1;
-	//			RELAY = 1;
-				Relay_Cnt++;
-				flag_EEPROM_Write = 1;
-			}
-		}
-		else
-		{
-			if(flag_Relay == 1)
-			{
-				flag_Relay = 0;
-	//			RELAY = 0;
-			}
-		}	
-	}
-	
+	HC138Set(5);	
 	HC138Set(0);	
 }
 

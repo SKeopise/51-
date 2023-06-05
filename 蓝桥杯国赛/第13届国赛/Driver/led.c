@@ -52,9 +52,7 @@ void SmgMenuMain()
 
 void LedDisplay()
 {
-	P0 = 0xFF;
-	HC138Set(4);
-	
+	P0 = 0xFF;	
 	if(Menu_Mode == 0)
 	{
 		LED1 = 0;
@@ -106,6 +104,7 @@ void LedDisplay()
 		LED8 = 0;
 	}
 	
+	HC138Set(4);	
 	HC138Set(0);
 }
 
@@ -239,13 +238,18 @@ void SmgDisplay()
 {
 	static unsigned char i = 0;
 
-    HC138Set(7);
-    P0 = 0xFF;	
-	HC138Set(6);
-	P0 = 0x01 << i;
+	P0 = 0xFF;	
 	HC138Set(7);
+	HC138Set(0);
+	
+	P0 = 0x00;
+	P0 = 0x01 << i;
+	HC138Set(6);
+	HC138Set(0);
+	
 	P0 = 0xFF;
-	P0 = Led_Buff[i];
+	P0 = Led_Buff[i];	
+	HC138Set(7);
 	HC138Set(0);
 	
 	i++;
