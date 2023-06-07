@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   EEPROM                                                            06/03/2023 18:34:59 PAGE 1   
+C51 COMPILER V9.60.0.0   EEPROM                                                            06/07/2023 19:19:33 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE EEPROM
@@ -10,7 +10,7 @@ line level    source
 
    1          #include "eeprom.h"
    2          
-   3          #define FIRST_ADDR 0x77
+   3          #define FIRST_ADDR 0x78
    4          #define FIRST_DATA 0x66
    5          
    6          
@@ -35,7 +35,7 @@ line level    source
   25          {
   26   1              unsigned char Data_Buf = 0;
   27   1              
-  28   1              Data_Buf = (unsigned char)(*dat & 0x0F); 
+  28   1              Data_Buf = (unsigned char)(*dat & 0x00FF); 
   29   1              EEPROM_WriteData(addrL,Data_Buf);
   30   1              Data_Buf = (unsigned char)(*dat >> 8);
   31   1              EEPROM_WriteData(addrH,Data_Buf);                       
@@ -62,7 +62,7 @@ line level    source
   52   1              {
   53   2                      while (--j);
   54   2              } while (--i);
-C51 COMPILER V9.60.0.0   EEPROM                                                            06/03/2023 18:34:59 PAGE 2   
+C51 COMPILER V9.60.0.0   EEPROM                                                            06/07/2023 19:19:33 PAGE 2   
 
   55   1      }
   56          
@@ -115,7 +115,7 @@ line level    source
 
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
-   CODE SIZE        =    275    ----
+   CODE SIZE        =    274    ----
    CONSTANT SIZE    =   ----    ----
    XDATA SIZE       =   ----    ----
    PDATA SIZE       =   ----    ----

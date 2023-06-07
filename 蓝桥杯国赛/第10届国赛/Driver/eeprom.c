@@ -1,6 +1,6 @@
 #include "eeprom.h"
 
-#define FIRST_ADDR 0x77
+#define FIRST_ADDR 0x78
 #define FIRST_DATA 0x66
 
 
@@ -25,7 +25,7 @@ void EEPROM_WriteUnsignedInt(unsigned char addrH,unsigned char addrL,unsigned in
 {
 	unsigned char Data_Buf = 0;
 	
-	Data_Buf = (unsigned char)(*dat & 0x0F); 
+	Data_Buf = (unsigned char)(*dat & 0x00FF); 
 	EEPROM_WriteData(addrL,Data_Buf);
 	Data_Buf = (unsigned char)(*dat >> 8);
 	EEPROM_WriteData(addrH,Data_Buf);			

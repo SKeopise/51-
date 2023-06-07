@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.0.0   LED                                                               06/03/2023 18:34:59 PAGE 1   
+C51 COMPILER V9.60.0.0   LED                                                               06/07/2023 19:19:33 PAGE 1   
 
 
 C51 COMPILER V9.60.0.0, COMPILATION OF MODULE LED
@@ -62,7 +62,7 @@ line level    source
   52          void LedDisplay()
   53          {
   54   1              P0 = 0xFF;
-C51 COMPILER V9.60.0.0   LED                                                               06/03/2023 18:34:59 PAGE 2   
+C51 COMPILER V9.60.0.0   LED                                                               06/07/2023 19:19:33 PAGE 2   
 
   55   1              HC138Set(4);
   56   1              
@@ -126,7 +126,7 @@ line level    source
  114   1              Led_Buff[1] = Led_Number[10];
  115   1              Led_Buff[2] = Led_Number[10];   
  116   1              
-C51 COMPILER V9.60.0.0   LED                                                               06/03/2023 18:34:59 PAGE 3   
+C51 COMPILER V9.60.0.0   LED                                                               06/07/2023 19:19:33 PAGE 3   
 
  117   1              if(Parm_ChangCnt >= 10000)
  118   1              {
@@ -190,7 +190,7 @@ line level    source
  176   1              Led_Buff[1] = Led_Number[10];
  177   1              Led_Buff[2] = Led_Number[10];
  178   1              
-C51 COMPILER V9.60.0.0   LED                                                               06/03/2023 18:34:59 PAGE 4   
+C51 COMPILER V9.60.0.0   LED                                                               06/07/2023 19:19:33 PAGE 4   
 
  179   1              if(flag_TempMinus == 1)
  180   1              {
