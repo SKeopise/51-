@@ -46,7 +46,7 @@ void EEPROM_WriteDataUint(unsigned char addrH,unsigned char addrL,unsigned int d
 	
 	Data_Buf = (unsigned char)(dat >> 8);
 	EEPROM_WriteData(addrH,Data_Buf);
-	Data_Buf = (unsigned char)(dat & 0x0F);
+	Data_Buf = (unsigned char)(dat & 0x00FF);
 	EEPROM_WriteData(addrL,Data_Buf);	
 }
 
