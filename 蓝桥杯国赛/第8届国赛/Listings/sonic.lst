@@ -1,0 +1,115 @@
+C51 COMPILER V9.60.0.0   SONIC                                                             06/07/2023 21:56:33 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE SONIC
+OBJECT MODULE PLACED IN .\Objects\sonic.obj
+COMPILER INVOKED BY: E:\keil5\keil5\C51\BIN\C51.EXE Driver\sonic.c OPTIMIZE(8,SPEED) BROWSE INCDIR(.\User;.\Driver;.\Sys
+                    -tem;.\Config) DEBUG OBJECTEXTEND PRINT(.\Listings\sonic.lst) OBJECT(.\Objects\sonic.obj)
+
+line level    source
+
+   1          #include "sonic.h"
+   2          
+   3          
+   4          
+   5          sbit TX = P1^0;
+   6          sbit RX = P1^1;
+   7          
+   8          
+   9          unsigned int Sonic_HistoryData[10] = {0,0,0,0,0,0,0,0,0,0};
+  10          
+  11          unsigned int Sonic_Distence = 0;
+  12          
+  13          
+  14          
+  15          void Delay13us()                //@12.000MHz
+  16          {
+  17   1              unsigned char i;
+  18   1      
+  19   1              _nop_();
+  20   1              _nop_();
+  21   1              i = 36;
+  22   1              while (--i);
+  23   1      }
+  24          
+  25          
+  26          
+  27          void PCA_Init()
+  28          {
+  29   1              CMOD |= 0x80;
+  30   1              CCON = 0x00;
+  31   1      }
+  32          
+  33          
+  34          void SendWave()
+  35          {
+  36   1              unsigned char i = 0;
+  37   1              
+  38   1              EA = 0;
+  39   1              for(i=0;i<8;i++)
+  40   1              {
+  41   2                      TX = 1;
+  42   2                      Delay13us();
+  43   2                      TX = 0;
+  44   2                      Delay13us();
+  45   2              }
+  46   1              EA = 1;
+  47   1      }
+  48          
+  49          
+  50          
+  51          void Sonic_DistenceRead()
+  52          {
+  53   1              float Data_Buf = 0;
+  54   1              unsigned int Time_Buf = 0;
+C51 COMPILER V9.60.0.0   SONIC                                                             06/07/2023 21:56:33 PAGE 2   
+
+  55   1              
+  56   1              CH = 0x00;
+  57   1              CL = 0x00;
+  58   1              
+  59   1              SendWave();
+  60   1              CR = 1;
+  61   1              while((RX == 1) && (CF == 0));
+  62   1              CR = 0;
+  63   1              
+  64   1              if(CF == 1)
+  65   1              {
+  66   2                      CF = 0;
+  67   2                      Sonic_Distence = 0;
+  68   2              }
+  69   1              else
+  70   1              {
+  71   2                      Time_Buf = CH;
+  72   2                      Time_Buf = (Time_Buf << 8) | CL;
+  73   2                      Data_Buf = Time_Buf;
+  74   2                      Data_Buf *= 0.017;
+  75   2                      Sonic_Distence = Data_Buf;
+  76   2              }
+  77   1              
+  78   1      }
+  79          
+  80          
+  81          
+  82          
+  83          
+  84          
+  85          
+  86          
+  87          
+  88          
+  89          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    134    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     22       4
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

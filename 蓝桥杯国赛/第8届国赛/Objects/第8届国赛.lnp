@@ -1,0 +1,10 @@
+".\Objects\main.obj",
+".\Objects\key.obj",
+".\Objects\led.obj",
+".\Objects\eeprom.obj",
+".\Objects\pcf8951.obj",
+".\Objects\sonic.obj",
+".\Objects\iic.obj",
+".\Objects\init.obj" 
+TO ".\Objects\第8届国赛" 
+PRINT(".\Listings\第8届国赛.m51") RAMSIZE(256) 
